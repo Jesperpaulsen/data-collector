@@ -1,4 +1,4 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent } from 'preact';
 
 const Dashboard: FunctionComponent = () => {
   return <div className="w-full">Dashboard</div>;
