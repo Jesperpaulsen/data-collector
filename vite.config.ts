@@ -6,6 +6,7 @@ export default defineConfig({
   esbuild: {
     jsxFactory: 'h',
     jsxFragment: 'Fragment',
+    jsxInject: `import { h } from 'preact'`
   },
   plugins: [preactRefresh(), VitePWA()],
 });

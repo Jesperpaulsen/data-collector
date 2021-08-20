@@ -4,13 +4,13 @@ module.exports = {
   purge: {
     enabled: process.env.NODE_ENV === 'production',
     safeList: [],
-    content: ['./index.html', './src/**/*.jsx', './src/**/*.js', './src/**/*.ts', './src/**/*.tsx'],
+    content: ['./index.html', './src/**/*.jsx', './src/**/*.js', './src/**/*.tsx'],
   },
   theme: {
     extend: {
       fontWeight: ['hover', 'focus'],
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: '"Trebuchet MS", "Lucida Grande", sans-serif',
       },
     },
   },

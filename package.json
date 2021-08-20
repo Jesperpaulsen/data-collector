@@ -6,6 +6,7 @@
     "build": "cross-env NODE_ENV=production vite build"
   },
   "dependencies": {
+    "classnames": "^2.3.1",
     "preact": "^10.5.10",
     "preact-router": "^3.2.1"
   },

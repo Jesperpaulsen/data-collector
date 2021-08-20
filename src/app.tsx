@@ -1,16 +1,8 @@
-import { h, Fragment } from 'preact';
-import { Logo } from './logo';
+import Dashboard from './components/dashboard/dashboard';
+import Login from './components/login/login';
+import UserProvider from './contexts/UserContext';
+import Router from './Router';
 
 export function App() {
-  return (
-    <>
-      <Logo />
-      <p>Hello Vite + Preact!</p>
-      <p>
-        <a class="link" href="https://preactjs.com/" target="_blank" rel="noopener noreferrer">
-          Learn Preact
-        </a>
-      </p>
-    </>
-  );
+  return <Login />;
 }
