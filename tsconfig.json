@@ -17,5 +17,5 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "include": ["src", "worker"]
+  "include": ["src", "worker", "public/injected.js"]
 }
