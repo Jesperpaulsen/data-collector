@@ -1,7 +1,7 @@
 {
   "name": "Waste Collector",
   "description": "Collecting your data usage",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "manifest_version": 3,
   "action": {
     "default_popup": "index.html",
@@ -13,7 +13,12 @@
     "128": "android-chrome-192x192.png"
   },
   "background": {
-    "service_worker": "worker.js"
+    "service_worker": "wrapper.js"
   },
-  "permissions": ["webRequest", "<all_urls>"]
+  "permissions": [
+    "webRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
 }
