@@ -14,7 +14,6 @@ const Input: FunctionComponent<InputProps> = ({ initialValue, label, placeholder
   const [value, setValue] = useState(initialValue);
 
   const handleChange = (e: any) => {
-    console.log(e);
     const value = e.target.value;
     setValue(value);
     onChange(value);

@@ -1,5 +1,5 @@
 {
-  "name": "Waste Collector",
+  "name": "Data Collector",
   "description": "Collecting your data usage",
   "version": "1.0.6",
   "manifest_version": 3,
@@ -13,7 +13,8 @@
     "128": "android-chrome-192x192.png"
   },
   "background": {
-    "service_worker": "wrapper.js"
+    "service_worker": "wrapper.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -28,7 +29,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["injected.js"],
+      "resources": ["injected.js", "header_listener.js"],
       "matches": ["<all_urls>"]
     }
   ],

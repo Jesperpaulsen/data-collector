@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm cp:worker && cross-env NODE_ENV=production INLINE_RUNTIME_CHUNK=false vite build",
-    "cp:worker": "tsc worker/*.ts --outDir public"
+    "build": "pnpm cp:worker && pnpm cp:injected && cross-env NODE_ENV=production INLINE_RUNTIME_CHUNK=false vite build",
+    "cp:worker": "tsc worker/*.ts --outDir public --module es2020",
+    "cp:injected": "cp worker/injected.js ./public"
   },
   "dependencies": {
     "classnames": "^2.3.1",
