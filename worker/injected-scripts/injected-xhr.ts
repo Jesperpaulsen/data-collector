@@ -1,7 +1,12 @@
 const XHR = XMLHttpRequest.prototype;
+// @ts-ignore
 const open = XHR.open;
 const send = XHR.send;
 const setRequestHeader = XHR.setRequestHeader;
+
+/*function sendMessage(message: NetworkCall) {
+  return window.postMessage({ type: 'networkCall', message }, '*')
+}*/
 
 XHR.send = function () {
   this.addEventListener('load', function () {
@@ -26,22 +31,4 @@ XHR.send = function () {
   });
   // @ts-ignore
   return send.apply(this, arguments);
-};
-
-const constantMock = window.fetch;
-window.fetch = function () {
-  console.log(arguments);
-
-  return new Promise((resolve, reject) => {
-    // @ts-ignore
-    constantMock
-      .apply(this, arguments)
-      .then((response) => {
-        console.log(response);
-        resolve(response);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
 };

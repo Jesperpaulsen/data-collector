@@ -1,3 +1,8 @@
+/**
+ * TODO:
+ * * Update database with network calls every 5 sec
+ * * Determine data structure
+ */
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -121,12 +126,66 @@ var __generator =
       return { value: op[0] ? op[1] : void 0, done: true };
     }
   };
-var _this = this;
-self.onmessage = function (event) {
-  return __awaiter(_this, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-      console.log(event);
-      return [2 /*return*/];
-    });
-  });
-};
+var __spreadArrays =
+  (this && this.__spreadArrays) ||
+  function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+      for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) r[k] = a[j];
+    return r;
+  };
+var DataReporter = /** @class */ (function () {
+  function DataReporter(userToken) {
+    var _this = this;
+    this.currentRequests = [];
+    this.interval = 5000;
+    this.startTimer = function () {
+      if (_this.timeout) clearTimeout(_this.timeout);
+      _this.timeout = setTimeout(function () {
+        _this.sendRequests();
+      }, _this.interval);
+    };
+    this.sendRequests = function () {
+      return __awaiter(_this, void 0, void 0, function () {
+        var promises, requests, _i, requests_1, request;
+        return __generator(this, function (_a) {
+          switch (_a.label) {
+            case 0:
+              promises = [];
+              requests = __spreadArrays(this.currentRequests);
+              this.currentRequests = [];
+              for (_i = 0, requests_1 = requests; _i < requests_1.length; _i++) {
+                request = requests_1[_i];
+                promises.push(this.sendRequest(request));
+              }
+              return [4 /*yield*/, Promise.all(promises)];
+            case 1:
+              _a.sent();
+              this.startTimer();
+              return [2 /*return*/];
+          }
+        });
+      });
+    };
+    this.sendRequest = function (request) {
+      return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+          try {
+            // TODO: Do request
+          } catch (e) {
+            console.error(e);
+            this.currentRequests.push(request);
+          }
+          return [2 /*return*/];
+        });
+      });
+    };
+    this.userToken = userToken;
+    this.startTimer();
+  }
+  DataReporter.prototype.addRequest = function (request) {
+    this.currentRequests.push(request);
+  };
+  return DataReporter;
+})();
+export { DataReporter };

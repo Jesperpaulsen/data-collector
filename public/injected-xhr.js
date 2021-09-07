@@ -30,20 +30,3 @@ XHR.send = function () {
   // @ts-ignore
   return send.apply(this, arguments);
 };
-var constantMock = window.fetch;
-window.fetch = function () {
-  var _this = this;
-  console.log(arguments);
-  return new Promise(function (resolve, reject) {
-    // @ts-ignore
-    constantMock
-      .apply(_this, arguments)
-      .then(function (response) {
-        console.log(response);
-        resolve(response);
-      })
-      ['catch'](function (error) {
-        reject(error);
-      });
-  });
-};

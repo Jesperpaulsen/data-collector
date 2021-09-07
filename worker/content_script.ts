@@ -1,9 +1,6 @@
 const checkIfChromeIsReady = () => typeof chrome.runtime.getURL;
 const messagesToSend: MessageEvent[] = [];
 
-const s = document.createElement('script');
-s.src = chrome.runtime.getURL('injected.js');
-
 window.addEventListener('message', (event) => {
   if (event.data?.type === 'test') {
     try {
@@ -17,8 +14,14 @@ window.addEventListener('message', (event) => {
   }
 });
 
-s.onload = function () {
-  // @ts-ignore
-  this.remove();
-};
-(document.head || document.documentElement).appendChild(s);
+const scriptsToLoad = ['injected-fetch.js', 'injected-xhr.js'];
+
+for (const path of scriptsToLoad) {
+  const script = document.createElement('script');
+  script.src = chrome.runtime.getURL(path);
+  script.onload = function () {
+    // @ts-ignore
+    this.remove();
+  };
+  (document.head || document.documentElement).appendChild(script);
+}

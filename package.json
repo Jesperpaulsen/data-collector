@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm cp:worker && pnpm cp:injected && cross-env NODE_ENV=production INLINE_RUNTIME_CHUNK=false vite build",
-    "cp:worker": "tsc worker/*.ts --outDir public --module es2020",
-    "cp:injected": "cp worker/injected.js ./public"
+    "build": "pnpm cp:worker && pnpm cp:injected-fetch && cross-env NODE_ENV=production INLINE_RUNTIME_CHUNK=false vite build",
+    "cp:worker": "tsc worker/*/**.ts --outDir public --module es2020 --skipLibCheck",
+    "cp:injected-fetch": "cp worker/injected-scripts/injected-fetch.js ./public"
   },
   "dependencies": {
     "classnames": "^2.3.1",
@@ -17,6 +17,7 @@
     "@prefresh/vite": "^2.0.1",
     "@tailwindcss/typography": "^0.3.1",
     "@types/chrome": "^0.0.154",
+    "@types/node": "^16.7.12",
     "@typescript-eslint/eslint-plugin": "^4.14.0",
     "@typescript-eslint/parser": "^4.14.0",
     "autoprefixer": "^10.2.1",
