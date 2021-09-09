@@ -14,7 +14,6 @@ var headerListener = function (details) {
     console.log(details.url + ': ' + fileSize);
   }
 };
-export { headerListener };
 try {
   chrome.webRequest.onHeadersReceived.addListener(headerListener, { urls: ['<all_urls>'] }, ['responseHeaders']);
   chrome.runtime.onMessage.addListener(function (details) {
@@ -23,3 +22,4 @@ try {
 } catch (e) {
   console.error(e);
 }
+export {};

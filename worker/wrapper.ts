@@ -1,3 +1,4 @@
+import webWorker from './worker';
 // TODO: Look into why manifest v3 doesn't work with module imports
 const headerListener = (details: chrome.webRequest.WebResponseHeadersDetails) => {
   var fileSize;
@@ -11,8 +12,6 @@ const headerListener = (details: chrome.webRequest.WebResponseHeadersDetails) =>
     console.log(`${details.url}: ${fileSize}`);
   }
 };
-
-export { headerListener };
 
 try {
   chrome.webRequest.onHeadersReceived.addListener(headerListener, { urls: ['<all_urls>'] }, ['responseHeaders']);

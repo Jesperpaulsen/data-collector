@@ -25,6 +25,7 @@ const bruteForceBodyType = async (body) => {
 const parseBody = async (body, headers) => {
   const contentTypeHeader = headers.get('content-type');
   if (contentTypeHeader) {
+    // These methods are currently fetched from the injected-xhr after the scripts are mounted to the dom
     const type = getContentTypeHeader(headers.get('content-type'));
     const bodyParser = bodyParserMethods[type];
     return {

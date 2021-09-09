@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['plugin:react/essential', 'standard', 'plugin:prettier/recommended'],
+  extends: ['plugin:react/essential', 'standard', 'plugin:prettier/recommended', "prettier"],
   parserOptions: {
     ecmaVersion: 12,
     parser: '@typescript-eslint/parser',

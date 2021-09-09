@@ -1,11 +1,12 @@
-var getContentType = function (header) {
-  var knownHeaderTypes = ['arraybuffer', 'blob', 'json', 'text'];
-  if (header in knownHeaderTypes) return header;
+const getContentType = (header: string): XMLHttpRequestResponseType => {
+  const knownHeaderTypes: XMLHttpRequestResponseType[] = ['arraybuffer', 'blob', 'json', 'text'];
+  if (header in knownHeaderTypes) return header as XMLHttpRequestResponseType;
   return 'json';
 };
-var getContentTypeHeader = function (header) {
+
+const getContentTypeHeader = (header: string | null): XMLHttpRequestResponseType => {
   if (!header) return 'json';
-  var contentTypeHeaders = header.split('/');
+  const contentTypeHeaders = header.split('/');
   if (contentTypeHeaders[0] === 'text') {
     return 'text';
   } else if (contentTypeHeaders[0] === 'application' && contentTypeHeaders.length > 1) {
@@ -14,20 +15,22 @@ var getContentTypeHeader = function (header) {
     return 'text';
   }
 };
-var originalXHR = window.XMLHttpRequest;
+
+const originalXHR = window.XMLHttpRequest;
+
 function mockXHR() {
-  var xhr = new originalXHR();
+  const xhr = new originalXHR();
   xhr.addEventListener(
     'readystatechange',
     function async() {
       if (xhr.readyState === 4) {
-        var networkCall = {
+        const networkCall: NetworkCall = {
           headers: xhr.getAllResponseHeaders(),
           type: getContentTypeHeader(xhr.getResponseHeader('content-type')),
           url: xhr.responseURL,
           data: xhr.response,
         };
-        window.postMessage({ type: 'networkCall', networkCall: networkCall }, '*');
+        window.postMessage({ type: 'networkCall', networkCall }, '*');
       }
     },
     false
