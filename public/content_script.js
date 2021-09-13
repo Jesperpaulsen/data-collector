@@ -58,6 +58,7 @@ var handleIncommingMessage = function (_a) {
   var type = _a.type,
     url = _a.url,
     headers = _a.headers,
+    timestamp = _a.timestamp,
     data = _a.data;
   var bodySize = calculateBodySize(data, type) || 0;
   var headerSize = calculateBodySize(headers, MESSAGE_TYPES.TEXT) || 0;
@@ -67,6 +68,8 @@ var handleIncommingMessage = function (_a) {
     size: size,
     url: url,
     headers: headers,
+    timestamp: timestamp,
+    manuallyCalculated: true,
   };
   sendMessage(networkCall);
 };
@@ -84,12 +87,13 @@ window.addEventListener(
         url: networkCall.url,
         headers: networkCall.headers,
         data: networkCall.data,
+        timestamp: networkCall.timestamp,
       });
     }
   },
   false
 );
-var scriptsToLoad = ['injected-fetch.js', 'injected-xhr.js'];
+var scriptsToLoad = ['injected-xhr.js', 'injected-fetch.js'];
 for (var _i = 0, scriptsToLoad_1 = scriptsToLoad; _i < scriptsToLoad_1.length; _i++) {
   var path = scriptsToLoad_1[_i];
   var script = document.createElement('script');

@@ -4,4 +4,6 @@ declare interface NetworkCall {
   data?: any;
   url: string;
   headers: string;
+  timestamp: number;
+  manuallyCalculated?: boolean;
 }

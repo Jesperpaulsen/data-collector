@@ -26,6 +26,7 @@ function mockXHR() {
           type: getContentTypeHeader(xhr.getResponseHeader('content-type')),
           url: xhr.responseURL,
           data: xhr.response,
+          timestamp: Math.floor(Date.now().valueOf() / 100),
         };
         window.postMessage({ type: 'networkCall', networkCall: networkCall }, '*');
       }

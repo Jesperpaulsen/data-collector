@@ -45,11 +45,13 @@ const handleIncommingMessage = ({
   type,
   url,
   headers,
+  timestamp,
   data,
 }: {
   type: NetworkCall['type'];
   url: string;
   headers: string;
+  timestamp: number;
   data: any;
 }) => {
   const bodySize = calculateBodySize(data, type as MESSAGE_TYPES) || 0;
@@ -60,6 +62,8 @@ const handleIncommingMessage = ({
     size,
     url,
     headers,
+    timestamp,
+    manuallyCalculated: true,
   };
   sendMessage(networkCall);
 };
@@ -77,6 +81,7 @@ window.addEventListener(
         url: networkCall.url,
         headers: networkCall.headers,
         data: networkCall.data,
+        timestamp: networkCall.timestamp,
       });
     }
   },

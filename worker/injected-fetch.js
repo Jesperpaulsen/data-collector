@@ -54,6 +54,7 @@ window.fetch = function () {
       .then((response) => {
         const resClone = response.clone();
         const headerString = parseHeaders(resClone.headers);
+        const timestamp = Math.floor(Date.now().valueOf() / 100);
         parseBody(resClone, resClone.headers).then((result) => {
           if (result) {
             window.postMessage(
@@ -65,6 +66,7 @@ window.fetch = function () {
                   headers: headerString,
                   data: result.data,
                   headers: headerString,
+                  timestamp,
                 },
               },
               '*'
