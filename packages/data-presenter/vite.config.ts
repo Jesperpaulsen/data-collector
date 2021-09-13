@@ -8,4 +8,7 @@ export default defineConfig({
     jsxInject: `import { h } from 'preact'`
   },
   plugins: [preactRefresh()],
+  build: {
+    outDir: '../../dist'
+  }
 });

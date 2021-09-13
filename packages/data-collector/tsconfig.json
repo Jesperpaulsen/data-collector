@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@data-collector/types": ["../types/src"]
+    }
+  },
+  "include": ["./src","__tests__/**/**.ts"],
+  "references": [{ "path": "../types/tsconfig.json" }]
+}
