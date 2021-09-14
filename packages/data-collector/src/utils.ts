@@ -1,10 +1,11 @@
+export const knownHeaderTypes: XMLHttpRequestResponseType[] = [
+  'arraybuffer',
+  'blob',
+  'json',
+  'text'
+]
+
 export const getContentType = (header: string): XMLHttpRequestResponseType => {
-  const knownHeaderTypes: XMLHttpRequestResponseType[] = [
-    'arraybuffer',
-    'blob',
-    'json',
-    'text'
-  ]
   if (header in knownHeaderTypes) return header as XMLHttpRequestResponseType
   return 'json'
 }

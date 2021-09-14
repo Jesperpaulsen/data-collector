@@ -1,16 +1,14 @@
-// Something goes wrong when ts compiles this to JS. This file is therefore stored as JS for now.
 import { getContentTypeHeader } from './utils'
-// TODO: Refactor this with parcel or similar
 
-const bodyParserMethods = {
+const bodyParserMethods: { [key: string]: (body: any) => Promise<void> } = {
   json: (body) => body.json(),
   text: (body) => body.text(),
   blob: (body) => body.blob(),
   arraybuffer: (body) => body.arrayBuffer()
 }
 
-const bruteForceBodyType = async (body) => {
-  for (const { type, parserMethod } of Object.entries(bodyParserMethods)) {
+const bruteForceBodyType = async (body: any) => {
+  for (const [type, parserMethod] of Object.entries(bodyParserMethods)) {
     try {
       const data = await parserMethod(body.clone())
       return { data, type }
@@ -20,11 +18,11 @@ const bruteForceBodyType = async (body) => {
   }
 }
 
-const parseBody = async (body, headers) => {
+const parseBody = async (body: any, headers: Headers) => {
   const contentTypeHeader = headers.get('content-type')
   if (contentTypeHeader) {
     const type = getContentTypeHeader(headers.get('content-type'))
-    const bodyParser = bodyParserMethods[type]
+    const bodyParser = bodyParserMethods[type] || bodyParserMethods.text
     return {
       type,
       data: await bodyParser(body)
@@ -34,7 +32,7 @@ const parseBody = async (body, headers) => {
   }
 }
 
-const parseHeaders = (headers) => {
+const parseHeaders = (headers: Headers) => {
   let headerString = ''
   headers.forEach((value, name) => {
     headerString += `${name}: ${value}`
@@ -43,11 +41,13 @@ const parseHeaders = (headers) => {
 }
 
 const constantMock = window.fetch
+// @ts-ignore
 window.fetch = constantMock
   ? function () {
       // console.log(arguments.headers.values());
       return new Promise((resolve, reject) => {
         constantMock
+          // @ts-ignore
           .apply(this, arguments)
           .then((response) => {
             const resClone = response.clone()
@@ -55,6 +55,7 @@ window.fetch = constantMock
             const timestamp = Math.floor(Date.now().valueOf() / 100)
             parseBody(resClone, resClone.headers).then((result) => {
               if (result) {
+                console.log('yo')
                 window.postMessage(
                   {
                     type: 'networkCall',
