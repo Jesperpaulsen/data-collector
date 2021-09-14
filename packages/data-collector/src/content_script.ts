@@ -25,10 +25,10 @@ let messagesToSend: NetworkCall[] = []
 
 const sendMessages = () => {
   const messages = [...messagesToSend]
+  console.log(messages)
   messagesToSend = []
   for (const message of messages) {
     try {
-      console.log(message)
       chrome.runtime.sendMessage({ type: 'networkCall', networkCall: message })
     } catch (e) {
       console.log(e)
@@ -72,7 +72,7 @@ const handleIncommingMessage = ({
 window.addEventListener(
   'message',
   (event: MessageEvent<{ type: string; networkCall: NetworkCall }>) => {
-    if (event.source !== window) {
+    if (event.source !== window || !event.data?.networkCall) {
       return
     }
     if (event.data?.type === 'networkCall') {

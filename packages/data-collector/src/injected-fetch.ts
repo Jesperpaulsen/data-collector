@@ -55,7 +55,6 @@ window.fetch = constantMock
             const timestamp = Math.floor(Date.now().valueOf() / 100)
             parseBody(resClone, resClone.headers).then((result) => {
               if (result) {
-                console.log('yo')
                 window.postMessage(
                   {
                     type: 'networkCall',

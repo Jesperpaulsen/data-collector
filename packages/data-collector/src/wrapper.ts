@@ -1,5 +1,14 @@
 import { NetworkCall } from '@data-collector/types'
 
+import { DataReporter } from './services/DataReporter'
+
+const dataReporter = new DataReporter('')
+
+chrome.alarms.create({ delayInMinutes: dataReporter.interval })
+chrome.alarms.onAlarm.addListener(() => {
+  dataReporter.sendRequests()
+})
+
 const urlHashMapWithSize: { [hash: string]: NetworkCall } = {}
 
 const networkCallsMissingSize: { [url: string]: NetworkCall } = {}
@@ -31,6 +40,17 @@ export const createNetworkCallHash = (url: string, timestamp: number) => {
   return hash
 }
 
+const checkIfPotentialConflict = (
+  existingNetworkCall: NetworkCall,
+  networkCall: NetworkCall
+) => {
+  return (
+    (existingNetworkCall.manuallyCalculated &&
+      !networkCall.manuallyCalculated) ||
+    (networkCall.manuallyCalculated && !existingNetworkCall.manuallyCalculated)
+  )
+}
+
 export const storeNetworkCall = (networkCall: NetworkCall) => {
   const networkCallHash = createNetworkCallHash(
     networkCall.url,
@@ -43,16 +63,10 @@ export const storeNetworkCall = (networkCall: NetworkCall) => {
     networkCallsMissingSize[networkCall.url] = networkCall
 
   if (existingNetworkCall) {
-    if (
-      existingNetworkCall.size &&
-      networkCall.size &&
-      ((existingNetworkCall.manuallyCalculated &&
-        !networkCall.manuallyCalculated) ||
-        (networkCall.manuallyCalculated &&
-          !existingNetworkCall.manuallyCalculated))
-    ) {
+    if (!existingNetworkCall.size || !networkCall.size) return
+    if (checkIfPotentialConflict(existingNetworkCall, networkCall)) {
       console.log('Found conflict for url: ' + networkCall.url)
-      if (existingNetworkCall.size > networkCall.size) {
+      if (existingNetworkCall.size > networkCall!.size) {
         allRequests[url] = existingNetworkCall
       } else {
         allRequests[url] = networkCall
