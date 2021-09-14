@@ -6,22 +6,23 @@ const networkCallsMissingSize: { [url: string]: NetworkCall } = {}
 
 const allRequests: { [url: string]: NetworkCall } = {}
 
-const generateHash = (stringToHash: string) => {
+export const generateHash = (stringToHash: string) => {
   let hash = 0
-  let chr
   if (stringToHash.length === 0) return hash
   for (let i = 0; i < stringToHash.length; i++) {
-    chr = stringToHash.charCodeAt(i)
+    const chr = stringToHash.charCodeAt(i)
     hash = (hash << 5) - hash + chr
     hash |= 0
   }
   return hash
 }
 
-const createNetworkCallAndTimestampString = (url: string, timestamp: number) =>
-  `${url}${timestamp}`
+export const createNetworkCallAndTimestampString = (
+  url: string,
+  timestamp: number
+) => `${url}${timestamp}`
 
-const createNetworkCallHash = (url: string, timestamp: number) => {
+export const createNetworkCallHash = (url: string, timestamp: number) => {
   const urlAndTimestampString = createNetworkCallAndTimestampString(
     url,
     timestamp
@@ -30,7 +31,7 @@ const createNetworkCallHash = (url: string, timestamp: number) => {
   return hash
 }
 
-const storeNetworkCall = (networkCall: NetworkCall) => {
+export const storeNetworkCall = (networkCall: NetworkCall) => {
   const networkCallHash = createNetworkCallHash(
     networkCall.url,
     networkCall.timestamp
@@ -78,7 +79,7 @@ setInterval(() => {
 }, 5000)
 
 // TODO: Look into why manifest v3 doesn't work with module imports
-const headerListener = (
+export const headerListener = (
   details: chrome.webRequest.WebResponseHeadersDetails
 ) => {
   let fileSize

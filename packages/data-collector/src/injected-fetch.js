@@ -1,8 +1,6 @@
 // Something goes wrong when ts compiles this to JS. This file is therefore stored as JS for now.
-
+import { getContentTypeHeader } from './utils'
 // TODO: Refactor this with parcel or similar
-
-const constantMock = window.fetch
 
 const bodyParserMethods = {
   json: (body) => body.json(),
@@ -25,8 +23,6 @@ const bruteForceBodyType = async (body) => {
 const parseBody = async (body, headers) => {
   const contentTypeHeader = headers.get('content-type')
   if (contentTypeHeader) {
-    // These methods are currently fetched from the injected-xhr after the scripts are mounted to the dom
-    // eslint-disable-next-line no-undef
     const type = getContentTypeHeader(headers.get('content-type'))
     const bodyParser = bodyParserMethods[type]
     return {
@@ -46,38 +42,41 @@ const parseHeaders = (headers) => {
   return headerString
 }
 
-window.fetch = function () {
-  // console.log(arguments.headers.values());
-  return new Promise((resolve, reject) => {
-    constantMock
-      .apply(this, arguments)
-      .then((response) => {
-        const resClone = response.clone()
-        const headerString = parseHeaders(resClone.headers)
-        const timestamp = Math.floor(Date.now().valueOf() / 100)
-        parseBody(resClone, resClone.headers).then((result) => {
-          if (result) {
-            window.postMessage(
-              {
-                type: 'networkCall',
-                networkCall: {
-                  type: result.type,
-                  url: resClone.url,
-                  headers: headerString,
-                  data: result.data,
-                  timestamp
-                }
-              },
-              '*'
-            )
-          } else {
-            console.log(`Unable to parse data from url: ${resClone.url}`)
-          }
-        })
-        resolve(response)
+const constantMock = window.fetch
+window.fetch = constantMock
+  ? function () {
+      // console.log(arguments.headers.values());
+      return new Promise((resolve, reject) => {
+        constantMock
+          .apply(this, arguments)
+          .then((response) => {
+            const resClone = response.clone()
+            const headerString = parseHeaders(resClone.headers)
+            const timestamp = Math.floor(Date.now().valueOf() / 100)
+            parseBody(resClone, resClone.headers).then((result) => {
+              if (result) {
+                window.postMessage(
+                  {
+                    type: 'networkCall',
+                    networkCall: {
+                      type: result.type,
+                      url: resClone.url,
+                      headers: headerString,
+                      data: result.data,
+                      timestamp
+                    }
+                  },
+                  '*'
+                )
+              } else {
+                console.log(`Unable to parse data from url: ${resClone.url}`)
+              }
+            })
+            resolve(response)
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
+    }
+  : undefined

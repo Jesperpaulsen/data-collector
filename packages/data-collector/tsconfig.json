@@ -4,7 +4,8 @@
     "outDir": "./dist",
     "paths": {
       "@data-collector/types": ["../types/src"]
-    }
+    },
+    "module": "ESNext"
   },
   "include": ["./src","__tests__/**/**.ts"],
   "references": [{ "path": "../types/tsconfig.json" }]

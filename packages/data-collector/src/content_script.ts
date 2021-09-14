@@ -95,7 +95,7 @@ for (const path of scriptsToLoad) {
   script.src = chrome.runtime.getURL(path)
   script.onload = function () {
     // @ts-ignore
-    this.remove()
+    // this.remove()
   }
   ;(document.head || document.documentElement).appendChild(script)
 }

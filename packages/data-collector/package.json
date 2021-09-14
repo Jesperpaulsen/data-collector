@@ -11,7 +11,7 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "build": "esbuild src/**.ts --define:process.env.NODE_ENV=\"production\" --bundle --platform=node --sourcemap --outdir=../../dist && pnpm run cp:injected-fetch && pnpm run cp:manifest",
+    "build": "esbuild src/** --define:process.env.NODE_ENV=\"production\" --bundle --format=iife --sourcemap --outdir=../../dist && pnpm run cp:manifest",
     "cp:injected-fetch": "cp src/injected-fetch.js ../../dist",
     "cp:manifest": "cp manifest.json ../../dist && cp site.webmanifest ../../dist"
   },
