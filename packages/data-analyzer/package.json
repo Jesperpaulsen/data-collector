@@ -1,0 +1,36 @@
+{
+  "name": "data-analyzer",
+  "version": "1.0.0",
+  "description": "Responsible for serving data-collector and data-presenter",
+  "main": "src/wrapper.ts",
+  "scripts": {
+    "dev": "esbuild src/** --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --watch",
+    "test": "jest --watchAll --no-cache --detectOpenHandles",
+    "prettier": "prettier --check src/",
+    "prettier:fix": "prettier --write src/",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "yarn lint --fix",
+    "verify": "run-p prettier lint",
+    "verify:fix": "yarn prettier:fix && yarn lint:fix",
+    "build": "esbuild src/** --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist"
+  },
+  "author": "Jesper Paulsen",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.154",
+    "@types/cors": "^2.8.12",
+    "@types/node": "^16.7.12",
+    "supertest": "^6.1.6"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "typings": "dist/src/index.d.ts"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.1",
+    "firebase-admin": "^9.11.1"
+  }
+}
