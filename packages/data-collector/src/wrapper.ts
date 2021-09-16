@@ -1,4 +1,4 @@
-import { NetworkCall } from '@data-collector/types'
+import { NetworkCall } from '../../types/src/network-call'
 
 import { DataReporter } from './services/DataReporter'
 

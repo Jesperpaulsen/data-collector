@@ -10,6 +10,6 @@ export const requireAdmin = (
   const user = req.currentUser
   if (!user) throw new NotAuthorizedError()
   const role = user.role
-  if (!role || role !== 'admin') throw new NotAuthorizedError()
+  if (role !== 'admin') throw new NotAuthorizedError()
   next()
 }

@@ -8,4 +8,5 @@ packages/*/coverage
 .vscode/
 dist
 serviceAccount.json
+appEngineKey.json
 **.log

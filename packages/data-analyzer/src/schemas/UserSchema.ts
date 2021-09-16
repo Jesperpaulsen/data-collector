@@ -30,11 +30,16 @@ const UserSchema = (update?: true): Schema => ({
     isEmail: true,
     errorMessage: 'E-mail is not valid'
   },
-  role: {
+  password: {
     in: ['body'],
     exists: update,
     isString: true,
-    errorMessage: 'Role is not valid'
+    isLength: {
+      options: {
+        min: 6
+      }
+    },
+    errorMessage: 'Password is not valid'
   }
 })
 

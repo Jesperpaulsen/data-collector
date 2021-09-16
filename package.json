@@ -8,7 +8,8 @@
     "verify": "pnpm recursive run verify --stream",
     "prettier": "pnpm recursive run prettier",
     "build": "rm -rf ./dist && pnpm recursive run build",
-    "test": "NODE_ENV=development pnpm recursive run test --stream"
+    "test": "NODE_ENV=development pnpm recursive run test --stream",
+    "emulators": "export GOOGLE_APPLICATION_CREDENTIALS=\"./packages/data-analyzer/appEngineKey.json\" && firebase emulators:start"
   },
   "author": "@CryogenicPlanet",
   "license": "ISC",
@@ -42,11 +43,11 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "husky": "^6.0.0",
-    "jest": "^27.0.3",
+    "jest": "^27.2.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.0",
     "prettier-config-standard": "^4.0.0",
-    "ts-jest": "^27.0.2",
+    "ts-jest": "^27.0.5",
     "tsconfig-paths-jest": "^0.0.1",
     "typescript": "^4.3.2",
     "wait-on": "^5.3.0"

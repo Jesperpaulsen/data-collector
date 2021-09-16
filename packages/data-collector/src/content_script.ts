@@ -1,4 +1,4 @@
-import { NetworkCall } from '@data-collector/types'
+import { NetworkCall } from '../../types/src/network-call'
 
 enum MESSAGE_TYPES {
   ARRAY_BUFFER = 'arraybuffer',
