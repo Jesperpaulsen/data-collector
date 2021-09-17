@@ -4,7 +4,6 @@
   "description": "An example typescript monorepo",
   "scripts": {
     "dev": "pnpm recursive run dev",
-    "prepublish": "pnpm build",
     "verify": "pnpm recursive run verify --stream",
     "prettier": "pnpm recursive run prettier",
     "build": "rm -rf ./dist && pnpm recursive run build",
