@@ -3,7 +3,12 @@ import admin from 'firebase-admin'
 import { Auth } from './auth'
 import { Firestore } from './firestore'
 
-const serviceAccount = require('../../serviceAccount.json')
+let serviceAccount = {}
+try {
+  serviceAccount = require('../../serviceAccount.json')
+} catch (e) {
+  console.log(e)
+}
 
 class FirebaseAdmin {
   admin: admin.app.App
