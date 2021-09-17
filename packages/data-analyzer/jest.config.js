@@ -8,6 +8,5 @@ module.exports = {
     '^.+\\.(ts|tsx|js|jsx)?$': 'ts-jest'
   },
   setupFiles,
-  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
-  transformIgnorePatterns: ['node_modules/(?!@node-fetch)/']
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts']
 }
