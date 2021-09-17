@@ -3,7 +3,7 @@ import admin from 'firebase-admin'
 import { Auth } from './auth'
 import { Firestore } from './firestore'
 
-let serviceAccount = {}
+let serviceAccount
 try {
   serviceAccount = require('../../serviceAccount.json')
 } catch (e) {
@@ -18,7 +18,9 @@ class FirebaseAdmin {
   constructor() {
     const options: admin.AppOptions = {
       projectId: 'data-collector-ff33b',
-      credential: admin.credential.cert(serviceAccount)
+      credential: serviceAccount
+        ? admin.credential.cert(serviceAccount)
+        : admin.credential.applicationDefault()
     }
     const initializedAdmin = admin.initializeApp(options)
     this.admin = initializedAdmin
