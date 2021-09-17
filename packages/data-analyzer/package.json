@@ -14,7 +14,7 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "build": "esbuild src/** --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist"
+    "build": "esbuild src/** --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --platform=node"
   },
   "author": "Jesper Paulsen",
   "license": "MIT",
