@@ -16,10 +16,8 @@ function mockXHR() {
           url: xhr.responseURL,
           data: xhr.response,
           timestamp: Math.floor(Date.now().valueOf() / 100),
-          host: {
-            pathname: window.location.pathname,
-            origin: window.location.origin
-          }
+          hostPathname: window.location.pathname,
+          hostOrigin: window.location.origin
         }
         window.postMessage({ type: 'networkCall', networkCall }, '*')
       }

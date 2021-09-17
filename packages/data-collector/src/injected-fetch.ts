@@ -63,10 +63,8 @@ window.fetch = constantMock
                   headers: headerString,
                   data: result.data,
                   timestamp,
-                  host: {
-                    pathname: window.location.pathname,
-                    origin: window.location.origin
-                  }
+                  hostPathname: window.location.pathname,
+                  hostOrigin: window.location.origin
                 }
                 window.postMessage(
                   {

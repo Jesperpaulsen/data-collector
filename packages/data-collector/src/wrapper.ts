@@ -79,8 +79,10 @@ export const storeNetworkCall = (networkCall: NetworkCall) => {
   }
 }
 
-const getUrlForTab = async (tabId: number): Promise<NetworkCall['host']> => {
-  const host: NetworkCall['host'] = {
+const getUrlForTab = async (
+  tabId: number
+): Promise<{ origin: string; pathname: string }> => {
+  const host = {
     pathname: '',
     origin: ''
   }
@@ -116,7 +118,8 @@ export const headerListener = (
       url: details.url,
       size: fileSize,
       manuallyCalculated: false,
-      host
+      hostOrigin: host.origin,
+      hostPathname: host.pathname
     }
     storeNetworkCall(networkCall)
   })

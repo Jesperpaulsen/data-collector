@@ -48,15 +48,9 @@ const handleIncommingMessage = ({
   headers,
   timestamp,
   data,
-  host
-}: {
-  type: NetworkCall['type']
-  url: string
-  headers: string
-  timestamp: number
-  data: any
-  host: NetworkCall['host']
-}) => {
+  hostPathname,
+  hostOrigin
+}: NetworkCall) => {
   const bodySize = calculateBodySize(data, type as MESSAGE_TYPES) || 0
   const headerSize = calculateBodySize(headers, MESSAGE_TYPES.TEXT) || 0
   const size = bodySize + headerSize
@@ -66,7 +60,8 @@ const handleIncommingMessage = ({
     url,
     headers,
     timestamp,
-    host,
+    hostPathname,
+    hostOrigin,
     manuallyCalculated: true
   }
   sendMessage(networkCall)
@@ -80,14 +75,7 @@ window.addEventListener(
     }
     if (event.data?.type === 'networkCall') {
       const networkCall = event.data.networkCall
-      handleIncommingMessage({
-        type: networkCall.type,
-        url: networkCall.url,
-        headers: networkCall.headers,
-        data: networkCall.data,
-        timestamp: networkCall.timestamp,
-        host: networkCall.host
-      })
+      handleIncommingMessage(networkCall)
     }
   },
   false
