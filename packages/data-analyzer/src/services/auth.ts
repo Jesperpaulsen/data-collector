@@ -1,12 +1,12 @@
 import admin from 'firebase-admin'
 
-import firebaseAdmin from './firebase-admin'
+import FirebaseAdmin from './firebase-admin'
 
 export class Auth {
   private client: admin.auth.Auth
-  private firebaseAdmin: typeof firebaseAdmin
+  private firebaseAdmin: typeof FirebaseAdmin
 
-  constructor(auth: admin.auth.Auth, firebaseAdmin) {
+  constructor(auth: admin.auth.Auth, firebaseAdmin: typeof FirebaseAdmin) {
     this.client = auth
     this.firebaseAdmin = firebaseAdmin
   }
@@ -33,5 +33,6 @@ export class Auth {
 
   updateUserRole = async (uid: string, role: 'admin' | 'user') => {
     await this.client.setCustomUserClaims(uid, { role })
+    await this.firebaseAdmin.firestore.updateUser(uid, { role })
   }
 }

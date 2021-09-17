@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import admin from 'firebase-admin'
+
+import firebaseAdmin from '../services/firebase-admin'
 
 export const currentUser = async (
   req: Request,
@@ -7,7 +8,6 @@ export const currentUser = async (
   next: NextFunction
 ) => {
   let idToken = ''
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer ')
@@ -17,10 +17,11 @@ export const currentUser = async (
     idToken = req.cookies.__session
   }
   try {
-    const decodedIdToken = await admin.auth().verifyIdToken(idToken, true)
+    const decodedIdToken = await firebaseAdmin.admin
+      .auth()
+      .verifyIdToken(idToken, true)
     req.currentUser = decodedIdToken
   } catch (e) {
-    console.log(e)
     req.currentUser = undefined
   }
   next()

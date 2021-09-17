@@ -26,7 +26,7 @@ router.post(
     try {
       const { email, password, name } = req.body
 
-      const userAuth = await firebaseAdmin.admin.auth.createUser({
+      const userAuth = await firebaseAdmin.auth.createUser({
         displayName: name,
         email,
         password
@@ -39,7 +39,7 @@ router.post(
         role: 'user'
       }
 
-      await firebaseAdmin.admin.firestore.createUser(user)
+      await firebaseAdmin.firestore.createUser(user)
 
       res
         .status(201)
@@ -51,7 +51,7 @@ router.post(
 )
 
 router.put(
-  generateRoute('/admin/:userId'),
+  generateRoute('/admin/:uid'),
   requireAdmin,
   checkSchema({
     uid: {
@@ -74,7 +74,14 @@ router.put(
     }
   }),
   validateRequest,
-  async (req: Request, res: Response, next: NextFunction) => {}
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await firebaseAdmin.auth.updateUserRole(req.params.uid, req.body.role)
+      res.status(200).send()
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
 )
 
 export { router as userRouter }

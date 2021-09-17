@@ -5,16 +5,10 @@ import { Firestore } from './firestore'
 
 const serviceAccount = require('../../serviceAccount.json')
 
-const getAdminObject = (initializedAdmin: admin.app.App) => {
-  return {
-    ...admin,
-    auth: new Auth(initializedAdmin.auth()),
-    firestore: new Firestore(initializedAdmin.firestore())
-  }
-}
-
 class FirebaseAdmin {
-  admin: ReturnType<typeof getAdminObject>
+  admin: admin.app.App
+  auth: Auth
+  firestore: Firestore
 
   constructor() {
     const options: admin.AppOptions = {
@@ -22,7 +16,9 @@ class FirebaseAdmin {
       credential: admin.credential.cert(serviceAccount)
     }
     const initializedAdmin = admin.initializeApp(options)
-    this.admin = getAdminObject(initializedAdmin)
+    this.admin = initializedAdmin
+    this.auth = new Auth(initializedAdmin.auth(), this)
+    this.firestore = new Firestore(initializedAdmin.firestore(), this)
   }
 }
 

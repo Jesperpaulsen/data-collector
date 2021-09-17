@@ -1,7 +1,9 @@
+import admin from 'firebase-admin'
 import request from 'supertest'
 
 import { User } from '@data-collector/types'
 
+import { getAdminToken } from '../../../test/utils'
 import { app } from '../../app'
 import firebaseAdmin from '../../services/firebase-admin'
 
@@ -20,10 +22,10 @@ const createUser = async (expectedCode = 201) => {
 
 describe('route: /users method: POST', () => {
   beforeEach(async () => {
-    const allAccounts = await firebaseAdmin.admin.auth.listUsers()
+    const allAccounts = await firebaseAdmin.auth.listUsers()
     expect(allAccounts.users.length).toBe(0)
 
-    const allUserDocs = await firebaseAdmin.admin.firestore.getAllUsers()
+    const allUserDocs = await firebaseAdmin.firestore.getAllUsers()
     expect(allUserDocs.empty).toBeTruthy()
   })
 
@@ -67,9 +69,7 @@ describe('route: /users method: POST', () => {
   it('returns 201 and creates a user sucessfully', async () => {
     const { res, testUser } = await createUser()
 
-    const userInDatabase = await firebaseAdmin.admin.firestore.getUser(
-      res.body.uid
-    )
+    const userInDatabase = await firebaseAdmin.firestore.getUser(res.body.uid)
 
     expect(userInDatabase?.uid.length).toBe(28)
     expect(userInDatabase?.email).toEqual(testUser.email)
@@ -82,13 +82,29 @@ describe('route: /users method: POST', () => {
 describe('route /users/admin/:uid method: PUT', () => {
   it('returns 401 if not logged in as admin', async () => {
     const { res } = await createUser()
-
-    await request(app).put(`/users/admin/${res.body.uid}`).expect(401)
+    await request(app)
+      .put(`/users/admin/${res.body.uid}`)
+      .send({ role: 'admin' })
+      .expect(401)
   })
 
-  it('updates user to admin', async () => {
+  it('returns 200 and updates user to admin if issued by admin', async () => {
+    const token = await getAdminToken()
     const { res } = await createUser()
+    await request(app)
+      .put(`/users/admin/${res.body.uid}`)
+      .set('authorization', `Bearer ${token}`)
+      .send({ role: 'admin' })
+      .expect(200)
+  })
 
-    await request(app).put(`/users/admin/${res.body.uid}`).expect(200)
+  it('returns 200 and degrades user to user if issued by admin', async () => {
+    const token = await getAdminToken()
+    const { res } = await createUser()
+    await request(app)
+      .put(`/users/admin/${res.body.uid}`)
+      .set('authorization', `Bearer ${token}`)
+      .send({ role: 'user' })
+      .expect(200)
   })
 })

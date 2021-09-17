@@ -10,3 +10,4 @@ dist
 serviceAccount.json
 appEngineKey.json
 **.log
+firebase.vars.js
