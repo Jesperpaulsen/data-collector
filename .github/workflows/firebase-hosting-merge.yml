@@ -34,8 +34,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: pnpm global install
-        run: npm install -g pnpm
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
       - name: Cache .pnpm-store
         uses: actions/cache@v1
         with:
@@ -45,7 +46,7 @@ jobs:
         run: pnpm install
       - uses: w9jds/firebase-action@master
         with:
-          args: emulators:exec --only firestore,auth 'npm run test'
+          args: emulators:exec --only firestore,auth 'npm run test:ci'
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   build_and_deploy:
