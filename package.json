@@ -7,7 +7,7 @@
     "verify": "pnpm recursive run verify --stream",
     "prettier": "pnpm recursive run prettier",
     "build": "rm -rf ./dist && pnpm recursive run build",
-    "test": "pnpm recursive run test --stream",
+    "test": "npm install -g pnpm && pnpm recursive run test --stream",
     "test:ci": "firebase emulators:exec --only firestore,auth 'pnpm recursive run test'",
     "emulators": "export GOOGLE_APPLICATION_CREDENTIALS=\"./packages/data-analyzer/appEngineKey.json\" && firebase emulators:start"
   },
