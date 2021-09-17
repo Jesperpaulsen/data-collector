@@ -9,6 +9,7 @@
     "prettier": "pnpm recursive run prettier",
     "build": "rm -rf ./dist && pnpm recursive run build",
     "test": "NODE_ENV=development pnpm recursive run test --stream",
+    "test:ci": "pnpm recursive run test --stream",
     "emulators": "export GOOGLE_APPLICATION_CREDENTIALS=\"./packages/data-analyzer/appEngineKey.json\" && firebase emulators:start"
   },
   "author": "@CryogenicPlanet",
