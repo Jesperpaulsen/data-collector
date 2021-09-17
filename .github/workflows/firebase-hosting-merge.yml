@@ -41,7 +41,11 @@ jobs:
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: pnpm install
         run: pnpm install
-      - run: pnpm test:ci
+      - uses: w9jds/firebase-action@master
+        with:
+          args: firebase emulators:exec --only firestore,auth 'pnpm recursive run test'
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   build_and_deploy:
     needs: test
     runs-on: ubuntu-latest
