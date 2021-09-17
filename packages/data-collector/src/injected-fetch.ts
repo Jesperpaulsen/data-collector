@@ -1,3 +1,5 @@
+import { NetworkCall } from '@data-collector/types'
+
 import { getContentTypeHeader } from './utils'
 
 const bodyParserMethods: { [key: string]: (body: any) => Promise<void> } = {
@@ -55,16 +57,21 @@ window.fetch = constantMock
             const timestamp = Math.floor(Date.now().valueOf() / 100)
             parseBody(resClone, resClone.headers).then((result) => {
               if (result) {
+                const networkCall: NetworkCall = {
+                  type: result.type as NetworkCall['type'],
+                  url: resClone.url,
+                  headers: headerString,
+                  data: result.data,
+                  timestamp,
+                  host: {
+                    pathname: window.location.pathname,
+                    origin: window.location.origin
+                  }
+                }
                 window.postMessage(
                   {
                     type: 'networkCall',
-                    networkCall: {
-                      type: result.type,
-                      url: resClone.url,
-                      headers: headerString,
-                      data: result.data,
-                      timestamp
-                    }
+                    networkCall
                   },
                   '*'
                 )

@@ -6,4 +6,8 @@ export interface NetworkCall {
   headers: string
   timestamp: number
   manuallyCalculated?: boolean
+  host: {
+    origin: string
+    pathname: string
+  }
 }

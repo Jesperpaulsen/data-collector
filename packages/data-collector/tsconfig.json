@@ -7,6 +7,6 @@
     },
     "module": "ESNext"
   },
-  "include": ["./src","__tests__/**/**.ts"],
+  "include": ["./src"],
   "references": [{ "path": "../types/tsconfig.json" }]
 }

@@ -15,7 +15,11 @@ function mockXHR() {
           type: getContentTypeHeader(xhr.getResponseHeader('content-type')),
           url: xhr.responseURL,
           data: xhr.response,
-          timestamp: Math.floor(Date.now().valueOf() / 100)
+          timestamp: Math.floor(Date.now().valueOf() / 100),
+          host: {
+            pathname: window.location.pathname,
+            origin: window.location.origin
+          }
         }
         window.postMessage({ type: 'networkCall', networkCall }, '*')
       }

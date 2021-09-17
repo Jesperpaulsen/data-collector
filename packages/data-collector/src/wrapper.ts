@@ -1,6 +1,6 @@
 import { NetworkCall } from '../../types/src/network-call'
 
-import { DataReporter } from './services/DataReporter'
+import { DataReporter } from './DataReporter'
 
 const dataReporter = new DataReporter('')
 
@@ -79,18 +79,23 @@ export const storeNetworkCall = (networkCall: NetworkCall) => {
   }
 }
 
-setInterval(() => {
-  console.log(
-    `Missing size for: ${Object.keys(networkCallsMissingSize).length}`
-  )
-  console.log(
-    `Number of kbytes used: ${
-      Object.values(allRequests).reduce((prevValue, currentValue) => {
-        return Number(prevValue) + Number(currentValue.size)
-      }, 0) / 1024
-    }`
-  )
-}, 5000)
+const getUrlForTab = async (tabId: number): Promise<NetworkCall['host']> => {
+  const host: NetworkCall['host'] = {
+    pathname: '',
+    origin: ''
+  }
+  if (!tabId) return host
+  return new Promise((resolve) => {
+    chrome.tabs.get(tabId, (tab) => {
+      if (!tab?.url) return resolve(host)
+
+      const url = new URL(tab.url)
+      host.pathname = url.pathname
+      host.origin = url.origin
+      resolve(host)
+    })
+  })
+}
 
 // TODO: Look into why manifest v3 doesn't work with module imports
 export const headerListener = (
@@ -103,15 +108,18 @@ export const headerListener = (
     headers += `${header.name}: ${header.value}`
     if (header.name.toLowerCase() === 'content-length') fileSize = header.value
   })
-  const networkCall: NetworkCall = {
-    headers,
-    timestamp,
-    type: 'text', // TODO: Check if we need this
-    url: details.url,
-    size: fileSize,
-    manuallyCalculated: false
-  }
-  storeNetworkCall(networkCall)
+  getUrlForTab(details.tabId).then((host) => {
+    const networkCall: NetworkCall = {
+      headers,
+      timestamp,
+      type: 'text', // TODO: Check if we need this
+      url: details.url,
+      size: fileSize,
+      manuallyCalculated: false,
+      host
+    }
+    storeNetworkCall(networkCall)
+  })
 }
 
 try {

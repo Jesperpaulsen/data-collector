@@ -39,7 +39,9 @@
     }
   ],
   "permissions": [
-    "webRequest"
+    "webRequest",
+    "tabs",
+    "alarms"
   ],
   "host_permissions": [
     "<all_urls>"

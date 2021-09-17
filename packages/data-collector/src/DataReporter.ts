@@ -4,7 +4,7 @@
  * * Determine data structure
  */
 
-import { NetworkCall } from '../../../types/src/network-call'
+import { NetworkCall } from '../../types/src/network-call'
 
 export class DataReporter {
   private currentRequests: NetworkCall[] = []
