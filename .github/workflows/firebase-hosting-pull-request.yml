@@ -4,14 +4,18 @@
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
 jobs:
-  test:
+  install:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.0.2
-      - uses: actions/checkout@v2
       - name: Cache .pnpm-store
         uses: actions/cache@v1
         with:
@@ -19,29 +23,38 @@ jobs:
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: pnpm install
         run: pnpm install
-      - run: pnpm test:ci
-  build_and_preview:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+  test:
+    needs: install
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
       - name: Cache .pnpm-store
         uses: actions/cache@v1
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.0.2
-      - name: pnpm Build
+      - name: pnpm install
         run: pnpm install
-      - uses: actions/checkout@v2
+      - uses: w9jds/firebase-action@master
+        with:
+          args: emulators:exec --only firestore,auth 'npm run test:ci'
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  build_and_deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
       - run: pnpm build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATA_COLLECTOR_FF33B }}'
+          channelId: live
           projectId: data-collector-ff33b
