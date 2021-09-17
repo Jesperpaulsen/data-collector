@@ -21,6 +21,7 @@ const keys = [
 const config: { [key: string]: string } = {}
 
 for (const key of keys) {
+  if (!process.env) break
   config[key] = process.env[`FIREBASE_${key}`] || ''
 }
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "esbuild src/index.ts --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --watch",
     "test": "jest --watchAll --no-cache --detectOpenHandles",
-    "test:ci": "jest",
+    "test:ci": "jest --verbose true --silent false",
     "emulators": "export GOOGLE_APPLICATION_CREDENTIALS=\"./appEngineKey.json\" && firebase emulators:start",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",
