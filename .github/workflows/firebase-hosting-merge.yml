@@ -45,7 +45,7 @@ jobs:
         run: pnpm install
       - uses: w9jds/firebase-action@master
         with:
-          args: emulators:exec --only firestore,auth 'pnpm recursive run test'
+          args: emulators:exec --only firestore,auth 'npm run test'
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   build_and_deploy:
