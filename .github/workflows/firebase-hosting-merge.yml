@@ -31,6 +31,12 @@ jobs:
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           FB_SA_KEY: ${{ secrets.FB_SA_KEY }}
+          FIREBASE_apiKey: ${{ secrets.FIREBASE_APIKEY }}
+          FIREBASE_authDomain: ${{ secrets.FIREBASE_AUTHDOMAIN }}
+          FIREBASE_projectId: ${{ secrets.FIREBASE_PROJECTID }}
+          FIREBASE_storageBucket: ${{ secrets.FIREBASE_STORAGEBUCKET }}
+          FIREBASE_messagingSenderId: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
+          FIREBASE_appId: ${{ secrets.FIREBASE_APPID }}
   build_and_deploy:
     needs: test
     runs-on: ubuntu-latest
