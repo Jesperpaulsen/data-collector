@@ -33,11 +33,17 @@ const NetworkCallSchema = (isUpdate?: true): Schema => {
       isNumeric: true,
       errorMessage: 'Size is not valid'
     },
-    url: {
+    targetOrigin: {
       in: ['body'],
       optional,
       isURL: true,
-      errorMessage: 'URL is not valid'
+      errorMessage: 'targetOrigin is not valid'
+    },
+    targetPathname: {
+      in: ['body'],
+      optional,
+      isString: true,
+      errorMessage: 'targetPathname is not valid'
     },
     headers: {
       in: ['body'],
@@ -60,7 +66,7 @@ const NetworkCallSchema = (isUpdate?: true): Schema => {
     hostOrigin: {
       in: ['body'],
       optional,
-      isString: true,
+      isURL: true,
       errorMessage: 'Host origin is not valid'
     },
     hostPathname: {

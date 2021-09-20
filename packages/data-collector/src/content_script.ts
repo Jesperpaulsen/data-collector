@@ -44,7 +44,8 @@ const sendMessage = (networkCall: NetworkCall) => {
 
 const handleIncommingMessage = ({
   type,
-  url,
+  targetOrigin,
+  targetPathname,
   headers,
   timestamp,
   data,
@@ -57,7 +58,8 @@ const handleIncommingMessage = ({
   const networkCall: NetworkCall = {
     type,
     size,
-    url,
+    targetOrigin,
+    targetPathname,
     headers,
     timestamp,
     hostPathname,

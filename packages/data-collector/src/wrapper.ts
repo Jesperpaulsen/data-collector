@@ -52,20 +52,16 @@ const checkIfPotentialConflict = (
 }
 
 export const storeNetworkCall = (networkCall: NetworkCall) => {
-  const networkCallHash = createNetworkCallHash(
-    networkCall.url,
-    networkCall.timestamp
-  )
+  const url = `${networkCall.targetOrigin}/${networkCall.targetPathname}`
+  const networkCallHash = createNetworkCallHash(url, networkCall.timestamp)
   const existingNetworkCall = urlHashMapWithSize[networkCallHash]
-  const url = networkCall.url
 
   if (!networkCall.size && !existingNetworkCall)
-    networkCallsMissingSize[networkCall.url] = networkCall
+    networkCallsMissingSize[url] = networkCall
 
   if (existingNetworkCall) {
     if (!existingNetworkCall.size || !networkCall.size) return
     if (checkIfPotentialConflict(existingNetworkCall, networkCall)) {
-      console.log('Found conflict for url: ' + networkCall.url)
       if (existingNetworkCall.size > networkCall!.size) {
         allRequests[url] = existingNetworkCall
       } else {
@@ -110,12 +106,16 @@ export const headerListener = (
     headers += `${header.name}: ${header.value}`
     if (header.name.toLowerCase() === 'content-length') fileSize = header.value
   })
+
+  const url = new URL(details.url)
+
   getUrlForTab(details.tabId).then((host) => {
     const networkCall: NetworkCall = {
       headers,
       timestamp,
       type: 'text', // TODO: Check if we need this
-      url: details.url,
+      targetOrigin: url.origin,
+      targetPathname: url.pathname,
       size: fileSize,
       manuallyCalculated: false,
       hostOrigin: host.origin,
@@ -137,7 +137,6 @@ try {
   }) {
     const { networkCall } = details
     storeNetworkCall(networkCall as NetworkCall)
-    console.log(`${networkCall.url}: ${networkCall.timestamp}`)
   })
 } catch (e) {
   console.error(e)

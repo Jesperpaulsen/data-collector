@@ -74,6 +74,7 @@ describe('route: /users method: POST', () => {
     expect(userInDatabase?.email).toEqual(testUser.email)
     expect(userInDatabase?.name).toEqual(testUser.name)
     expect(userInDatabase?.role).toEqual('user')
+    // @ts-ignore
     expect(userInDatabase?.password).toBeUndefined()
   })
 })
@@ -95,6 +96,9 @@ describe('route /users/admin/:uid method: PUT', () => {
       .set('authorization', `Bearer ${token}`)
       .send({ role: 'admin' })
       .expect(200)
+
+    const userInDatabase = await firebaseAdmin.firestore.getUser(res.body.uid)
+    expect(userInDatabase).toEqual({ ...res.body, role: 'admin' })
   })
 
   it('returns 200 and degrades user to user if issued by admin', async () => {
@@ -105,5 +109,8 @@ describe('route /users/admin/:uid method: PUT', () => {
       .set('authorization', `Bearer ${token}`)
       .send({ role: 'user' })
       .expect(200)
+
+    const userInDatabase = await firebaseAdmin.firestore.getUser(res.body.uid)
+    expect(userInDatabase).toEqual({ ...res.body, role: 'user' })
   })
 })

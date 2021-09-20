@@ -55,11 +55,15 @@ window.fetch = constantMock
             const resClone = response.clone()
             const headerString = parseHeaders(resClone.headers)
             const timestamp = Math.floor(Date.now().valueOf() / 100)
+            const url = new URL(resClone.url)
+            const targetPathname = url.pathname
+            const targetOrigin = url.origin
             parseBody(resClone, resClone.headers).then((result) => {
               if (result) {
                 const networkCall: NetworkCall = {
                   type: result.type as NetworkCall['type'],
-                  url: resClone.url,
+                  targetPathname,
+                  targetOrigin,
                   headers: headerString,
                   data: result.data,
                   timestamp,

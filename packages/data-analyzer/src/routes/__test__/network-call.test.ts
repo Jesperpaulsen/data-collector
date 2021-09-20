@@ -13,7 +13,8 @@ const testNetworkCall: NetworkCall = {
   hostPathname: '/marketplace/actions/github-action-for-firebase',
   timestamp: Date.now(),
   type: 'json',
-  url: 'https://github.com/users/Jesperpaulsen/feature_preview/indicator_check',
+  targetOrigin: 'https://github.com',
+  targetPathname: '/users/Jesperpaulsen/feature_preview/indicator_check',
   manuallyCalculated: true,
   size: 1855,
   userId: 'iK3zNJGCP0Ry6ENuiZTSTPFVeVW2'
@@ -32,7 +33,7 @@ const createNetworkCall = async (
     .set('authorization', `Bearer ${token}`)
     .send(networkCall)
     .expect(expectedCode)
-  return { testNetworkCall, res }
+  return { res }
 }
 
 describe('route: /network-call method: POST', () => {
@@ -69,7 +70,13 @@ describe('route: /network-call method: POST', () => {
   it('returns 201 when logged in when creating network call', async () => {
     const { token, user } = await getUserToken()
     const networkCall = { ...testNetworkCall, userId: user.uid }
-    await createNetworkCall(networkCall, token, 201)
+    const { res } = await createNetworkCall(networkCall, token, 201)
+
+    const networkCallInDatabase = await firebaseAdmin.firestore.getNetworkCall(
+      res.body.uid
+    )
+
+    expect(networkCallInDatabase).toEqual({ ...networkCall, uid: res.body.uid })
   })
 })
 
@@ -114,6 +121,18 @@ describe('route: /network-call/:uid method: PUT', () => {
     const networkCall = { ...testNetworkCall, userId: user.uid! }
     const uid = await firebaseAdmin.firestore.createNetworkCall(networkCall)
     const networkCallWithUid = { ...networkCall, uid }
-    await createNetworkCall(networkCallWithUid, token, 200, true)
+
+    const { res } = await createNetworkCall(
+      networkCallWithUid,
+      token,
+      200,
+      true
+    )
+
+    const networkCallInDatabase = await firebaseAdmin.firestore.getNetworkCall(
+      res.body.uid
+    )
+
+    expect(networkCallInDatabase).toEqual({ ...networkCall, uid: res.body.uid })
   })
 })

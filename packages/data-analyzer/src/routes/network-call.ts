@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { checkSchema, matchedData } from 'express-validator'
+import { checkSchema } from 'express-validator'
 
 import { NetworkCall } from '@data-collector/types'
 
@@ -72,7 +72,7 @@ router.put(
         networkCall.uid,
         networkCall
       )
-      return res.status(200).send()
+      return res.status(200).send({ uid: networkCall.uid })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }
