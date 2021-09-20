@@ -1,6 +1,6 @@
 import admin from 'firebase-admin'
 
-import { User } from '@data-collector/types'
+import { NetworkCall, User } from '@data-collector/types'
 
 import FirebaseAdmin from './firebase-admin'
 
@@ -8,6 +8,7 @@ export class Firestore {
   private client: admin.firestore.Firestore
   private firebaseAdmin: typeof FirebaseAdmin
   private userCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  private networkCallCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
 
   constructor(
     firestore: admin.firestore.Firestore,
@@ -16,6 +17,7 @@ export class Firestore {
     this.client = firestore
     this.firebaseAdmin = firebaseAdmin
     this.userCollection = this.client.collection('users')
+    this.networkCallCollection = this.client.collection('networkCall')
   }
 
   getAllUsers = () => {
@@ -33,5 +35,19 @@ export class Firestore {
 
   updateUser = async (uid: User['uid'], user: Partial<User>) => {
     return this.userCollection.doc(uid).update(user)
+  }
+
+  deleteUser = (uid: User['uid']) => {
+    return this.userCollection.doc(uid).delete()
+  }
+
+  getAllNetworkCalls = () => {
+    return this.networkCallCollection.get()
+  }
+
+  createNetworkCall = async (networkCall: NetworkCall) => {
+    const reference = this.networkCallCollection.doc()
+    const networkCallToAdd = { uid: reference.id, ...networkCall }
+    return reference.set(networkCallToAdd)
   }
 }

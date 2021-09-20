@@ -1,4 +1,3 @@
-import admin from 'firebase-admin'
 import request from 'supertest'
 
 import { User } from '@data-collector/types'
