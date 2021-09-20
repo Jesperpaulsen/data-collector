@@ -1,4 +1,5 @@
 export interface NetworkCall {
+  uid?: string
   type: XMLHttpRequestResponseType
   size?: number | null
   data?: any
@@ -8,4 +9,5 @@ export interface NetworkCall {
   manuallyCalculated?: boolean
   hostOrigin: string
   hostPathname: string
+  userId?: string
 }

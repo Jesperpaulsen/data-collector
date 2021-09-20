@@ -60,3 +60,36 @@ export const getAdminToken = async () => {
   )
   return res.user.getIdToken()
 }
+
+export const getUserToken = async () => {
+  const testUser: Partial<User> = {
+    email: 'test@test.com',
+    name: 'Test testesen',
+    role: 'user'
+  }
+
+  const password = 'test123'
+
+  const authUser = await firebaseAdmin.auth.createUser({
+    email: testUser.email!,
+    displayName: testUser.name!,
+    password
+  })
+
+  const user: User = {
+    email: testUser.email!,
+    name: testUser.name!,
+    role: testUser.role!,
+    uid: authUser.uid
+  }
+  await firebaseAdmin.firestore.createUser(user)
+
+  const res = await signInWithEmailAndPassword(
+    authMock,
+    testUser.email!,
+    password
+  )
+
+  const token = await res.user.getIdToken()
+  return { token, user }
+}
