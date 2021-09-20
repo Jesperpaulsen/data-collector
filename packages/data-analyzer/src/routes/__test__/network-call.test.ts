@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import { NetworkCall } from '@data-collector/types'
+import { NetworkCall, User } from '@data-collector/types'
 
 import { getUserToken } from '../../../test/utils'
 import { app } from '../../app'
@@ -22,10 +22,13 @@ const testNetworkCall: NetworkCall = {
 const createNetworkCall = async (
   networkCall: NetworkCall,
   token: string,
-  expectedCode = 201
+  expectedCode = 201,
+  isUpdate = false
 ) => {
   const res = await request(app)
-    .post('/network-call')
+    [isUpdate ? 'put' : 'post'](
+      `/network-call${isUpdate ? `/${networkCall.uid}` : ''}`
+    )
     .set('authorization', `Bearer ${token}`)
     .send(networkCall)
     .expect(expectedCode)
@@ -67,5 +70,50 @@ describe('route: /network-call method: POST', () => {
     const { token, user } = await getUserToken()
     const networkCall = { ...testNetworkCall, userId: user.uid }
     await createNetworkCall(networkCall, token, 201)
+  })
+})
+
+describe('route: /network-call/:uid method: PUT', () => {
+  let user: User
+  let token: string
+
+  beforeEach(async () => {
+    const allNetworkCallDocs =
+      await firebaseAdmin.firestore.getAllNetworkCalls()
+    expect(allNetworkCallDocs.empty).toBeTruthy()
+    const res = await getUserToken()
+    user = res.user
+    token = res.token
+  })
+
+  it('returns 401 if not logged in when updating network call', async () => {
+    await createNetworkCall(testNetworkCall, '', 401, true)
+  })
+
+  it('returns 400 if userId is wrong when updating network call', async () => {
+    const { token } = await getUserToken()
+    const networkCall = { ...testNetworkCall, userId: '12345test' }
+    await createNetworkCall(networkCall, token, 400, true)
+  })
+
+  it('returns 401 if trying to update a network call for a different user', async () => {
+    const { token } = await getUserToken()
+    const uid = await firebaseAdmin.firestore.createNetworkCall(testNetworkCall)
+    const networkCall = { ...testNetworkCall, uid }
+    await createNetworkCall(networkCall, token, 401, true)
+  })
+
+  it('returns 400 if uid for network call is missing when updating network call', async () => {
+    const networkCall = { ...testNetworkCall, userId: user.uid }
+    delete networkCall.uid
+    await createNetworkCall(networkCall, token, 400, true)
+  })
+
+  it('returns 200 when logged in when updating network call', async () => {
+    const { token, user } = await getUserToken()
+    const networkCall = { ...testNetworkCall, userId: user.uid! }
+    const uid = await firebaseAdmin.firestore.createNetworkCall(networkCall)
+    const networkCallWithUid = { ...networkCall, uid }
+    await createNetworkCall(networkCallWithUid, token, 200, true)
   })
 })

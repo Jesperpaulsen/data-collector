@@ -63,7 +63,7 @@ export const getAdminToken = async () => {
 
 export const getUserToken = async () => {
   const testUser: Partial<User> = {
-    email: 'test@test.com',
+    email: `test-${Math.random() * 100}@test.com`,
     name: 'Test testesen',
     role: 'user'
   }

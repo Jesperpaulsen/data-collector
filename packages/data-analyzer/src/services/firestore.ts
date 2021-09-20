@@ -26,18 +26,18 @@ export class Firestore {
 
   getUser = async (userId: string) => {
     const snapshot = await this.userCollection.doc(userId).get()
-    return snapshot.data()
+    return snapshot.data() as User
   }
 
   createUser = async (user: User) => {
     return this.userCollection.doc(user.uid).set(user)
   }
 
-  updateUser = async (uid: User['uid'], user: Partial<User>) => {
+  updateUser = async (uid: string, user: Partial<User>) => {
     return this.userCollection.doc(uid).update(user)
   }
 
-  deleteUser = (uid: User['uid']) => {
+  deleteUser = (uid: string) => {
     return this.userCollection.doc(uid).delete()
   }
 
@@ -45,9 +45,22 @@ export class Firestore {
     return this.networkCallCollection.get()
   }
 
+  getNetworkCall = async (uid: string) => {
+    const snapshot = await this.networkCallCollection.doc(uid).get()
+    return snapshot.data() as NetworkCall
+  }
+
   createNetworkCall = async (networkCall: NetworkCall) => {
     const reference = this.networkCallCollection.doc()
-    const networkCallToAdd = { uid: reference.id, ...networkCall }
-    return reference.set(networkCallToAdd)
+    const networkCallToAdd = { ...networkCall, uid: reference.id }
+    await reference.set(networkCallToAdd)
+    return reference.id
+  }
+
+  updateNetworkCall = async (
+    uid: string,
+    networkCall: Partial<NetworkCall>
+  ) => {
+    return this.networkCallCollection.doc(uid).update(networkCall)
   }
 }
