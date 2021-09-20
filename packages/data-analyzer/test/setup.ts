@@ -1,17 +1,14 @@
-import fetch from 'node-fetch'
+import axios from 'axios'
 
 const deleteAccounts = async () => {
-  return fetch(
+  return axios.delete(
     'http://localhost:9099/emulator/v1/projects/data-collector-ff33b/accounts',
-    {
-      headers: { Authorization: 'Bearer owner' },
-      method: 'DELETE'
-    }
+    { headers: { Authorization: 'Bearer owner' } }
   )
 }
 
 const deleteDocs = () => {
-  return fetch(
+  return axios.delete(
     'http://localhost:8080/emulator/v1/projects/data-collector-ff33b/databases/(default)/documents',
     { method: 'DELETE' }
   )
