@@ -42,6 +42,28 @@ router.post(
   }
 )
 
+router.post(
+  generateRoute('/batch'),
+  requireAuth,
+  checkSchema(NetworkCallSchema()),
+  validateRequest,
+  sanitizeData,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const networkCall: NetworkCall = req.body
+
+    if (req.currentUser?.uid !== networkCall.userId) {
+      throw new NotAuthorizedError()
+    }
+
+    try {
+      const docId = await firebaseAdmin.firestore.createNetworkCall(networkCall)
+      return res.status(201).send({ uid: docId })
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
 router.put(
   generateRoute('/:uid'),
   requireAuth,

@@ -78,4 +78,13 @@ const NetworkCallSchema = (isUpdate?: true): Schema => {
   }
 }
 
+export const NetworkCallSchemaInArray = (isUpdate?: true): Schema => {
+  const baseSchema = NetworkCallSchema(isUpdate)
+  const newSchema = {}
+  for (const [key, value] of Object.entries(baseSchema)) {
+    newSchema[`networkCalls.*.${key}`] = value
+  }
+  return newSchema
+}
+
 export default NetworkCallSchema
