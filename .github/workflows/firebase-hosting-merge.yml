@@ -27,7 +27,7 @@ jobs:
         run: pnpm install
       - uses: w9jds/firebase-action@master
         with:
-          args: emulators:exec --only firestore,auth 'npm run test:ci'
+          args: emulators:exec --only firestore,auth 'npx pnpm run test:ci'
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           FB_SA_KEY: ${{ secrets.FB_SA_KEY }}
