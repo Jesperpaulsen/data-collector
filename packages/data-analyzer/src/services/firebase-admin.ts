@@ -7,9 +7,14 @@ let serviceAccount
 try {
   serviceAccount = require('../../serviceAccount.json')
 } catch (e) {
-  console.log(e)
+  const key = process.env.FB_SA_KEY
+  if (!key)
+    throw Error(
+      'Make sure the FB_SA_KEY or the service account is available to firebase'
+    )
+  const buffer = Buffer.from(key, 'base64')
+  serviceAccount = JSON.parse(buffer.toString())
 }
-
 class FirebaseAdmin {
   admin: admin.app.App
   auth: Auth
