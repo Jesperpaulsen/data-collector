@@ -6,6 +6,7 @@ import { User } from '@data-collector/types'
 import { DatabaseConnectionError } from '../errors/database-connection-error'
 import { requireAdmin } from '../middlewares/require-admin'
 import { requireAuth } from '../middlewares/require-auth'
+import { sanitizeData } from '../middlewares/sanitize-data'
 import { validateRequest } from '../middlewares/validate-request'
 import UserSchema from '../schemas/UserSchema'
 import firebaseAdmin from '../services/firebase-admin'
@@ -22,6 +23,7 @@ router.post(
   generateRoute(),
   checkSchema(UserSchema()),
   validateRequest,
+  sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password, name } = req.body
@@ -74,6 +76,7 @@ router.put(
     }
   }),
   validateRequest,
+  sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await firebaseAdmin.auth.updateUserRole(req.params.uid, req.body.role)

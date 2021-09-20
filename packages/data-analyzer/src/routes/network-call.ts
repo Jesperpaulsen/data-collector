@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { checkSchema } from 'express-validator'
+import { checkSchema, matchedData } from 'express-validator'
 
 import { NetworkCall } from '@data-collector/types'
 
@@ -7,6 +7,7 @@ import { BadRequestError } from '../errors/bad-request-error'
 import { DatabaseConnectionError } from '../errors/database-connection-error'
 import { NotAuthorizedError } from '../errors/not-authorized-error'
 import { requireAuth } from '../middlewares/require-auth'
+import { sanitizeData } from '../middlewares/sanitize-data'
 import { validateRequest } from '../middlewares/validate-request'
 import NetworkCallSchema from '../schemas/NetworkCallSchema'
 import firebaseAdmin from '../services/firebase-admin'
@@ -24,6 +25,7 @@ router.post(
   requireAuth,
   checkSchema(NetworkCallSchema()),
   validateRequest,
+  sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
     const networkCall: NetworkCall = req.body
 
@@ -45,6 +47,7 @@ router.put(
   requireAuth,
   checkSchema(NetworkCallSchema(true)),
   validateRequest,
+  sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
     const networkCall: NetworkCall = req.body
 
