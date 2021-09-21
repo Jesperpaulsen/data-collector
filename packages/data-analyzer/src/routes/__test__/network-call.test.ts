@@ -136,3 +136,76 @@ describe('route: /network-call/:uid method: PUT', () => {
     expect(networkCallInDatabase).toEqual({ ...networkCall, uid: res.body.uid })
   })
 })
+
+const createBatchNetworkCalls = async (
+  { userId, networkCalls }: { userId: string; networkCalls: NetworkCall[] },
+  token: string,
+  expectedCode: number
+) => {
+  const res = await request(app)
+    .post('/network-call/batch')
+    .set('authorization', `Bearer ${token}`)
+    .send({ userId, networkCalls })
+    .expect(expectedCode)
+
+  return { res }
+}
+
+describe('route: /network-call/batch method: POST', () => {
+  beforeEach(async () => {
+    const allNetworkCallDocs =
+      await firebaseAdmin.firestore.getAllNetworkCalls()
+    expect(allNetworkCallDocs.empty).toBeTruthy()
+  })
+
+  it('returns 401 if not logged in when creating batched network call', async () => {
+    const { user } = await getUserToken()
+    await createBatchNetworkCalls(
+      { userId: user.uid, networkCalls: [testNetworkCall] },
+      '',
+      401
+    )
+  })
+
+  // TODO: Make sure sanitation works on arrays
+  it.skip('returns 400 if missing field when creating batched network call', async () => {
+    const { user, token } = await getUserToken()
+    for (const field of Object.keys(testNetworkCall)) {
+      const networkCall = { ...testNetworkCall }
+      delete networkCall[field]
+      await createBatchNetworkCalls(
+        { userId: user.uid, networkCalls: [networkCall] },
+        token,
+        400
+      )
+    }
+  })
+
+  it('returns 400 if userId is wrong when creating batched network call', async () => {
+    const { token } = await getUserToken()
+    const networkCall = { ...testNetworkCall }
+    await createBatchNetworkCalls(
+      { userId: '12345test', networkCalls: [networkCall] },
+      token,
+      400
+    )
+  })
+
+  it('returns 401 if trying to add batched network calls for a different user', async () => {
+    const { token } = await getUserToken()
+    await createBatchNetworkCalls(
+      { userId: testNetworkCall.userId!, networkCalls: [testNetworkCall] },
+      token,
+      401
+    )
+  })
+
+  it('returns 201 when creating batched network calls', async () => {
+    const { token, user } = await getUserToken()
+    await createBatchNetworkCalls(
+      { userId: user.uid, networkCalls: [testNetworkCall] },
+      token,
+      201
+    )
+  })
+})

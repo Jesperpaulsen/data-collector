@@ -9,7 +9,9 @@ import { NotAuthorizedError } from '../errors/not-authorized-error'
 import { requireAuth } from '../middlewares/require-auth'
 import { sanitizeData } from '../middlewares/sanitize-data'
 import { validateRequest } from '../middlewares/validate-request'
-import NetworkCallSchema from '../schemas/NetworkCallSchema'
+import NetworkCallSchema, {
+  NetworkCallSchemaInArray
+} from '../schemas/NetworkCallSchema'
 import firebaseAdmin from '../services/firebase-admin'
 
 const basePath = '/network-call'
@@ -32,6 +34,7 @@ router.post(
     if (req.currentUser?.uid !== networkCall.userId) {
       throw new NotAuthorizedError()
     }
+    console.log(req.body)
 
     try {
       const docId = await firebaseAdmin.firestore.createNetworkCall(networkCall)
@@ -45,19 +48,32 @@ router.post(
 router.post(
   generateRoute('/batch'),
   requireAuth,
-  checkSchema(NetworkCallSchema()),
+  checkSchema(NetworkCallSchemaInArray()),
   validateRequest,
   sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
-    const networkCall: NetworkCall = req.body
+    const batchRequest = req.body as {
+      userId: string
+      networkCalls: NetworkCall[]
+    }
 
-    if (req.currentUser?.uid !== networkCall.userId) {
+    if (req.currentUser?.uid !== batchRequest.userId) {
       throw new NotAuthorizedError()
+    }
+    const promises: Promise<string>[] = []
+
+    for (const networkCall of batchRequest.networkCalls) {
+      promises.push(
+        firebaseAdmin.firestore.createNetworkCall({
+          ...networkCall,
+          userId: batchRequest.userId
+        })
+      )
     }
 
     try {
-      const docId = await firebaseAdmin.firestore.createNetworkCall(networkCall)
-      return res.status(201).send({ uid: docId })
+      const ids = await Promise.all(promises)
+      return res.status(201).send({ ids })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }
