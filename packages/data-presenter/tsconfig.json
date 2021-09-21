@@ -3,8 +3,8 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src/*"],
-  "exclude": ["dist/*"],
+  "include": ["src"],
+  "exclude": ["dist"],
   "isolatedModules": false,
   "noEmit": true,
   "jsx": "react-jsx",

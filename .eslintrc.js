@@ -11,7 +11,8 @@ module.exports = {
     'prettier-standard'
   ],
   parserOptions: {
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname
   },
   plugins: [
     'react',
