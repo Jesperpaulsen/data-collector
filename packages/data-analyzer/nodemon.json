@@ -3,7 +3,7 @@
     "src"
   ],
   "ignore": [
-    "src/**/*.test.ts"
+    "src/routes/__test__"
   ],
   "ext": "ts,mjs,js,json,graphql",
   "exec": "etsc && node ./dist/index.js",
