@@ -6,7 +6,6 @@ import { UserContext } from './contexts/UserContext';
 
 const Router: FunctionComponent = () => {
   const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
   return currentUser ? <Dashboard /> : <Login />;
 };
 

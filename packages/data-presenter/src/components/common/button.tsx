@@ -13,6 +13,7 @@ interface Props {
 const Button: FunctionalComponent<Props> = ({ children, disabled, onClick, small, outline, block }) => {
   return (
     <button
+      onClick={onClick}
       className={classnames(styles['btn'], {
         [styles['btn--outline']]: outline,
         [styles['btn--small']]: small,

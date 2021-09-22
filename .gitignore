@@ -12,3 +12,8 @@ appEngineKey.json
 **.log
 firebase.vars.js
 packages/data-analyzer/output.txt
+dist.perm
+dist.crx
+dist.pem
+
+dist.zip
