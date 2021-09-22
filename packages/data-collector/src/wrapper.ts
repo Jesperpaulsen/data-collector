@@ -1,8 +1,9 @@
-/* eslint-disable no-global-assign */
+import { MESSAGE_TYPES } from '@data-collector/types'
+
 import { NetworkCall } from '../../types/src/network-call'
 
-import auth from './auth'
 import { DataReporter } from './DataReporter'
+import store from './store'
 
 const dataReporter = new DataReporter('')
 chrome.alarms.create({ delayInMinutes: dataReporter.interval })
@@ -96,7 +97,6 @@ const getUrlForTab = async (
   })
 }
 
-// TODO: Look into why manifest v3 doesn't work with module imports
 export const headerListener = (
   details: chrome.webRequest.WebResponseHeadersDetails
 ) => {
@@ -133,12 +133,14 @@ try {
     ['responseHeaders']
   )
   chrome.runtime.onMessage.addListener(function (details: any) {
-    console.log(details)
-    if (details.type === 'networkCall') {
+    if (details.type === MESSAGE_TYPES.NETWORK_CALL) {
       const { networkCall } = details
       storeNetworkCall(networkCall as NetworkCall)
-    } else if (details.type === 'signIn') {
-      auth.signIn()
+    } else if (details.type === MESSAGE_TYPES.SIGN_IN) {
+      store.auth.signIn()
+    } else if (details.type === MESSAGE_TYPES.REQUEST_USER) {
+      console.log('request user')
+      store.sendUser()
     }
   })
 } catch (e) {

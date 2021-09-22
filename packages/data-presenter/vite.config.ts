@@ -10,7 +10,10 @@ export default defineConfig({
   },
   plugins: [preactRefresh()],
   build: {
-    outDir: '../../dist'
+    outDir: '../../dist',
+    rollupOptions: {
+      external: ['@data-collector/types']
+    }
   },
   alias: {
     tslib: 'tslib/tslib.es6.js'

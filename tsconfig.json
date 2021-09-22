@@ -25,8 +25,9 @@
   "references": [
     { "path": "./packages/data-presenter/" },
     { "path": "./packages/data-collector/" },
+    { "path": "./packages/data-analyzer/" },
   ],
   "include": [
-    "**/src/**/*.ts",
+    "**/src/**/*.ts", "packages/types/MESSAGE_TYPES.ts",
   ]
 }

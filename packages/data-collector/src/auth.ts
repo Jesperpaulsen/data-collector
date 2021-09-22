@@ -7,8 +7,8 @@ import {
   signInWithCredential
 } from 'firebase/auth'
 
-import api from './api'
 import { firebase } from './firebase'
+import Store from './store'
 
 const auth = initializeAuth(firebase, {
   persistence:
@@ -17,11 +17,13 @@ const auth = initializeAuth(firebase, {
       : [indexedDBLocalPersistence, browserLocalPersistence]
 })
 
-class Auth {
+export class Auth {
   private client = auth
   private provider = new GoogleAuthProvider()
+  private store: typeof Store
 
-  constructor() {
+  constructor(store: typeof Store) {
+    this.store = store
     this.signIn()
   }
 
@@ -56,18 +58,15 @@ class Auth {
   private signInWithGoogle = async (token: string) => {
     const credential = GoogleAuthProvider.credential(null, token)
     const res = await signInWithCredential(this.client, credential)
-    let displayName = res.user.displayName
-    console.log(res.user.providerData)
+    let displayName = res.user.displayName || ''
     if (!displayName && res.user.providerData?.length) {
-      displayName = res.user.providerData[0].displayName
+      displayName = res.user.providerData[0].displayName?.split(' ')[0] || ''
     }
-    api.setUser(res.user)
-    api.createUser({
+    this.store.setUser({ ...res.user, displayName })
+    this.store.api.createUser({
       email: res.user.email || '',
       name: displayName || '',
       uid: res.user.uid
     })
   }
 }
-
-export default new Auth()

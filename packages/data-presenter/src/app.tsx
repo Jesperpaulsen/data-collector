@@ -4,5 +4,7 @@ import UserProvider from './contexts/UserContext';
 import Router from './Router';
 
 export function App() {
-  return <Router />;
+  return <UserProvider>
+    <Router />
+  </UserProvider>
 }
