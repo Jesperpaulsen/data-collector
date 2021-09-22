@@ -11,7 +11,7 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "build": "esbuild src/** --define:process.env.NODE_ENV=\"production\" --bundle --format=iife --sourcemap --outdir=../../dist && pnpm run cp:manifest",
+    "build": "node build.js && pnpm run cp:manifest",
     "cp:manifest": "cp manifest.json ../../dist && cp site.webmanifest ../../dist"
   },
   "author": "Jesper Paulsen",
@@ -24,5 +24,8 @@
     "access": "public",
     "main": "dist/index.js",
     "typings": "dist/src/index.d.ts"
+  },
+  "dependencies": {
+    "firebase": "^9.0.2"
   }
 }

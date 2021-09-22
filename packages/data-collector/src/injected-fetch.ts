@@ -1,7 +1,6 @@
 import { NetworkCall } from '@data-collector/types'
 
 import { getContentTypeHeader } from './utils'
-
 const bodyParserMethods: { [key: string]: (body: any) => Promise<void> } = {
   json: (body) => body.json(),
   text: (body) => body.text(),

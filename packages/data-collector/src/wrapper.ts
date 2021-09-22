@@ -1,9 +1,10 @@
+/* eslint-disable no-global-assign */
 import { NetworkCall } from '../../types/src/network-call'
 
+import auth from './auth'
 import { DataReporter } from './DataReporter'
 
 const dataReporter = new DataReporter('')
-
 chrome.alarms.create({ delayInMinutes: dataReporter.interval })
 chrome.alarms.onAlarm.addListener(() => {
   dataReporter.sendRequests()
@@ -131,12 +132,14 @@ try {
     { urls: ['<all_urls>'] },
     ['responseHeaders']
   )
-  chrome.runtime.onMessage.addListener(function (details: {
-    type: string
-    networkCall: NetworkCall
-  }) {
-    const { networkCall } = details
-    storeNetworkCall(networkCall as NetworkCall)
+  chrome.runtime.onMessage.addListener(function (details: any) {
+    console.log(details)
+    if (details.type === 'networkCall') {
+      const { networkCall } = details
+      storeNetworkCall(networkCall as NetworkCall)
+    } else if (details.type === 'signIn') {
+      auth.signIn()
+    }
   })
 } catch (e) {
   console.error(e)

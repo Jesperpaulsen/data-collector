@@ -23,7 +23,7 @@
       ],
       "run_at": "document_start",
       "js": [
-        "content_script.js"
+        "content-script.js"
       ]
     }
   ],
@@ -41,9 +41,17 @@
   "permissions": [
     "webRequest",
     "tabs",
-    "alarms"
+    "alarms",
+    "identity"
   ],
   "host_permissions": [
     "<all_urls>"
-  ]
+  ],
+  "oauth2": {
+    "client_id": "154072078565-c2qtni1qj3atn2ip7cgdeofpph8jjhhk.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  }
 }
