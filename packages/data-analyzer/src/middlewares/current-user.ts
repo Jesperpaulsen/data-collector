@@ -20,7 +20,9 @@ export const currentUser = async (
     const decodedIdToken = await firebaseAdmin.admin
       .auth()
       .verifyIdToken(idToken, true)
-    req.currentUser = decodedIdToken
+
+    const isAdmin = decodedIdToken.role === 'admin'
+    req.currentUser = { ...decodedIdToken, isAdmin }
   } catch (e) {
     req.currentUser = undefined
   }

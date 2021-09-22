@@ -1,9 +1,10 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { checkSchema, param } from 'express-validator'
+import { checkSchema } from 'express-validator'
 
 import { User } from '@data-collector/types'
 
 import { DatabaseConnectionError } from '../errors/database-connection-error'
+import { NotAuthorizedError } from '../errors/not-authorized-error'
 import { requireAdmin } from '../middlewares/require-admin'
 import { requireAuth } from '../middlewares/require-auth'
 import { sanitizeData } from '../middlewares/sanitize-data'
@@ -38,6 +39,65 @@ router.post(
         email,
         name,
         uid: userAuth.uid,
+        role: 'user'
+      }
+
+      await firebaseAdmin.firestore.createUser(user)
+
+      res
+        .status(201)
+        .send({ email: user.email, name: user.name, uid: user.uid })
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
+router.post(
+  generateRoute('/extension/:uid'),
+  checkSchema({
+    uid: {
+      in: ['params'],
+      exists: true,
+      isString: true,
+      isLength: {
+        errorMessage: 'uid is not valid',
+        options: {
+          min: 28,
+          max: 28
+        }
+      }
+    },
+    name: {
+      in: ['body'],
+      isString: true,
+      exists: true,
+      errorMessage: 'Name is not valid'
+    },
+    email: {
+      in: ['body'],
+      exists: true,
+      isEmail: true,
+      errorMessage: 'E-mail is not valid'
+    }
+  }),
+  requireAuth,
+  validateRequest,
+  sanitizeData,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, name } = req.body
+      const { uid } = req.params
+
+      if (uid !== req.currentUser?.uid && !req.currentUser?.isAdmin) {
+        console.log('yp')
+        throw new NotAuthorizedError()
+      }
+
+      const user: User = {
+        email,
+        name,
+        uid,
         role: 'user'
       }
 
