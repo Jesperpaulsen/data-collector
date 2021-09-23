@@ -16,7 +16,6 @@ export class API {
   ) => {
     const token = await this.store.user?.getIdToken()
     if (!token) console.error('No token was set')
-
     return fetch(`${this.baseUrl}${url}`, {
       method,
       headers: {
@@ -40,19 +39,17 @@ export class API {
   }
 
   createNetworkCall = async (networkCall: NetworkCall) => {
-    const res = await this.doRequest('network-call', 'POST', networkCall)
+    const res = await this.doRequest('/network-call', 'POST', networkCall)
     if (!res.ok) {
       res.json().then((body) => console.log(body))
     }
   }
 
   createNetworkCalls = async (networkCalls: NetworkCall[]) => {
-    console.log('yo')
-    const res = await this.doRequest('network-call/batch', 'POST', {
+    const res = await this.doRequest('/network-call/batch', 'POST', {
       userId: this.store.user?.uid,
       networkCalls
     })
-    console.log(res)
     if (!res.ok) {
       res.json().then((body) => console.log(body))
     }

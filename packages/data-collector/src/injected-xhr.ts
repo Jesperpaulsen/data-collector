@@ -1,4 +1,4 @@
-import { NetworkCall } from '@data-collector/types'
+import { MESSAGE_TYPES, NetworkCall } from '@data-collector/types'
 
 import { getContentTypeHeader } from './utils'
 
@@ -19,7 +19,7 @@ function mockXHR() {
         hostPathname: window.location.pathname,
         hostOrigin: window.location.origin
       }
-      window.postMessage({ type: 'networkCall', networkCall }, '*')
+      window.postMessage({ type: MESSAGE_TYPES.NETWORK_CALL, networkCall }, '*')
     }
   })
   return xhr

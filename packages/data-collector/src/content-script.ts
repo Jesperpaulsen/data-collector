@@ -1,21 +1,23 @@
+import { MESSAGE_TYPES } from '@data-collector/types'
+
 import { NetworkCall } from '../../types/src/network-call'
 
-enum MESSAGE_TYPES {
+enum DATA_TYPES {
   ARRAY_BUFFER = 'arraybuffer',
   BLOB = 'blob',
   JSON = 'json',
   TEXT = 'text'
 }
 
-const dataTypeToSizeMap: { [key in MESSAGE_TYPES]: (data: any) => number } = {
-  [MESSAGE_TYPES.ARRAY_BUFFER]: (data) => (data as ArrayBuffer).byteLength,
-  [MESSAGE_TYPES.BLOB]: (data) => (data as Blob).size,
-  [MESSAGE_TYPES.JSON]: (data) =>
+const dataTypeToSizeMap: { [key in DATA_TYPES]: (data: any) => number } = {
+  [DATA_TYPES.ARRAY_BUFFER]: (data) => (data as ArrayBuffer).byteLength,
+  [DATA_TYPES.BLOB]: (data) => (data as Blob).size,
+  [DATA_TYPES.JSON]: (data) =>
     new TextEncoder().encode(JSON.stringify(data)).length,
-  [MESSAGE_TYPES.TEXT]: (data) => new Blob([data]).size
+  [DATA_TYPES.TEXT]: (data) => new Blob([data]).size
 }
 
-const calculateBodySize = (body: any, type: MESSAGE_TYPES) => {
+const calculateBodySize = (body: any, type: DATA_TYPES) => {
   const methodUsedToCalculateSize = dataTypeToSizeMap[type]
   if (!methodUsedToCalculateSize) return null
   return methodUsedToCalculateSize(body)
@@ -28,7 +30,10 @@ const sendMessages = () => {
   messagesToSend = []
   for (const message of messages) {
     try {
-      chrome.runtime.sendMessage({ type: 'networkCall', networkCall: message })
+      chrome.runtime.sendMessage({
+        type: MESSAGE_TYPES.NETWORK_CALL,
+        networkCall: message
+      })
     } catch (e) {
       console.log(e)
       messagesToSend.push(message)
@@ -51,8 +56,8 @@ const handleIncommingMessage = ({
   hostPathname,
   hostOrigin
 }: NetworkCall) => {
-  const bodySize = calculateBodySize(data, type as MESSAGE_TYPES) || 0
-  const headerSize = calculateBodySize(headers, MESSAGE_TYPES.TEXT) || 0
+  const bodySize = calculateBodySize(data, type as DATA_TYPES) || 0
+  const headerSize = calculateBodySize(headers, DATA_TYPES.TEXT) || 0
   const size = bodySize + headerSize
   const networkCall: NetworkCall = {
     type,
@@ -74,7 +79,7 @@ window.addEventListener(
     if (event.source !== window || !event.data?.networkCall) {
       return
     }
-    if (event.data?.type === 'networkCall') {
+    if (event.data?.type === MESSAGE_TYPES.NETWORK_CALL) {
       const networkCall = event.data.networkCall
       handleIncommingMessage(networkCall)
     }

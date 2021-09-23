@@ -1,4 +1,4 @@
-import { NetworkCall } from '@data-collector/types'
+import { MESSAGE_TYPES, NetworkCall } from '@data-collector/types'
 
 import { getContentTypeHeader } from './utils'
 const bodyParserMethods: { [key: string]: (body: any) => Promise<void> } = {
@@ -73,7 +73,7 @@ window.fetch = constantMock
                 }
                 window.postMessage(
                   {
-                    type: 'networkCall',
+                    type: MESSAGE_TYPES.NETWORK_CALL,
                     networkCall
                   },
                   '*'

@@ -61,7 +61,9 @@ export class Auth {
     if (!displayName && res.user.providerData?.length) {
       displayName = res.user.providerData[0].displayName?.split(' ')[0] || ''
     }
-    this.store.setUser({ ...res.user, displayName })
+    // @ts-ignore
+    res.user.displayName = displayName
+    this.store.setUser(res.user)
     this.store.api.createUser({
       email: res.user.email || '',
       name: displayName || '',
