@@ -57,6 +57,8 @@ router.post(
       networkCalls: NetworkCall[]
     }
 
+    console.log(batchRequest)
+
     if (req.currentUser?.uid !== batchRequest.userId) {
       throw new NotAuthorizedError()
     }

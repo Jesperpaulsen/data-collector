@@ -17,6 +17,8 @@ const bruteForceBodyType = async (body: any) => {
       // pass
     }
   }
+  const data = await body.json()
+  return { data, type: 'json' }
 }
 
 const parseBody = async (body: any, headers: Headers) => {

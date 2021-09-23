@@ -6,38 +6,32 @@
 
 import { NetworkCall } from '../../types/src/network-call'
 
+import Store from './store'
+
 export class DataReporter {
   private currentRequests: NetworkCall[] = []
-  private userToken: string
-  interval = 5000
-  private timeout?: ReturnType<typeof setTimeout>
+  interval = 1
+  private store: typeof Store
 
-  constructor(userToken: string) {
-    this.userToken = userToken
+  constructor(store: typeof Store) {
+    this.store = store
   }
 
   sendRequests = async () => {
-    const promises: Promise<void>[] = []
+    await this.getRequests()
     const requests = [...this.currentRequests]
-    this.currentRequests = []
-
-    for (const request of requests) {
-      promises.push(this.sendRequest(request))
-    }
-    await Promise.all(promises)
-  }
-
-  private sendRequest = async (request: NetworkCall) => {
+    console.log('Reporting', requests)
     try {
-      // TODO: Do request
-      console.log('Sending request ' + request)
+      await this.store.api.createNetworkCalls(requests)
+      this.currentRequests = []
     } catch (e) {
-      console.error(e)
-      this.currentRequests.push(request)
+      this.currentRequests = requests
     }
   }
 
-  addRequest(request: NetworkCall) {
-    this.currentRequests.push(request)
+  getRequests = async () => {
+    const requestsFromStorage =
+      await this.store.storageHandler.getNetworkCallsToSync()
+    this.currentRequests = [...this.currentRequests, ...requestsFromStorage]
   }
 }

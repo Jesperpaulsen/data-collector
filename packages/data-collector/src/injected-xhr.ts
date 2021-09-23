@@ -6,9 +6,8 @@ const OriginalXHR = window.XMLHttpRequest
 
 function mockXHR() {
   const xhr = new OriginalXHR()
-  xhr.addEventListener('readystatechange', function async() {
+  xhr.addEventListener('readystatechange', function () {
     if (xhr.readyState === 4) {
-      console.log('yo')
       const url = new URL(xhr.responseURL)
       const networkCall: NetworkCall = {
         headers: xhr.getAllResponseHeaders(),

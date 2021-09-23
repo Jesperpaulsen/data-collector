@@ -25,7 +25,6 @@ let messagesToSend: NetworkCall[] = []
 
 const sendMessages = () => {
   const messages = [...messagesToSend]
-  console.log(messages)
   messagesToSend = []
   for (const message of messages) {
     try {

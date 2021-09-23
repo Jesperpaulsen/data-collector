@@ -1,3 +1,5 @@
+import { NetworkCall } from '@data-collector/types'
+
 import Store from './store'
 export class API {
   private store: typeof Store
@@ -33,6 +35,25 @@ export class API {
     )
     if (!res.ok) {
       console.log('Not ok')
+      res.json().then((body) => console.log(body))
+    }
+  }
+
+  createNetworkCall = async (networkCall: NetworkCall) => {
+    const res = await this.doRequest('network-call', 'POST', networkCall)
+    if (!res.ok) {
+      res.json().then((body) => console.log(body))
+    }
+  }
+
+  createNetworkCalls = async (networkCalls: NetworkCall[]) => {
+    console.log('yo')
+    const res = await this.doRequest('network-call/batch', 'POST', {
+      userId: this.store.user?.uid,
+      networkCalls
+    })
+    console.log(res)
+    if (!res.ok) {
       res.json().then((body) => console.log(body))
     }
   }

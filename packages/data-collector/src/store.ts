@@ -1,16 +1,25 @@
 import { UserCredential } from 'firebase/auth'
-import { API } from './api'
-import { Auth } from './auth'
+import { API } from './API'
+import { Auth } from './Auth'
 import { MESSAGE_TYPES } from '@data-collector/types'
+import { DuplicateHandler } from './DuplicateHandler'
+import { DataReporter } from './DataReporter'
+import { StorageHandler } from './StorageHandler'
 
 class Store {
   api: API
   auth: Auth
+  duplicateHandler: DuplicateHandler
+  dataReporter: DataReporter
+  storageHandler: StorageHandler
   user?: UserCredential['user']
 
   constructor() {
     this.api = new API(this)
     this.auth = new Auth(this)
+    this.duplicateHandler = new DuplicateHandler(this)
+    this.dataReporter = new DataReporter(this)
+    this.storageHandler = new StorageHandler(this)
   }
 
   setUser = (user: UserCredential['user']) => {

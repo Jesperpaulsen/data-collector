@@ -19,7 +19,6 @@ const auth = initializeAuth(firebase, {
 
 export class Auth {
   private client = auth
-  private provider = new GoogleAuthProvider()
   private store: typeof Store
 
   constructor(store: typeof Store) {
