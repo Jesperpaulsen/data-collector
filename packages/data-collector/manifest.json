@@ -2,8 +2,8 @@
   "name": "Data Collector",
   "description": "Collecting your data usage",
   "version": "1.0.6",
-  "manifest_version": 3,
-  "action": {
+  "manifest_version": 2,
+  "browser_action": {
     "default_popup": "index.html",
     "default_title": "Analyze your data usage"
   },
@@ -13,8 +13,10 @@
     "128": "android-chrome-192x192.png"
   },
   "background": {
-    "service_worker": "wrapper.js",
-    "type": "module"
+    "scripts": [
+      "wrapper.js"
+    ],
+    "persistent": true
   },
   "content_scripts": [
     {
@@ -27,26 +29,11 @@
       ]
     }
   ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "injected-xhr.js",
-        "injected-fetch.js"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
   "permissions": [
     "webRequest",
     "tabs",
-    "alarms",
     "identity",
     "storage"
-  ],
-  "host_permissions": [
-    "<all_urls>"
   ],
   "oauth2": {
     "client_id": "154072078565-c2qtni1qj3atn2ip7cgdeofpph8jjhhk.apps.googleusercontent.com",

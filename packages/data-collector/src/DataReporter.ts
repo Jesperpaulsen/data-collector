@@ -1,26 +1,22 @@
-/**
- * TODO:
- * * Update database with network calls every 5 sec
- * * Determine data structure
- */
-
 import { NetworkCall } from '../../types/src/network-call'
 
+import { Scheduler } from './Scheduler'
 import Store from './store'
 
 export class DataReporter {
   private currentRequests: NetworkCall[] = []
-  interval = 1
   private store: typeof Store
+  private scheduler = new Scheduler(5000)
 
   constructor(store: typeof Store) {
     this.store = store
+    this.scheduler.setCallback(this.sendRequests)
   }
 
   sendRequests = async () => {
     await this.getRequests()
     const requests = [...this.currentRequests]
-    console.log('Reporting', requests)
+    if (!requests?.length) return
     try {
       await this.store.api.createNetworkCalls(requests)
       this.currentRequests = []
@@ -29,7 +25,7 @@ export class DataReporter {
     }
   }
 
-  getRequests = async () => {
+  private getRequests = async () => {
     const requestsFromStorage =
       await this.store.storageHandler.getNetworkCallsToSync()
     this.currentRequests = [...this.currentRequests, ...requestsFromStorage]
