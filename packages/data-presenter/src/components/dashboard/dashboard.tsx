@@ -1,15 +1,9 @@
 import { FunctionComponent } from 'preact';
 import { useContext } from 'preact/hooks';
 import { UserContext } from '../../contexts/UserContext';
-import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES';
-import Button from '../common/button';
 
 const Dashboard: FunctionComponent = () => {
   const { currentUser } = useContext(UserContext);
-
-  const syncRequests = () => {
-    chrome.runtime.sendMessage({ type: MESSAGE_TYPES.SYNC_REQUESTS })
-  }
 
   return (
     <div className="w-full h-screen relative">
@@ -31,9 +25,6 @@ const Dashboard: FunctionComponent = () => {
             <div className="text-6xl font-medium">48 GB</div>
             <div className="text-xs font-light">Amount of data collected today</div>
           </div>
-          <Button onClick={syncRequests}>
-            Sync requests
-          </Button>
         </div>
       </div>
     </div>

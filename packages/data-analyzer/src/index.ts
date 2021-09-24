@@ -1,8 +1,9 @@
 import { app } from './app'
 
 const start = () => {
-  app.listen(3333, () => {
-    console.log('Listening on port 3333')
+  const port = process.env.PORT || 3333
+  app.listen(port, () => {
+    console.log(`Listening on port ${port}`)
   })
 }
 
