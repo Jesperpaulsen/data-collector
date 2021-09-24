@@ -50,6 +50,20 @@ export class Firestore {
     return snapshot.data() as NetworkCall
   }
 
+  getNetworkCallsForUser = async (uid: string) => {
+    const networkCalls = await this.networkCallCollection
+      .where('userId', '==', uid)
+      .get()
+
+    const res: NetworkCall[] = []
+
+    for (const doc of networkCalls.docs) {
+      res.push(doc.data() as NetworkCall)
+    }
+
+    return res
+  }
+
   createNetworkCall = async (networkCall: NetworkCall) => {
     const reference = this.networkCallCollection.doc()
     const networkCallToAdd = { ...networkCall, uid: reference.id }

@@ -48,16 +48,14 @@ router.post(
 router.post(
   generateRoute('/batch'),
   requireAuth,
-  /*checkSchema(NetworkCallSchemaInArray()),
+  checkSchema(NetworkCallSchemaInArray()),
   validateRequest,
-  sanitizeData,*/
+  sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
     const batchRequest = req.body as {
       userId: string
       networkCalls: NetworkCall[]
     }
-
-    console.log(batchRequest)
 
     if (req.currentUser?.uid !== batchRequest.userId) {
       throw new NotAuthorizedError()
@@ -113,6 +111,27 @@ router.put(
         networkCall
       )
       return res.status(200).send({ uid: networkCall.uid })
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
+router.get(
+  generateRoute('/user/:uid'),
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { uid } = req.params
+
+    if (req.currentUser?.uid !== uid) {
+      throw new NotAuthorizedError()
+    }
+
+    try {
+      const networkCalls = await firebaseAdmin.firestore.getNetworkCallsForUser(
+        uid
+      )
+      return res.status(200).send({ networkCalls })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }

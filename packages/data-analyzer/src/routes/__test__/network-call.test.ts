@@ -209,3 +209,33 @@ describe('route: /network-call/batch method: POST', () => {
     )
   })
 })
+
+describe('route: /network-call/user/:uid method: GET', () => {
+  beforeEach(async () => {
+    const allNetworkCallDocs =
+      await firebaseAdmin.firestore.getAllNetworkCalls()
+    expect(allNetworkCallDocs.empty).toBeTruthy()
+  })
+
+  it('returns 401 if not logged in when fetching network call', async () => {
+    await request(app).get('/network-call/user/1234').send().expect(401)
+  })
+
+  it('returns 401 if trying to get network calls for a different user', async () => {
+    const { token } = await getUserToken()
+    await request(app)
+      .get('/network-call/user/12345')
+      .set('authorization', `Bearer ${token}`)
+      .send()
+      .expect(401)
+  })
+
+  it('returns 200 and network calls when fetching network calls for user', async () => {
+    const { token, user } = await getUserToken()
+    await request(app)
+      .get(`/network-call/user/${user.uid}`)
+      .set('authorization', `Bearer ${token}`)
+      .send()
+      .expect(200)
+  })
+})
