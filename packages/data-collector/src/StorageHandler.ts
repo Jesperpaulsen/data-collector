@@ -1,5 +1,6 @@
 import { NetworkCall } from '@data-collector/types'
 
+import { Scheduler } from './Scheduler'
 import Store from './store'
 
 type NetworkCalls = { [hash: number]: NetworkCall }
@@ -9,19 +10,12 @@ const storageKey = 'dataStorage'
 export class StorageHandler {
   private store: typeof Store
   private networkCalls: NetworkCalls = {}
-  private interval = 1000
-  private timeout?: ReturnType<typeof setTimeout>
-  private nextSync = Date.now()
   private syncInProgress = false
+  private scheduler = new Scheduler(1000)
 
   constructor(store: typeof Store) {
     this.store = store
-  }
-
-  private setNextSync = (interval: number) => {
-    this.nextSync = Date.now() + interval
-    if (this.timeout) clearTimeout(this.timeout)
-    this.timeout = setTimeout(this.handleSync, interval)
+    this.scheduler.setCallback(this.syncNetworkCallsWithStorage)
   }
 
   private sleep = () => {
@@ -30,22 +24,11 @@ export class StorageHandler {
     })
   }
 
-  private handleSync = async () => {
+  private syncNetworkCallsWithStorage = async (): Promise<void> => {
     if (this.syncInProgress) {
       await this.sleep()
-      this.handleSync()
-      return
+      return this.syncNetworkCallsWithStorage()
     }
-    const now = Date.now()
-    if (now < this.nextSync) {
-      this.setNextSync(this.nextSync - now)
-    } else {
-      await this.syncNetworkCallsWithStorage()
-      this.setNextSync(this.interval)
-    }
-  }
-
-  private syncNetworkCallsWithStorage = async (): Promise<void> => {
     this.syncInProgress = true
     try {
       await this.fetchAndUpdateNetworkCalls()
@@ -55,18 +38,35 @@ export class StorageHandler {
     this.syncInProgress = false
   }
 
+  private readLocalStorage = async (): Promise<NetworkCalls> => {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(storageKey, (result) => {
+        resolve(result[storageKey])
+      })
+    })
+  }
+
+  private writeToLocalStorage = async (
+    networkCalls: NetworkCalls
+  ): Promise<void> => {
+    return new Promise((resolve) => {
+      chrome.storage.local.set({ [storageKey]: networkCalls }, resolve)
+    })
+  }
+
   private fetchAndUpdateNetworkCalls = async (): Promise<void> => {
-    const networkCalls = await chrome.storage.local.get(storageKey)
+    const networkCalls = await this.readLocalStorage()
     this.networkCalls = { ...networkCalls, ...this.networkCalls }
-    await chrome.storage.local.set({ [storageKey]: this.networkCalls })
+    this.writeToLocalStorage(this.networkCalls)
   }
 
   storeNetworkCall = (hash: number, networkCall: NetworkCall) => {
     this.networkCalls[hash] = networkCall
   }
 
-  getNetworkCall = (hash: number): NetworkCall | undefined =>
-    this.networkCalls[hash]
+  getNetworkCall = (hash: number): NetworkCall | undefined => {
+    return this.networkCalls[hash]
+  }
 
   getNetworkCallsToSync = async (): Promise<NetworkCall[]> => {
     if (this.syncInProgress) {
@@ -79,7 +79,7 @@ export class StorageHandler {
       await this.fetchAndUpdateNetworkCalls()
       requestsToSync = Object.values(this.networkCalls)
       this.networkCalls = {}
-      await chrome.storage.local.set({ [storageKey]: {} })
+      await this.writeToLocalStorage({})
     } catch (e) {
       console.error(e)
     }

@@ -48,9 +48,9 @@ router.post(
 router.post(
   generateRoute('/batch'),
   requireAuth,
-  checkSchema(NetworkCallSchemaInArray()),
+  /*checkSchema(NetworkCallSchemaInArray()),
   validateRequest,
-  sanitizeData,
+  sanitizeData,*/
   async (req: Request, res: Response, next: NextFunction) => {
     const batchRequest = req.body as {
       userId: string

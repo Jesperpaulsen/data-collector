@@ -33,6 +33,8 @@ export const headerListener = (
     if (header.name.toLowerCase() === 'content-length') fileSize = header.value
   })
 
+  console.log('yoyo')
+
   const url = new URL(details.url)
 
   getUrlForTab(details.tabId).then((host) => {

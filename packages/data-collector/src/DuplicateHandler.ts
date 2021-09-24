@@ -33,6 +33,7 @@ export class DuplicateHandler {
   }
 
   handleNetworkCall = (networkCall: NetworkCall) => {
+    console.log(networkCall)
     const hash = Hasher.createNetworkCallHash(networkCall)
     const existingNetworkCall = this.store.storageHandler.getNetworkCall(hash)
 

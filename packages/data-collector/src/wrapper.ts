@@ -4,15 +4,7 @@ import { headerListener } from './headerListener'
 import store from './store'
 
 try {
-  chrome.alarms.create({
-    periodInMinutes: store.dataReporter.interval,
-    when: 0
-  })
-  chrome.alarms.onAlarm.addListener(function () {
-    console.log('Alarm')
-    store.dataReporter.sendRequests()
-  })
-
+  console.log('yo')
   chrome.webRequest.onHeadersReceived.addListener(
     headerListener,
     { urls: ['<all_urls>'] },
@@ -20,6 +12,7 @@ try {
   )
   chrome.runtime.onMessage.addListener(function (details: any) {
     const type = details.type
+    console.log(type)
     switch (type) {
       case MESSAGE_TYPES.NETWORK_CALL:
         // eslint-disable-next-line no-case-declarations
