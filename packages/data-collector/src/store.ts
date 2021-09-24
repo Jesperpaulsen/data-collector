@@ -5,6 +5,7 @@ import { MESSAGE_TYPES } from '@data-collector/types'
 import { DuplicateHandler } from './DuplicateHandler'
 import { DataReporter } from './DataReporter'
 import { StorageHandler } from './StorageHandler'
+import { UsageCounter } from './UsageCounter'
 
 class Store {
   api: API
@@ -12,6 +13,7 @@ class Store {
   duplicateHandler: DuplicateHandler
   dataReporter: DataReporter
   storageHandler: StorageHandler
+  usageCounter: UsageCounter
   user?: UserCredential['user']
 
   constructor() {
@@ -20,6 +22,7 @@ class Store {
     this.duplicateHandler = new DuplicateHandler(this)
     this.dataReporter = new DataReporter(this)
     this.storageHandler = new StorageHandler(this)
+    this.usageCounter = new UsageCounter(this)
   }
 
   setUser = (user: UserCredential['user']) => {

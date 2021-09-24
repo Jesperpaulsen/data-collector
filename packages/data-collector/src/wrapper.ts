@@ -4,7 +4,6 @@ import { headerListener } from './headerListener'
 import store from './store'
 
 try {
-  console.log('yo')
   chrome.webRequest.onHeadersReceived.addListener(
     headerListener,
     { urls: ['<all_urls>'] },
@@ -27,6 +26,9 @@ try {
         return
       case MESSAGE_TYPES.SYNC_REQUESTS:
         store.dataReporter.sendRequests()
+        return
+      case MESSAGE_TYPES.REQUEST_CREDENTIALS:
+        store.auth.sendCredentials()
         return
       default:
         console.log(type)

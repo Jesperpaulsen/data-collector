@@ -54,4 +54,9 @@ export class API {
       res.json().then((body) => console.log(body))
     }
   }
+
+  getAllNetworkCallsForUser = async () => {
+    const res = await this.doRequest('/network-call', 'GET')
+    return res.json()
+  }
 }

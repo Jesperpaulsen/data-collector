@@ -4,8 +4,11 @@ import {
   indexedDBLocalPersistence,
   initializeAuth,
   inMemoryPersistence,
+  OAuthCredential,
   signInWithCredential
 } from 'firebase/auth'
+
+import { MESSAGE_TYPES } from '@data-collector/types'
 
 import { firebase } from './firebase'
 import Store from './store'
@@ -20,6 +23,7 @@ const auth = initializeAuth(firebase, {
 export class Auth {
   private client = auth
   private store: typeof Store
+  private credentials?: OAuthCredential
 
   constructor(store: typeof Store) {
     this.store = store
@@ -54,9 +58,16 @@ export class Auth {
     return token
   }
 
+  sendCredentials = () => {
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPES.SYNC_REQUESTS,
+      payload: this.credentials
+    })
+  }
+
   private signInWithGoogle = async (token: string) => {
-    const credential = GoogleAuthProvider.credential(null, token)
-    const res = await signInWithCredential(this.client, credential)
+    this.credentials = GoogleAuthProvider.credential(null, token)
+    const res = await signInWithCredential(this.client, this.credentials)
     let displayName = res.user.displayName || ''
     if (!displayName && res.user.providerData?.length) {
       displayName = res.user.providerData[0].displayName?.split(' ')[0] || ''

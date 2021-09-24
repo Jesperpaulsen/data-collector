@@ -16,7 +16,6 @@ const UserProvider: FunctionComponent = ({ children }) => {
   useEffect(() => {
     chrome.runtime.onMessage.addListener(function (details) {
       const { type } = details
-      console.log(details)
       if (type === MESSAGE_TYPES.SEND_USER) {
         setCurrentUser(details.payload)
       }
