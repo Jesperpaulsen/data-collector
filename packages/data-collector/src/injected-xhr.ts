@@ -5,6 +5,7 @@ import { getContentTypeHeader } from './utils'
 const OriginalXHR = window.XMLHttpRequest
 
 function mockXHR() {
+  console.log('yo')
   const xhr = new OriginalXHR()
   xhr.addEventListener('readystatechange', function () {
     if (xhr.readyState === 4) {

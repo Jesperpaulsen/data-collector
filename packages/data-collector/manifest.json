@@ -29,7 +29,12 @@
       ]
     }
   ],
+  "web_accessible_resources": [
+    "injected-xhr.js",
+    "injected-fetch.js"
+  ],
   "permissions": [
+    "<all_urls>",
     "webRequest",
     "tabs",
     "identity",
