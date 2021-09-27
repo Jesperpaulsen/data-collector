@@ -6,6 +6,7 @@
 
 import { MESSAGE_TYPES, NetworkCall } from '@data-collector/types'
 
+import { Scheduler } from './Scheduler'
 import Store from './store'
 
 export class UsageCounter {
@@ -13,15 +14,17 @@ export class UsageCounter {
   private usageLast7Days = 0
   private totalUsage = 0
   private store: typeof Store
+  private scheduler = new Scheduler(1000)
 
   constructor(store: typeof Store) {
     this.store = store
-    this.fetchNetworkCallsForUser()
+    this.scheduler.setCallback(this.getNetworkCallsToSync)
   }
 
   fetchNetworkCallsForUser = async () => {
-    const networkCalls = await this.store.api.getAllNetworkCallsForUser()
-    this.addNetworkCalls(networkCalls)
+    const res = await this.store.api.getAllNetworkCallsForUser()
+    console.log(res)
+    this.addNetworkCalls(res.networkCalls)
   }
 
   private getUsageFromNetworkCall = (networkCall: NetworkCall) => {
@@ -34,6 +37,7 @@ export class UsageCounter {
     } else {
       this.totalUsage += networkCall.size || 0
     }
+    this.sendUsageUpdate()
   }
 
   private getDayAndWeekLimit = () => {
@@ -43,6 +47,12 @@ export class UsageCounter {
       new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).valueOf() / 100
     )
     return { todaysLimit, weekLimit }
+  }
+
+  private getNetworkCallsToSync = async () => {
+    const networkCalls =
+      await this.store.storageHandler.getFilteredNetworkCalls()
+    this.addNetworkCalls(networkCalls)
   }
 
   addNetworkCalls = (networkCalls: NetworkCall[]) => {

@@ -25,7 +25,7 @@ try {
       case MESSAGE_TYPES.REQUEST_USER:
         store.sendUser()
         return
-      case MESSAGE_TYPES.SYNC_REQUESTS:
+      case MESSAGE_TYPES.REQUEST_USAGE:
         store.dataReporter.sendRequests()
         return
       case MESSAGE_TYPES.REQUEST_CREDENTIALS:

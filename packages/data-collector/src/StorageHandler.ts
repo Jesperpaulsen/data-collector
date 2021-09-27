@@ -68,6 +68,13 @@ export class StorageHandler {
     return this.networkCalls[hash]
   }
 
+  getFilteredNetworkCalls = async () => {
+    await this.fetchAndUpdateNetworkCalls()
+    return Object.values(this.networkCalls).filter(
+      (request) => request.fromCache === undefined || !request.fromCache
+    )
+  }
+
   getNetworkCallsToSync = async (): Promise<NetworkCall[]> => {
     if (this.syncInProgress) {
       await this.sleep()
@@ -76,8 +83,7 @@ export class StorageHandler {
     let requestsToSync: NetworkCall[] = []
     this.syncInProgress = true
     try {
-      await this.fetchAndUpdateNetworkCalls()
-      requestsToSync = Object.values(this.networkCalls)
+      requestsToSync = await this.getFilteredNetworkCalls()
       this.networkCalls = {}
       await this.writeToLocalStorage({})
     } catch (e) {

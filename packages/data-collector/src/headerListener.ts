@@ -9,7 +9,7 @@ const getUrlForTab = async (
     pathname: '',
     origin: ''
   }
-  if (!tabId) return host
+  if (!tabId || tabId < 0) return host
   return new Promise((resolve) => {
     chrome.tabs.get(tabId, (tab) => {
       if (!tab?.url) return resolve(host)
@@ -25,8 +25,6 @@ const getUrlForTab = async (
 export const headerListener = (
   details: chrome.webRequest.WebResponseCacheDetails
 ) => {
-  if (details.fromCache) return
-
   let fileSize: number
   let headers = ''
   const timestamp = Math.floor(Date.now().valueOf() / 100)
@@ -49,7 +47,8 @@ export const headerListener = (
       manuallyCalculated: false,
       hostOrigin: host.origin,
       hostPathname: host.pathname,
-      targetIP: details.ip
+      targetIP: details.ip,
+      fromCache: details.fromCache
     }
     store.duplicateHandler.handleNetworkCall(networkCall)
   })

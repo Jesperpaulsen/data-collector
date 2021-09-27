@@ -20,6 +20,24 @@ export class DuplicateHandler {
     )
   }
 
+  private getIPAdress = (
+    existingNetworkCall: NetworkCall,
+    newNetworkCall: NetworkCall
+  ) => {
+    if (!existingNetworkCall.manuallyCalculated)
+      return existingNetworkCall.targetIP
+    else return newNetworkCall.targetIP
+  }
+
+  private checkIfCache = (
+    existingNetworkCall: NetworkCall,
+    newNetworkCall: NetworkCall
+  ) => {
+    if (!existingNetworkCall.manuallyCalculated)
+      return existingNetworkCall.fromCache
+    else return newNetworkCall.fromCache
+  }
+
   private storeLargestNetworkCall = (
     hash: number,
     existingNetworkCall: NetworkCall,
@@ -29,11 +47,29 @@ export class DuplicateHandler {
       (newNetworkCall.size || 0) > (existingNetworkCall.size || 0)
         ? newNetworkCall
         : existingNetworkCall
+    networkCallToStore.targetIP = this.getIPAdress(
+      existingNetworkCall,
+      newNetworkCall
+    )
+    networkCallToStore.fromCache = this.checkIfCache(
+      existingNetworkCall,
+      newNetworkCall
+    )
+    console.log(networkCallToStore.targetOrigin)
     this.store.storageHandler.storeNetworkCall(hash, networkCallToStore)
   }
 
+  private isInternalNetworkCall = (networkCall: NetworkCall) => {
+    return (
+      networkCall.targetOrigin ===
+        'chrome-extension://jkoeemadehedckholhdkcjnadckenjgd' ||
+      networkCall.targetIP === '::1'
+    )
+  }
+
   handleNetworkCall = (networkCall: NetworkCall) => {
-    console.log(networkCall)
+    if (this.isInternalNetworkCall(networkCall)) return
+
     const hash = Hasher.createNetworkCallHash(networkCall)
     const existingNetworkCall = this.store.storageHandler.getNetworkCall(hash)
 
@@ -43,6 +79,7 @@ export class DuplicateHandler {
     }
 
     if (this.checkIfDuplicate(existingNetworkCall, networkCall)) {
+      console.log('Duplicate')
       this.storeLargestNetworkCall(hash, existingNetworkCall, networkCall)
     } else {
       const fakeHash = Hasher.createNetworkCallHash(networkCall, {

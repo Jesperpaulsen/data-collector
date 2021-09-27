@@ -56,7 +56,10 @@ export class API {
   }
 
   getAllNetworkCallsForUser = async () => {
-    const res = await this.doRequest('/network-call', 'GET')
+    const res = await this.doRequest(
+      `/network-call/user/${this.store.user?.uid}`,
+      'GET'
+    )
     return res.json()
   }
 }
