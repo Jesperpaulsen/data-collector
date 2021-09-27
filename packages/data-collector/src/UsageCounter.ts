@@ -32,11 +32,11 @@ export class UsageCounter {
 
     if (networkCall.timestamp > todaysLimit) {
       this.usageToday += networkCall.size || 0
-    } else if (networkCall.timestamp > weekLimit) {
-      this.usageLast7Days += networkCall.size || 0
-    } else {
-      this.totalUsage += networkCall.size || 0
     }
+    if (networkCall.timestamp > weekLimit) {
+      this.usageLast7Days += networkCall.size || 0
+    }
+    this.totalUsage += networkCall.size || 0
     this.sendUsageUpdate()
   }
 

@@ -19,7 +19,7 @@ const UsageDisplay: FunctionalComponent = () => {
         case 'usageToday':
           return 'Amount of data collected today'
         case 'usageLast7Days':
-          return 'Amount of data collected last seven days'
+          return 'Amount of data collected the last seven days'
         case 'totalUsage':
           return 'Total amount of data collected'
       }
