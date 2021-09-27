@@ -1,10 +1,13 @@
-import Dashboard from './components/dashboard/dashboard';
-import Login from './components/login/login';
+import UsageProvider from './contexts/UsageContext';
 import UserProvider from './contexts/UserContext';
 import Router from './Router';
 
 export function App() {
-  return <UserProvider>
-    <Router />
-  </UserProvider>
+  return (
+    <UserProvider>
+        <UsageProvider>
+          <Router />
+        </UsageProvider>
+    </UserProvider>
+  )
 }

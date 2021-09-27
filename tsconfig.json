@@ -28,6 +28,6 @@
     { "path": "./packages/data-analyzer/" },
   ],
   "include": [
-    "**/src/**/*.ts", "packages/types/MESSAGE_TYPES.ts",
+    "**/src/**/*.ts", "**/src/**/*.tsx",
   ]
 }
