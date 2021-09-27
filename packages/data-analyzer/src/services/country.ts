@@ -16,6 +16,12 @@ class Country {
     const countryInfo = geoip.lookup(ip)
     return countryInfo?.country || undefined
   }
+
+  // TODO: Create estimation
+  calculateEmission = (country?: string) => {
+    if (!country) return 0
+    return 0
+  }
 }
 
 export default new Country()

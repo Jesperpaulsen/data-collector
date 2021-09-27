@@ -39,7 +39,9 @@ router.post(
         email,
         name,
         uid: userAuth.uid,
-        role: 'user'
+        role: 'user',
+        totalCO2: 0,
+        totalSize: 0
       }
 
       await firebaseAdmin.firestore.createUser(user)
@@ -90,7 +92,6 @@ router.post(
       const { uid } = req.params
 
       if (uid !== req.currentUser?.uid && !req.currentUser?.isAdmin) {
-        console.log('yp')
         throw new NotAuthorizedError()
       }
 
@@ -98,7 +99,9 @@ router.post(
         email,
         name,
         uid,
-        role: 'user'
+        role: 'user',
+        totalCO2: 0,
+        totalSize: 0
       }
 
       await firebaseAdmin.firestore.createUser(user)

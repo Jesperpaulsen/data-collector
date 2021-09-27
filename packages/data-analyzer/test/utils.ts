@@ -47,7 +47,9 @@ export const getAdminToken = async () => {
     email: testUser.email!,
     name: testUser.name!,
     role: testUser.role!,
-    uid: authUser.uid
+    uid: authUser.uid,
+    totalCO2: 0,
+    totalSize: 0
   }
 
   await firebaseAdmin.firestore.createUser(user)
@@ -80,7 +82,9 @@ export const getUserToken = async () => {
     email: testUser.email!,
     name: testUser.name!,
     role: testUser.role!,
-    uid: authUser.uid
+    uid: authUser.uid,
+    totalCO2: 0,
+    totalSize: 0
   }
   await firebaseAdmin.firestore.createUser(user)
 

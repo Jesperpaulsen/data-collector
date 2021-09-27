@@ -34,10 +34,12 @@ router.post(
     if (req.currentUser?.uid !== networkCall.userId) {
       throw new NotAuthorizedError()
     }
-    console.log(req.body)
 
     try {
-      const docId = await firebaseAdmin.firestore.createNetworkCall(networkCall)
+      const docId = await firebaseAdmin.firestore.storeNetworkCall(
+        networkCall,
+        req.currentUser!.uid
+      )
       return res.status(201).send({ uid: docId })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
@@ -60,14 +62,20 @@ router.post(
     if (req.currentUser?.uid !== batchRequest.userId) {
       throw new NotAuthorizedError()
     }
-    const promises: Promise<string>[] = []
+    const promises: ReturnType<
+      typeof firebaseAdmin.firestore.storeNetworkCall
+    >[] = []
 
     for (const networkCall of batchRequest.networkCalls) {
+      const userId = batchRequest.userId
       promises.push(
-        firebaseAdmin.firestore.createNetworkCall({
-          ...networkCall,
-          userId: batchRequest.userId
-        })
+        firebaseAdmin.firestore.storeNetworkCall(
+          {
+            ...networkCall,
+            userId
+          },
+          userId
+        )
       )
     }
 
@@ -97,6 +105,10 @@ router.put(
       throw new NotAuthorizedError()
     }
 
+    return res.status(200).send({ uid: networkCall.uid })
+
+    // @TODO: Fix this update
+    /*
     const existingNetworkCall = await firebaseAdmin.firestore.getNetworkCall(
       networkCall.uid!
     )
@@ -113,7 +125,7 @@ router.put(
       return res.status(200).send({ uid: networkCall.uid })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
-    }
+    }*/
   }
 )
 

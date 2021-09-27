@@ -16,16 +16,12 @@ export interface NetworkCall {
 }
 
 export interface NetworkCallDoc {
-  uid: string
-  type: XMLHttpRequestResponseType
-  size: number | null
-  timestamp: number
-  manuallyCalculated: boolean
+  uid?: string
+  size: any
+  date: string
   hostOrigin: string
-  hostPathname: string
   userId: string
-  targetOrigin: string | null
-  targetPathname: string | null
-  targetCountry: string | null
-  targetIP: string | null
+  country: string
+  numberOfCallsWithoutSize: any
+  CO2: any
 }
