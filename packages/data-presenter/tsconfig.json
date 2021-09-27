@@ -6,10 +6,8 @@
       "@data-collector/types": ["../types/src"]
     },
   },
-  "references": [ 
-    { "path": "../../" } 
-  ],
-  "include": ["src/**/*"],
+  "references": [{ "path": "../types/tsconfig.json" }],
+  "include": ["src"],
   "exclude": ["dist"],
   "isolatedModules": false,
   "noEmit": true,

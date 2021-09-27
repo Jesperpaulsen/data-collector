@@ -17,3 +17,4 @@ dist.crx
 dist.pem
 
 dist.zip
+env_variables.yaml

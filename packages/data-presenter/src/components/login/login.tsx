@@ -1,10 +1,9 @@
 import { FunctionComponent } from 'preact';
 import { useContext, useState } from 'preact/hooks';
 import { UserContext } from '../../contexts/UserContext';
-import Button from '../common/button';
+import Button from '../common/Button';
 
 const Login: FunctionComponent = () => {
-  const {  } = useContext(UserContext)
   const login = () => {
     chrome.runtime.sendMessage({ type: 'signIn' })
   }

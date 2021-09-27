@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useContext } from 'preact/hooks';
-import Dashboard from './components/dashboard/dashboard';
-import Login from './components/login/login';
+import Dashboard from './components/dashboard/Dashboard';
+import Login from './components/login/Login';
 import { UserContext } from './contexts/UserContext';
 
 const Router: FunctionComponent = () => {
