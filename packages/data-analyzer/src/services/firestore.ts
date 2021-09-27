@@ -1,8 +1,10 @@
 import admin from 'firebase-admin'
 
-import { NetworkCall, User } from '@data-collector/types'
+import { NetworkCall, NetworkCallDoc, User } from '@data-collector/types'
 
+import Country from './country'
 import FirebaseAdmin from './firebase-admin'
+import Whois from './whois'
 
 export class Firestore {
   private client: admin.firestore.Firestore
@@ -66,8 +68,36 @@ export class Firestore {
 
   createNetworkCall = async (networkCall: NetworkCall) => {
     const reference = this.networkCallCollection.doc()
-    const networkCallToAdd = { ...networkCall, uid: reference.id }
-    await reference.set(networkCallToAdd)
+    const {
+      hostOrigin,
+      hostPathname,
+      timestamp,
+      type,
+      manuallyCalculated,
+      size,
+      targetOrigin,
+      targetPathname,
+      targetIP,
+      userId
+    } = networkCall
+
+    const targetCountry = Country.getCountry(targetIP)
+    const networkCallDoc: NetworkCallDoc = {
+      hostOrigin,
+      hostPathname,
+      timestamp,
+      type,
+      targetIP: targetIP || null,
+      targetCountry: targetCountry || null,
+      uid: reference.id,
+      manuallyCalculated: !!manuallyCalculated,
+      size: size || null,
+      targetOrigin: targetOrigin || null,
+      targetPathname: targetPathname || null,
+      userId: userId!
+    }
+
+    await reference.set(networkCallDoc)
     return reference.id
   }
 

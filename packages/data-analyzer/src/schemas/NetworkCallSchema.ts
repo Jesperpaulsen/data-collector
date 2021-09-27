@@ -18,7 +18,7 @@ const getBaseSchema = (isUpdate?: true): Schema => {
     targetOrigin: {
       in: ['body'],
       exists,
-      isURL: true,
+      isString: true,
       errorMessage: 'targetOrigin is not valid'
     },
     targetPathname: {
@@ -48,7 +48,7 @@ const getBaseSchema = (isUpdate?: true): Schema => {
     hostOrigin: {
       in: ['body'],
       exists,
-      isURL: true,
+      isString: true,
       errorMessage: 'Host origin is not valid'
     },
     hostPathname: {
@@ -92,9 +92,7 @@ export const NetworkCallSchemaInArray = (isUpdate?: true): Schema => {
   for (const [key, value] of Object.entries(baseSchema)) {
     newSchema[`networkCalls.*.${key}`] = {
       ...value,
-      exists: true,
-      optional: false,
-      notEmpty: true
+      optional: true
     }
   }
   return {
