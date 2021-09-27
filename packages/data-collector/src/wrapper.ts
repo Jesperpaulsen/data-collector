@@ -4,12 +4,13 @@ import { headerListener } from './headerListener'
 import store from './store'
 
 try {
-  chrome.webRequest.onHeadersReceived.addListener(
+  chrome.webRequest.onResponseStarted.addListener(
     headerListener,
     { urls: ['<all_urls>'] },
     ['responseHeaders']
   )
-  chrome.runtime.onMessage.addListener(function (details: any) {
+
+  chrome.runtime.onMessage.addListener((details: any) => {
     const type = details.type
     console.log(type)
     switch (type) {

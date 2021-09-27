@@ -23,17 +23,18 @@ const getUrlForTab = async (
 }
 
 export const headerListener = (
-  details: chrome.webRequest.WebResponseHeadersDetails
+  details: chrome.webRequest.WebResponseCacheDetails
 ) => {
-  let fileSize
+  if (details.fromCache) return
+
+  let fileSize: number
   let headers = ''
   const timestamp = Math.floor(Date.now().valueOf() / 100)
   details.responseHeaders?.forEach((header) => {
     headers += `${header.name}: ${header.value}`
-    if (header.name.toLowerCase() === 'content-length') fileSize = header.value
+    if (header.name.toLowerCase() === 'content-length')
+      fileSize = Number(header.value)
   })
-
-  console.log('yoyo')
 
   const url = new URL(details.url)
 
@@ -47,7 +48,8 @@ export const headerListener = (
       size: fileSize,
       manuallyCalculated: false,
       hostOrigin: host.origin,
-      hostPathname: host.pathname
+      hostPathname: host.pathname,
+      targetIP: details.ip
     }
     store.duplicateHandler.handleNetworkCall(networkCall)
   })

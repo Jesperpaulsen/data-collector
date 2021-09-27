@@ -16,6 +16,7 @@ export class UsageCounter {
 
   constructor(store: typeof Store) {
     this.store = store
+    this.fetchNetworkCallsForUser()
   }
 
   fetchNetworkCallsForUser = async () => {
