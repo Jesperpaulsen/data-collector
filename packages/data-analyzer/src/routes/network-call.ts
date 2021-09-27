@@ -150,4 +150,26 @@ router.get(
   }
 )
 
+router.get(
+  generateRoute('users/usage-details/:uid'),
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { uid } = req.params
+
+    if (req.currentUser?.uid !== uid) {
+      throw new NotAuthorizedError()
+    }
+
+    const details: { today: number; last7Days: number; totalUsage: number } = {
+      today: 0,
+      last7Days: 0,
+      totalUsage: 0
+    }
+
+    const usageToday = firebaseAdmin.firestore.getNetworkCall('host', uid)
+
+    const
+  }
+)
+
 export { router as networkCallRouter }

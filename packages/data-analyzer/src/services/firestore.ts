@@ -50,8 +50,8 @@ export class Firestore {
     return this.userCollection.doc(uid).delete()
   }
 
-  getDateString = () => {
-    return new Date().toISOString().split('T')[0]
+  getDateString = (date: Date) => {
+    return date.toISOString().split('T')[0]
   }
 
   getAllNetworkCalls = async () => {
@@ -60,9 +60,12 @@ export class Firestore {
     return [...hostDocs.docs, ...countryDocs.docs]
   }
 
+  getCollection = (type: 'country' | 'host') => {
+    return type === 'country' ? this.countryCollection : this.hostCollection
+  }
+
   getNetworkCall = async (type: 'country' | 'host', uid: string) => {
-    const collection =
-      type === 'country' ? this.countryCollection : this.hostCollection
+    const collection = this.getCollection(type)
     const snapshot = await collection.doc(uid).get()
     return snapshot.data() as NetworkCallDoc
   }
@@ -85,22 +88,22 @@ export class Firestore {
     return res
   }
 
-  getDocId = (identifier: string, userId: string) => {
+  getDocId = (identifier: string, userId: string, date: Date) => {
     if (!identifier) return null
-    const date = this.getDateString()
-    return `${userId}-${identifier}-${date}`
+    const dateString = this.getDateString(date)
+    return `${userId}-${identifier}-${dateString}`
   }
 
   createCountryDoc = async (networkCall: NetworkCallDoc) => {
     const { country, numberOfCallsWithoutSize, size, userId, CO2 } = networkCall
-    const uid = this.getDocId(country, userId)
+    const uid = this.getDocId(country, userId, new Date())
 
     if (!uid) {
       console.error(`Missing country for doc`)
       return
     }
 
-    const date = this.getDateString()
+    const date = this.getDateString(new Date())
     const countryDoc: CountryDoc = {
       uid,
       userId,
@@ -116,14 +119,14 @@ export class Firestore {
   createHostDoc = async (networkCall: NetworkCallDoc) => {
     const { hostOrigin, numberOfCallsWithoutSize, size, userId, CO2 } =
       networkCall
-    const uid = this.getDocId(hostOrigin, userId)
+    const uid = this.getDocId(hostOrigin, userId, new Date())
 
     if (!uid) {
       console.error(`Missing country for doc`)
       return
     }
 
-    const date = this.getDateString()
+    const date = this.getDateString(new Date())
     const hostDoc: HostDoc = {
       uid,
       userId,
@@ -161,7 +164,7 @@ export class Firestore {
       ),
       size: admin.firestore.FieldValue.increment(size || 0),
       CO2: admin.firestore.FieldValue.increment(CO2 || 0),
-      date: this.getDateString()
+      date: this.getDateString(new Date())
     }
 
     const promises = [
@@ -172,5 +175,24 @@ export class Firestore {
 
     const [host, network] = await Promise.all(promises)
     return { host, network }
+  }
+
+  // TODO: Change date to be stored in unix for time 0 each date, so we can query > unix date
+  getLastWeekNetworkCall = async (uid: string, type: 'country' | 'host') => {
+    const today = new Date()
+    const dates: string[] = []
+
+    for (let i = 7; i > -1; i--) {
+      const tmpDate = new Date()
+      tmpDate.setDate(today.getDate() - i)
+      dates.push(this.getDateString(tmpDate))
+    }
+
+    const collection = this.getCollection(type)
+    const promises: Promise<NetworkCallDoc> = []
+    for (const date of dates) {
+      const id = this.getDocId()
+      promises.push(this.getCollection())
+    }
   }
 }
