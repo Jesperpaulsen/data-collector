@@ -8,6 +8,6 @@
     },
     "module": "ESNext"
   },
-  "include": ["src","__tests__"],
+  "include": ["src","test"],
   "references": [{ "path": "../types/tsconfig.json" }]
 }

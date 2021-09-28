@@ -98,7 +98,7 @@ describe('route /users/admin/:uid method: PUT', () => {
       .expect(200)
 
     const userInDatabase = await firebaseAdmin.firestore.getUser(res.body.uid)
-    expect(userInDatabase).toEqual({ ...res.body, role: 'admin' })
+    expect(userInDatabase.role).toEqual('admin')
   })
 
   it('returns 200 and degrades user to user if issued by admin', async () => {
@@ -111,6 +111,6 @@ describe('route /users/admin/:uid method: PUT', () => {
       .expect(200)
 
     const userInDatabase = await firebaseAdmin.firestore.getUser(res.body.uid)
-    expect(userInDatabase).toEqual({ ...res.body, role: 'user' })
+    expect(userInDatabase.role).toEqual('user')
   })
 })

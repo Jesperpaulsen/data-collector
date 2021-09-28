@@ -37,7 +37,7 @@ export class NetworkCallController {
       this.usageCollection.get()
     ]
     const [hostDocs, countryDocs, usageDocs] = await Promise.all(promises)
-    return [...hostDocs.docs, ...countryDocs.docs, usageDocs.docs]
+    return [...hostDocs.docs, ...countryDocs.docs, ...usageDocs.docs]
   }
 
   getCollection = (type: USAGE_TYPES) => {
@@ -79,7 +79,9 @@ export class NetworkCallController {
     userId: string
     date: number
   }) => {
-    return identifier ? `${userId}-${identifier}-${date}` : `${userId}-${date}`
+    return identifier?.length
+      ? `${userId}-${identifier}-${date}`
+      : `${userId}-${date}`
   }
 
   private getFieldValue = (numberOfIncrements: number) => {
@@ -88,8 +90,8 @@ export class NetworkCallController {
 
   updateUserStats = async (networkCall: BaseUsageDoc) => {
     const fieldsToUpdate: Pick<User, 'totalCO2' | 'totalSize'> = {
-      totalSize: admin.firestore.FieldValue.increment(networkCall.size),
-      totalCO2: admin.firestore.FieldValue.increment(networkCall.CO2)
+      totalSize: networkCall.size,
+      totalCO2: networkCall.CO2
     }
     return this.firestore.updateUser(networkCall.userId, fieldsToUpdate)
   }
@@ -99,8 +101,10 @@ export class NetworkCallController {
     hostOrigin: string,
     usageId: string
   ) => {
+    const paths = hostOrigin.split('://')
+    const identifier = paths.length > 1 ? paths[1] : ''
     const uid = this.getDocId({
-      identifier: hostOrigin,
+      identifier,
       date: networkCall.date,
       userId: networkCall.userId
     })
@@ -164,8 +168,11 @@ export class NetworkCallController {
       this.setCountryDoc(baseUsageDoc, targetCountry, usageId),
       this.setUsageDoc(baseUsageDoc)
     ]
-
-    const [host, network, country, usage] = await Promise.all(promises)
-    return { host, network, country, usage }
+    try {
+      const [host, network, country, usage] = await Promise.all(promises)
+      return { host, network, country, usage }
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
