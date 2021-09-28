@@ -1,8 +1,6 @@
-export interface CountryDoc {
-  uid: string
-  userId: string
-  date: string
-  size: any
-  CO2: any
-  numberOfCallsWithoutSize: any
+import { BaseUsageDoc } from './base-usage-doc'
+
+export interface CountryDoc extends BaseUsageDoc {
+  usageId: string
+  country: string
 }

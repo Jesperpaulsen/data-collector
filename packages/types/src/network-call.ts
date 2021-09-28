@@ -14,14 +14,3 @@ export interface NetworkCall {
   targetIP?: string
   fromCache?: boolean
 }
-
-export interface NetworkCallDoc {
-  uid?: string
-  size: any
-  date: string
-  hostOrigin: string
-  userId: string
-  country: string
-  numberOfCallsWithoutSize: any
-  CO2: any
-}

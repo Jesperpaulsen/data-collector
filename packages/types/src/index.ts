@@ -1,5 +1,7 @@
-export type { NetworkCall, NetworkCallDoc } from './network-call'
+export type { NetworkCall } from './network-call'
 export type { User } from './user'
 export { MESSAGE_TYPES } from './MESSAGE_TYPES'
+export type { BaseUsageDoc } from './base-usage-doc'
 export type { CountryDoc } from './country-doc'
 export type { HostDoc } from './host-doc'
+export { USAGE_TYPES } from './USAGE_TYPES'

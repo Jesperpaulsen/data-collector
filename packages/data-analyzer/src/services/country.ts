@@ -3,9 +3,9 @@ import geoip from 'geoip-country'
 class Country {
   getCountry = (ip?: string) => {
     try {
-      if (!ip) return undefined
+      if (!ip) return ''
       const country = this.lookUp(ip)
-      return country
+      return country || ''
     } catch (e) {
       console.log(e)
       return ''

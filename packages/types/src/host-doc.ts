@@ -1,9 +1,6 @@
-export interface HostDoc {
-  uid: string
-  userId: string
-  date: string
+import { BaseUsageDoc } from './base-usage-doc'
+
+export interface HostDoc extends BaseUsageDoc {
+  usageId: string
   hostOrigin: string
-  size: any
-  CO2?: any
-  numberOfCallsWithoutSize: any
 }
