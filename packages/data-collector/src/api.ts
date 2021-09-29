@@ -1,5 +1,6 @@
 import { NetworkCall } from '@data-collector/types'
 
+import { firebase } from './firebase'
 import Store from './store'
 export class API {
   private store: typeof Store

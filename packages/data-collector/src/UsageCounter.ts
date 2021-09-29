@@ -1,77 +1,71 @@
-/**
- * The idea behind this class is to work as a cacher for network requests. Initially it will load all the network requests for a user, and then it will
- * listen to network requests that are beeing sent to the database. This is just an idea, and it might change in the future when we (most likely) change
- * the database structure
- */
+import { MESSAGE_TYPES } from '@data-collector/types'
 
-import { MESSAGE_TYPES, NetworkCall } from '@data-collector/types'
-
-import { Scheduler } from './Scheduler'
 import Store from './store'
 
 export class UsageCounter {
-  private usageToday = 0
+  private usageToday?: number
   private usageLast7Days = 0
   private totalUsage = 0
+  private usageSinceSubscriptionStarted = 0
   private store: typeof Store
-  private scheduler = new Scheduler(1000)
 
   constructor(store: typeof Store) {
     this.store = store
-    this.scheduler.setCallback(this.getNetworkCallsToSync)
   }
 
-  fetchNetworkCallsForUser = async () => {
-    const res = await this.store.api.getAllNetworkCallsForUser()
-    console.log(res)
-    this.addNetworkCalls(res.networkCalls)
+  private getUsageLast7Days = async () => {
+    const dateLimit = this.getDateLimit(7)
+    if (!this.store.user) return
+    this.usageLast7Days = await this.store.firestore.getUsageForPreviousDates(
+      this.store.user?.uid,
+      dateLimit
+    )
   }
 
-  private getUsageFromNetworkCall = (networkCall: NetworkCall) => {
-    const { todaysLimit, weekLimit } = this.getDayAndWeekLimit()
+  private getTotalUsage = async () => {
+    if (!this.store.user) return
+    const userDoc = await this.store.firestore.getUserDoc(this.store.user.uid)
+    this.totalUsage = userDoc.totalSize
+  }
 
-    if (networkCall.timestamp > todaysLimit) {
-      this.usageToday += networkCall.size || 0
-    }
-    if (networkCall.timestamp > weekLimit) {
-      this.usageLast7Days += networkCall.size || 0
-    }
-    this.totalUsage += networkCall.size || 0
+  private listenToTodaysUsage = async () => {
+    if (!this.store.user) return
+    this.store.firestore.listenToTodaysUsage(
+      this.store.user.uid,
+      this.getDateLimit(0),
+      this.handleUsageUpdate
+    )
+  }
+
+  private handleUsageUpdate = (usage: number) => {
+    if (!this.usageToday) this.usageToday = usage
+    this.usageSinceSubscriptionStarted = usage - this.usageToday
     this.sendUsageUpdate()
   }
 
-  private getDayAndWeekLimit = () => {
-    const todaysLimit =
-      Math.floor(new Date().setUTCHours(0, 0, 0, 0).valueOf()) / 100
-    const weekLimit = Math.floor(
-      new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).valueOf() / 100
-    )
-    return { todaysLimit, weekLimit }
+  private getDateLimit = (numberOfDaysToSubtract: number) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const dateToCompare = new Date()
+    dateToCompare.setDate(today.getDate() - numberOfDaysToSubtract)
+    dateToCompare.setHours(0, 0, 0, 0)
+    return dateToCompare.valueOf() / 1000
   }
 
-  private getNetworkCallsToSync = async () => {
-    const networkCalls =
-      await this.store.storageHandler.getFilteredNetworkCalls()
-    this.addNetworkCalls(networkCalls)
-  }
-
-  addNetworkCalls = (networkCalls: NetworkCall[]) => {
-    for (const networkCall of networkCalls) {
-      this.getUsageFromNetworkCall(networkCall)
-    }
-  }
-
-  addNetworkCall = (networkCall: NetworkCall) => {
-    this.getUsageFromNetworkCall(networkCall)
+  listenToChanges = async () => {
+    const promises = [this.getUsageLast7Days(), this.getTotalUsage()]
+    await Promise.all(promises)
+    this.listenToTodaysUsage()
   }
 
   sendUsageUpdate = () => {
     chrome.runtime.sendMessage({
       type: MESSAGE_TYPES.SYNC_REQUESTS,
       payload: {
-        usageToday: this.usageToday,
-        usageLast7Days: this.usageLast7Days,
-        totalUsage: this.totalUsage
+        usageToday: (this.usageToday || 0) + this.usageSinceSubscriptionStarted,
+        usageLast7Days:
+          this.usageLast7Days + this.usageSinceSubscriptionStarted,
+        totalUsage: this.totalUsage + this.usageSinceSubscriptionStarted
       }
     })
   }

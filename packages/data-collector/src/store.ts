@@ -6,10 +6,12 @@ import { DuplicateHandler } from './DuplicateHandler'
 import { DataReporter } from './DataReporter'
 import { StorageHandler } from './StorageHandler'
 import { UsageCounter } from './UsageCounter'
+import { Firestore } from './Firestore'
 
 class Store {
   api: API
   auth: Auth
+  firestore: Firestore
   duplicateHandler: DuplicateHandler
   dataReporter: DataReporter
   storageHandler: StorageHandler
@@ -19,6 +21,7 @@ class Store {
   constructor() {
     this.api = new API(this)
     this.auth = new Auth(this)
+    this.firestore = new Firestore(this)
     this.duplicateHandler = new DuplicateHandler(this)
     this.dataReporter = new DataReporter(this)
     this.storageHandler = new StorageHandler(this)
