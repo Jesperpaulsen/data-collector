@@ -35,6 +35,11 @@ export class Firestore {
     return snapshot.data() as User
   }
 
+  checkIfUserExists = async (uid: string) => {
+    const snapshot = await this.getUser(uid)
+    return !!snapshot
+  }
+
   createUser = async (user: User) => {
     return this.userCollection.doc(user.uid).set(user)
   }

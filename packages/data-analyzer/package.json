@@ -15,7 +15,7 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "build": "esbuild src/index.ts --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --platform=node",
+    "build": "rm -rf ./dist && esbuild src/index.ts --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --platform=node",
     "gcp-build": "esbuild-node-tsc && node ./node_modules/geoip-country/scripts/updatedb.js"
   },
   "author": "Jesper Paulsen",

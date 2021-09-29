@@ -95,6 +95,15 @@ router.post(
         throw new NotAuthorizedError()
       }
 
+      const checkIfUserExists = await firebaseAdmin.firestore.checkIfUserExists(
+        uid
+      )
+
+      if (checkIfUserExists) {
+        res.status(201).send({ email, name, uid, role: 'user' })
+        return
+      }
+
       const user: User = {
         email,
         name,

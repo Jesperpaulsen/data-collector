@@ -3,13 +3,12 @@ import {
   CountryDoc,
   HostDoc,
   NetworkCall,
-  USAGE_TYPES,
   User
 } from '@data-collector/types'
 import admin from 'firebase-admin'
 import Country from './country'
 import { getStartOfDateInUnix } from '../utils/date'
-
+import { USAGE_TYPES } from '../types/USAGE_TYPES'
 import { Firestore } from './firestore'
 
 export class NetworkCallController {

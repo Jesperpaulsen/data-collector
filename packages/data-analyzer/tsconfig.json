@@ -2,12 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
+    "baseUrl": ".",
     "outDir": "./dist",
     "paths": {
       "@data-collector/types": ["../types/src"]
     },
     "module": "ESNext"
   },
-  "include": ["src","test"],
+  "include": ["src"],
   "references": [{ "path": "../types/tsconfig.json" }]
 }
