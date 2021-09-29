@@ -6,5 +6,8 @@ module.exports = {
   testEnvironment: 'node',
   testPathIgnorePatterns: ['dist'],
   setupFiles,
-  setupFilesAfterEnv: ['<rootDir>/test/setup.ts']
+  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
+  moduleNameMapper: {
+    '@data-collector/(.*)': '<rootDir>/../types/src'
+  }
 }
