@@ -1,0 +1,14 @@
+{
+  "name": "co2emissionperkwhparser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "parse": "node ./parser.mjs"
+  },
+  "author": "Jesper Paulsen",
+  "license": "ISC",
+  "devDependencies": {
+    "pdf-table-extractor": "^1.0.3"
+  }
+}
