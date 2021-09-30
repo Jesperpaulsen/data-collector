@@ -8,9 +8,18 @@ export class UsageCounter {
   private totalUsage = 0
   private usageSinceSubscriptionStarted = 0
   private store: typeof Store
+  private totalCO2 = 0
 
   constructor(store: typeof Store) {
     this.store = store
+    setTimeout(() => {
+      chrome.notifications.create('', {
+        title: 'Update on your usage',
+        message: `You have used ${this.usageToday} bytes today`,
+        type: 'basic',
+        iconUrl: './android-chrome-192x192.png'
+      })
+    }, 5000)
   }
 
   private getUsageLast7Days = async () => {
@@ -26,6 +35,7 @@ export class UsageCounter {
     if (!this.store.user) return
     const userDoc = await this.store.firestore.getUserDoc(this.store.user.uid)
     this.totalUsage = userDoc.totalSize
+    this.totalCO2 = userDoc.totalCO2
   }
 
   private listenToTodaysUsage = async () => {
@@ -37,9 +47,19 @@ export class UsageCounter {
     )
   }
 
-  private handleUsageUpdate = (usage: number) => {
-    if (!this.usageToday) this.usageToday = usage
-    this.usageSinceSubscriptionStarted = usage - this.usageToday
+  private handleUsageUpdate = ({
+    size,
+    CO2
+  }: {
+    size: number
+    CO2: number
+  }) => {
+    if (!this.usageToday) this.usageToday = size
+    this.usageSinceSubscriptionStarted = size - this.usageToday
+    this.usageToday += this.usageSinceSubscriptionStarted
+    this.usageLast7Days += this.usageSinceSubscriptionStarted
+    this.totalUsage += this.usageSinceSubscriptionStarted
+    this.totalCO2 += CO2
     this.sendUsageUpdate()
   }
 
@@ -62,10 +82,10 @@ export class UsageCounter {
     chrome.runtime.sendMessage({
       type: MESSAGE_TYPES.SYNC_REQUESTS,
       payload: {
-        usageToday: (this.usageToday || 0) + this.usageSinceSubscriptionStarted,
-        usageLast7Days:
-          this.usageLast7Days + this.usageSinceSubscriptionStarted,
-        totalUsage: this.totalUsage + this.usageSinceSubscriptionStarted
+        usageToday: this.usageToday,
+        usageLast7Days: this.usageLast7Days,
+        totalUsage: this.totalUsage,
+        totalCO2: this.totalCO2
       }
     })
   }

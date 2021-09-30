@@ -38,7 +38,8 @@
     "webRequest",
     "tabs",
     "identity",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "oauth2": {
     "client_id": "154072078565-c2qtni1qj3atn2ip7cgdeofpph8jjhhk.apps.googleusercontent.com",

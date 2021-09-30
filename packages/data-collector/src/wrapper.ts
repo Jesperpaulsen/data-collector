@@ -26,7 +26,7 @@ try {
         store.sendUser()
         return
       case MESSAGE_TYPES.REQUEST_USAGE:
-        store.dataReporter.sendRequests()
+        store.usageCounter.sendUsageUpdate()
         return
       case MESSAGE_TYPES.REQUEST_CREDENTIALS:
         store.auth.sendCredentials()

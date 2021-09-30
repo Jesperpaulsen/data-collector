@@ -1,14 +1,36 @@
 import geoip from 'geoip-country'
 
+import { CO2PerKWHCountry } from '@data-collector/types'
+const co2PerKWH = require('../data/co2PerKwhPerCountry.json') as {
+  [countryISO: string]: CO2PerKWHCountry
+}
+
+const valuesArray = Object.values(co2PerKWH)
+const total = valuesArray.reduce(
+  (prevValue, country) => (prevValue += country.CO2perKWH),
+  0
+)
+const length = valuesArray.length
+
+const average = total / length
+
+const kwhPerGB = 1.8
+const kwhPerByte = kwhPerGB / (1024 * 1024 * 1024)
+
 class Country {
+  // @ts-ignore
+  private regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
+
   getCountry = (ip?: string) => {
+    const res = { countryCode: '', countryName: '' }
     try {
-      if (!ip) return ''
-      const country = this.lookUp(ip)
-      return country || ''
+      if (!ip) return res
+      res.countryCode = this.lookUp(ip) || ''
+      res.countryName = this.regionNames.of(res.countryCode)
+      return res
     } catch (e) {
       console.log(e)
-      return ''
+      return res
     }
   }
 
@@ -17,10 +39,17 @@ class Country {
     return countryInfo?.country || undefined
   }
 
-  // TODO: Create estimation
-  calculateEmission = (country?: string) => {
-    if (!country) return 0
-    return 0
+  calculateEmission = ({
+    size,
+    countryCode = ''
+  }: {
+    size?: number | null
+    countryCode?: string
+  }) => {
+    if (!size) return 0
+    const infoAboutCountry = co2PerKWH[countryCode]
+    const CO2perKWH = infoAboutCountry?.CO2perKWH || average
+    return size * kwhPerByte * CO2perKWH
   }
 }
 

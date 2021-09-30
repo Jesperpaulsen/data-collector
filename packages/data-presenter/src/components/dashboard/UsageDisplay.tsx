@@ -9,7 +9,7 @@ interface UsageDisplay {
 
 
 const UsageDisplay: FunctionalComponent = () => {
-  const { usage } = useContext(UsageContext)
+  const { usage, totalCO2 } = useContext(UsageContext)
   const [usageToDisplay, setUsageToDisplay] = useState<UsageDisplay[]>([])
   
 
@@ -55,13 +55,21 @@ const UsageDisplay: FunctionalComponent = () => {
   }, [usage])
 
   return (
-    <div className="flex justify-center">
-      {usageToDisplay.map((usage) => (
-        <div className="text-center px-3">
-          <div className="text-4xl font-medium">{usage.usageString}</div>
-          <div className="text-xs font-light">{usage.usageDescription}</div>
+    <div>
+      <div className="flex justify-center">
+        {usageToDisplay.map((usage) => (
+          <div className="text-center px-3">
+            <div className="text-4xl font-medium">{usage.usageString}</div>
+            <div className="text-xs font-light">{usage.usageDescription}</div>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center mt-3">
+        <div className="text-center">
+          <div className="text-6xl font-medium">{totalCO2.toFixed(2)}</div>
+          <div className="text-xs font-light">kg CO2</div>
         </div>
-      ))}
+      </div>
     </div>
   )
 }

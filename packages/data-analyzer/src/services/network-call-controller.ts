@@ -101,7 +101,10 @@ export class NetworkCallController {
     usageId: string
   ) => {
     const paths = hostOrigin.split('://')
-    const identifier = paths.length > 1 ? paths[1] : ''
+    let identifier = paths.length > 1 ? paths[1] : ''
+    if (identifier.startsWith('www')) {
+      identifier = identifier.substr(2)
+    }
     const uid = this.getDocId({
       identifier,
       date: networkCall.date,
@@ -119,17 +122,19 @@ export class NetworkCallController {
 
   setCountryDoc = async (
     networkCall: BaseUsageDoc,
-    country: string,
+    countryCode: string,
+    countryName: string,
     usageId: string
   ) => {
     const uid = this.getDocId({
-      identifier: country,
+      identifier: countryCode,
       date: networkCall.date,
       userId: networkCall.userId
     })
     const countryDoc: CountryDoc = {
       ...networkCall,
-      country,
+      countryCode,
+      countryName,
       usageId,
       type: USAGE_TYPES.COUNTRY,
       uid
@@ -148,8 +153,8 @@ export class NetworkCallController {
     const { hostOrigin, size, targetIP } = networkCall
 
     const date = getStartOfDateInUnix(new Date())
-    const targetCountry = Country.getCountry(targetIP)
-    const CO2 = Country.calculateEmission(targetCountry)
+    const { countryCode, countryName } = Country.getCountry(targetIP)
+    const CO2 = Country.calculateEmission({ size, countryCode })
     const usageId = this.getDocId({ userId, date })
     const baseUsageDoc: BaseUsageDoc = {
       uid: usageId,
@@ -164,7 +169,7 @@ export class NetworkCallController {
     const promises = [
       this.updateUserStats(baseUsageDoc),
       this.setHostDoc(baseUsageDoc, hostOrigin || '', usageId),
-      this.setCountryDoc(baseUsageDoc, targetCountry, usageId),
+      this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
       this.setUsageDoc(baseUsageDoc)
     ]
     try {

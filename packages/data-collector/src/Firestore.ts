@@ -55,13 +55,13 @@ export class Firestore {
   listenToTodaysUsage = (
     uid: string,
     date: number,
-    callback: (usage: number) => void
+    callback: (props: { size: number; CO2: number }) => void
   ) => {
     const d = doc(this.usageCollection, `${uid}-${date}`)
-    console.log(date)
     onSnapshot(d, (doc) => {
       const data = doc.data() as BaseUsageDoc
-      callback(data.size)
+      const usage = { size: data.size, CO2: data.CO2 }
+      callback(usage)
     })
   }
 }
