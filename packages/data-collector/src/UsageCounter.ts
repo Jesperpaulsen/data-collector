@@ -9,6 +9,7 @@ export class UsageCounter {
   private usageSinceSubscriptionStarted = 0
   private store: typeof Store
   private totalCO2 = 0
+  private currentDate = new Date().setHours(0, 0, 0, 0).valueOf()
 
   constructor(store: typeof Store) {
     this.store = store
@@ -47,6 +48,15 @@ export class UsageCounter {
     )
   }
 
+  private checkIfDateHasChanged = () => {
+    const now = new Date().setHours(0, 0, 0, 0).valueOf()
+    if (this.currentDate !== now) {
+      this.currentDate = now
+      return true
+    }
+    return false
+  }
+
   private handleUsageUpdate = ({
     size,
     CO2
@@ -54,12 +64,21 @@ export class UsageCounter {
     size: number
     CO2: number
   }) => {
+    if (this.checkIfDateHasChanged()) {
+      this.usageSinceSubscriptionStarted = 0
+      this.usageToday = 0
+      this.usageLast7Days = 0
+      this.totalUsage = 0
+      this.totalCO2 = 0
+      this.listenToChanges()
+      return
+    }
     if (!this.usageToday) this.usageToday = size
     this.usageSinceSubscriptionStarted = size - this.usageToday
     this.usageToday += this.usageSinceSubscriptionStarted
     this.usageLast7Days += this.usageSinceSubscriptionStarted
     this.totalUsage += this.usageSinceSubscriptionStarted
-    this.totalCO2 += CO2
+    this.totalCO2 = CO2
     this.sendUsageUpdate()
   }
 

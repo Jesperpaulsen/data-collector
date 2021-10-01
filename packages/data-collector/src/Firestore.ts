@@ -24,6 +24,7 @@ export class Firestore {
   private store: typeof Store
   private usageCollection: CollectionReference<DocumentData>
   private userCollection: CollectionReference<DocumentData>
+  private unsubscribeTodaysListener?: () => void
 
   constructor(store: typeof Store) {
     this.store = store
@@ -58,7 +59,8 @@ export class Firestore {
     callback: (props: { size: number; CO2: number }) => void
   ) => {
     const d = doc(this.usageCollection, `${uid}-${date}`)
-    onSnapshot(d, (doc) => {
+    if (this.unsubscribeTodaysListener) this.unsubscribeTodaysListener()
+    this.unsubscribeTodaysListener = onSnapshot(d, (doc) => {
       const data = doc.data() as BaseUsageDoc
       const usage = { size: data.size, CO2: data.CO2 }
       callback(usage)
