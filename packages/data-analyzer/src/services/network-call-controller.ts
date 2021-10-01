@@ -103,7 +103,7 @@ export class NetworkCallController {
     const paths = hostOrigin.split('://')
     let identifier = paths.length > 1 ? paths[1] : ''
     if (identifier.startsWith('www')) {
-      identifier = identifier.substr(2)
+      identifier = identifier.substr(3)
     }
     const uid = this.getDocId({
       identifier,
