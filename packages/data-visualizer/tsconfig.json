@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "paths": {
+      "@data-collector/types": ["../types/src"]
+    },
+  },
+  "references": [{ "path": "../types/tsconfig.json" }],
+  "include": ["src"],
+  "exclude": ["dist"],
+  "isolatedModules": false,
+  "noEmit": true,
+  "jsx": "react-jsx",
+  "jsxImportSource": "preact",
+}

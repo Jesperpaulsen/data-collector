@@ -41,6 +41,12 @@
     "storage",
     "notifications"
   ],
+  "externally_connectable": {
+    "matches": [
+      "http://localhost:3000/*",
+      "https://*.jesper.no/*"
+    ]
+  },
   "oauth2": {
     "client_id": "154072078565-c2qtni1qj3atn2ip7cgdeofpph8jjhhk.apps.googleusercontent.com",
     "scopes": [

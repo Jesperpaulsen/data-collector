@@ -22,6 +22,9 @@ module.exports = {
     'simple-import-sort'
   ],
   rules: {
+    'no-case-declarations': 'off',
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
     'no-use-before-define': 'off',
     'prettier/prettier': [
       'error',

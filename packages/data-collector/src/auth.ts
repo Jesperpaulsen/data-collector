@@ -59,9 +59,13 @@ export class Auth {
     return token
   }
 
+  getToken = () => {
+    return this.forceLogin()
+  }
+
   sendCredentials = () => {
     chrome.runtime.sendMessage({
-      type: MESSAGE_TYPES.SYNC_REQUESTS,
+      type: MESSAGE_TYPES.SEND_CREDENTIALS,
       payload: this.credentials
     })
   }

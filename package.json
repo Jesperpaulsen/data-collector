@@ -11,7 +11,7 @@
     "test:ci": "pnpm recursive run test:ci --stream",
     "emulators": "export GOOGLE_APPLICATION_CREDENTIALS=\"./packages/data-analyzer/appEngineKey.json\" && firebase emulators:start"
   },
-  "author": "@CryogenicPlanet",
+  "author": "Jesper Paulsen",
   "license": "ISC",
   "private": true,
   "husky": {

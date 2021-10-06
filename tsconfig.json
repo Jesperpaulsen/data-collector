@@ -26,6 +26,7 @@
     { "path": "./packages/data-presenter/" },
     { "path": "./packages/data-collector/" },
     { "path": "./packages/data-analyzer/" },
+    { "path": "./packages/data-visualizer/" },
   ],
   "include": [
     "**/src/**/*.ts", "**/src/**/*.tsx",

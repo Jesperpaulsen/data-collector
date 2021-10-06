@@ -10,12 +10,28 @@ try {
     ['responseHeaders']
   )
 
+  chrome.runtime.onMessageExternal.addListener(
+    (details: any, sender, sendResponse) => {
+      const type = details.type
+
+      switch (type) {
+        case MESSAGE_TYPES.REQUEST_CONFIRMATION:
+          sendResponse({ exists: true })
+          break
+        case MESSAGE_TYPES.REQUEST_CREDENTIALS:
+          store.auth.getToken().then(sendResponse)
+          break
+        default:
+          break
+      }
+    }
+  )
+
   chrome.runtime.onMessage.addListener((details: any) => {
     const type = details.type
     console.log(type)
     switch (type) {
       case MESSAGE_TYPES.NETWORK_CALL:
-        // eslint-disable-next-line no-case-declarations
         const { networkCall } = details
         store.duplicateHandler.handleNetworkCall(networkCall)
         return
