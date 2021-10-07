@@ -9,7 +9,6 @@ const Dashboard: FunctionComponent = () => {
 
   return (
     <div>
-      <Greeting name={userState.currentUser?.name} />
     </div>
   )
 }

@@ -12,5 +12,8 @@
     "verify:fix": "yarn prettier:fix && yarn lint:fix"
   },
   "author": "Jesper Paulsen",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "firebase": "^9.1.1"
+  }
 }

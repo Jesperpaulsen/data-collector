@@ -88,9 +88,14 @@ export class NetworkCallController {
   }
 
   updateUserStats = async (networkCall: BaseUsageDoc) => {
-    const fieldsToUpdate: Pick<User, 'totalCO2' | 'totalSize'> = {
+    const fieldsToUpdate: Pick<
+      User,
+      'totalCO2' | 'totalSize' | 'totalKWH' | 'numberOfCalls'
+    > = {
       totalSize: networkCall.size,
-      totalCO2: networkCall.CO2
+      totalCO2: networkCall.CO2,
+      totalKWH: networkCall.KWH,
+      numberOfCalls: networkCall.numberOfCalls
     }
     return this.firestore.updateUser(networkCall.userId, fieldsToUpdate)
   }
@@ -154,12 +159,14 @@ export class NetworkCallController {
 
     const date = getStartOfDateInUnix(new Date())
     const { countryCode, countryName } = Country.getCountry(targetIP)
-    const CO2 = Country.calculateEmission({ size, countryCode })
+    const { CO2, KWH } = Country.calculateEmission({ size, countryCode })
     const usageId = this.getDocId({ userId, date })
     const baseUsageDoc: BaseUsageDoc = {
       uid: usageId,
       CO2: this.getFieldValue(CO2),
+      KWH: this.getFieldValue(KWH),
       date,
+      numberOfCalls: this.getFieldValue(1),
       numberOfCallsWithoutSize: this.getFieldValue(size ? 0 : 1),
       size: this.getFieldValue(size || 0),
       userId,

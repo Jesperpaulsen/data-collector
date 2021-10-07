@@ -10,12 +10,20 @@ import Redirect from '../components/common/Redirect'
 
 export enum ROUTES {
   DASHBOARD = '/',
-  LOGIN = '/login'
+  LOGIN = '/login',
+  USAGE_BY_COUNTRY = '/usage-by-country',
+  USAGE_BY_HOST = '/usage-by-host',
+  STATISTICS = '/statistics',
+  ABOUT = '/about'
 } 
 
-const routeComponents: {[route in ROUTES]: { requireAuth?: boolean, component: FunctionComponent }} = {
-  [ROUTES.DASHBOARD]: { requireAuth: true, component: Dashboard },
-  [ROUTES.LOGIN]: { component: Login }
+export const routeComponents: {[route in ROUTES]: { requireAuth?: boolean, component: FunctionComponent, label?: string }} = {
+  [ROUTES.DASHBOARD]: { requireAuth: true, component: Dashboard, label: 'Dashboard' },
+  [ROUTES.LOGIN]: { component: Login },
+  [ROUTES.USAGE_BY_COUNTRY]: { requireAuth: true, label: 'Usage By Country', component: () => <div>Usage By Country</div> },
+  [ROUTES.USAGE_BY_HOST]: { requireAuth: true, label: 'Usage By Host', component: () => <div>Usage By Host</div> },
+  [ROUTES.STATISTICS]: { requireAuth: true, label: 'Statistics', component: () => <div>Statistics</div> },
+  [ROUTES.ABOUT]: { requireAuth: true, label: 'About', component: () => <div>About</div> },
 }
 
 const initialRoute = window.location.pathname
