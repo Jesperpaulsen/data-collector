@@ -15,6 +15,7 @@ import {
 import { BaseUsageDoc, User } from '@data-collector/types'
 
 import { firebase } from './Firebase'
+import { UsageDetails } from '../contexts/Usage/UsageState'
 
 const firestore = getFirestore(firebase)
 
@@ -38,7 +39,7 @@ export class Firestore {
     const snapshot = await getDocs(q)
     let usage = 0
     for (const doc of snapshot.docs) {
-      const usageDoc = doc.data() as BaseUsageDoc
+      const usageDoc = doc.data() as any
       usage += usageDoc.size
     }
     return usage
@@ -53,15 +54,20 @@ export class Firestore {
   listenToTodaysUsage = (
     uid: string,
     date: number,
-    callback: (props: { size: number; CO2: number }) => void
+    callback: (props: UsageDetails) => void
   ) => {
-    const d = doc(this.usageCollection, `${uid}-${date}`)
-    if (this.unsubscribeTodaysListener) this.unsubscribeTodaysListener()
-    this.unsubscribeTodaysListener = onSnapshot(d, (doc) => {
-      const data = doc.data() as BaseUsageDoc
-      const usage = { size: data.size, CO2: data.CO2 }
-      callback(usage)
-    })
+    try {
+      const d = doc(this.usageCollection, `${uid}-${date}`)
+      if (this.unsubscribeTodaysListener) this.unsubscribeTodaysListener()
+      console.log(uid)
+      this.unsubscribeTodaysListener = onSnapshot(d, (doc) => {
+        const data = doc.data() as any
+        const usage = { size: data.size, CO2: data.CO2, KWH: data.KWH }
+        callback(usage)
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

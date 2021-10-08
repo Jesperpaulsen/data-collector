@@ -1,28 +1,34 @@
 import { createContext, FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useContext, useEffect, useState } from 'preact/hooks';
 import User from '../../types/User';
 import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
+import { initialState, UsageState } from './UsageState';
+import { UserContext } from '../User/UserContext';
+import { UsageHandler } from './UsageHandler';
 
 interface UsageContextProps {
-  usage: {
-    usageToday: number
-    usageLast7Days: number
-    totalUsage: number
-  },
-  totalCO2: number
+  usageState: UsageState,
+  usageHandler?: UsageHandler 
 }
 
-const initialUsage = {
-  usageToday: 0, usageLast7Days: 0, totalUsage: 0
-}
 
-export const UsageContext = createContext<UsageContextProps>({ usage: initialUsage, totalCO2: 0 });
+export const UsageContext = createContext<UsageContextProps>({ usageState: initialState });
 
 const UsageProvider: FunctionComponent = ({ children }) => {
-  const [usage, setUsage] = useState(initialUsage)
-  const [totalCO2, setTotalCO2] = useState(0)
+  const [usageState, setUsageState] = useState<UsageState>(initialState)
+  const [usageHandler, setUsageHandler] = useState<UsageHandler | undefined>(undefined)
+  const { userState } = useContext(UserContext)
 
-  return <UsageContext.Provider value={{ usage, totalCO2 }}>{children}</UsageContext.Provider>;
+  useEffect(() => {
+    if (!usageHandler) setUsageHandler(new UsageHandler(usageState, setUsageState))
+  }, [])
+
+  useEffect(() => {
+    if (userState) usageHandler?.setState({ userState })
+  }, [userState])
+
+
+  return <UsageContext.Provider value={{ usageState, usageHandler }}>{children}</UsageContext.Provider>;
 };
 
 export default UsageProvider;

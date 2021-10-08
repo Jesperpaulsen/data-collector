@@ -13,9 +13,13 @@ export class GenericHandler<S> {
   }
 
   setState = (newState: Partial<S>) => {
-    const tmpState = { ...this.state, ...newState } as Mutable<S>
+    const oldState = { ...this.state }
+    const tmpState = { ...oldState, ...newState } as Mutable<S>
     this.updateState(tmpState)
+    this.onStateUpdated(oldState, tmpState)
   }
+
+  onStateUpdated = (oldState: S, newState: S) => {}
 
   getState = () => {
     return this.state

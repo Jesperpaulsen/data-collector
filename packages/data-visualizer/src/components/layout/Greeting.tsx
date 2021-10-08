@@ -28,11 +28,7 @@ const Greeting: FunctionalComponent<Props> = ({ name }) => {
     return getGreeting(hours)
   }, [])
 
-  return ( 
-    <div className="pt-0 md:pt-10 pl-1 md:pl-5">
-      <div>{greeting}, {name}!</div>
-    </div>
-  )
+  return <div>{greeting}, {name}!</div>
 }
 
 export default Greeting

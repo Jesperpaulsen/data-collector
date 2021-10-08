@@ -18,8 +18,12 @@ export class UserApi {
   getUser = async (uid?: string) => {
     if (!uid) return
     const d = doc(Firestore.userCollection, uid)
-    const snapshot = await getDoc(d)
-    return snapshot.data() as User
+    try {
+      const snapshot = await getDoc(d)
+      return snapshot.data() as User
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   createUser = async (user: Pick<User, 'email' | 'name' | 'uid'>) => {

@@ -1,21 +1,24 @@
+import { UserState } from '../User/UserState'
+
 export interface UsageDetails {
-  gb: number
-  kwh: number
-  co2: number
+  size: number
+  KWH: number
+  CO2: number
 }
 
 export interface UsageState {
-  today: UsageDetails
-  total: UsageDetails
+  todaysUsage: UsageDetails
+  totalUsage: UsageDetails
+  userState?: UserState
 }
 
 const initialUsage: UsageDetails = {
-  gb: 0,
-  kwh: 0,
-  co2: 0
+  size: 0,
+  KWH: 0,
+  CO2: 0
 }
 
 export const initialState: UsageState = {
-  today: initialUsage,
-  total: initialUsage
+  todaysUsage: initialUsage,
+  totalUsage: initialUsage
 }

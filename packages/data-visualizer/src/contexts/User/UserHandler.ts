@@ -9,6 +9,7 @@ import {
   onAuthStateChanged
 } from 'firebase/auth'
 
+import { extensionID } from '../../utils/extensionID'
 import { isMobile } from '../../utils/isMobile'
 
 import { firebase } from '../../services/Firebase'
@@ -20,8 +21,6 @@ import { UserState } from './UserState'
 import { User } from '@data-collector/types'
 
 const auth = getAuth(firebase)
-
-const extensionId = 'jkoeemadehedckholhdkcjnadckenjgd'
 
 const provider = new GoogleAuthProvider()
 provider.addScope('https://www.googleapis.com/auth/userinfo.email')
@@ -43,6 +42,7 @@ export class UserHandler extends GenericHandler<UserState> {
 
   private listenToAuthChanges = () => {
     onAuthStateChanged(this.client, async (authState) => {
+      console.log(authState)
       const user = await this.api.getUser(authState?.uid)
       this.setState({ currentUser: user })
     })
@@ -75,7 +75,7 @@ export class UserHandler extends GenericHandler<UserState> {
   private checkIfExtensionIsAvailable = (): Promise<boolean> => {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
-        extensionId,
+        extensionID,
         { type: MESSAGE_TYPES.REQUEST_CONFIRMATION },
         (details) => {
           resolve(details)
@@ -87,7 +87,7 @@ export class UserHandler extends GenericHandler<UserState> {
   requestToken = (): Promise<string> => {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
-        extensionId,
+        extensionID,
         { type: MESSAGE_TYPES.REQUEST_CREDENTIALS },
         (response) => {
           resolve(response)
@@ -110,6 +110,7 @@ export class UserHandler extends GenericHandler<UserState> {
       const result = await getRedirectResult(auth)
       return result
     } catch (error: any) {
+      console.log(error)
       const errorCode = error.code
       const errorMessage = error.message
       const email = error.email
