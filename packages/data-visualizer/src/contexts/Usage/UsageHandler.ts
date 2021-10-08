@@ -1,4 +1,5 @@
 import { GenericHandler } from '../../types/GenericHandler'
+import User from '../../types/User'
 
 import { UsageApi } from './UsageApi'
 import { UsageDetails, UsageState } from './UsageState'
@@ -12,8 +13,22 @@ export class UsageHandler extends GenericHandler<UsageState> {
   ) => {
     if (!oldState.userState?.currentUser && newState.userState?.currentUser) {
       const currentUser = newState.userState?.currentUser
-      if (currentUser) this.api.listenToUsage(currentUser.uid)
+      if (currentUser) {
+        this.setTotalUsage(currentUser)
+        this.api.listenToUsage(currentUser.uid)
+      }
     }
+  }
+
+  private setTotalUsage = (currentUser: User) => {
+    console.log(currentUser)
+    const todaysUsage: UsageDetails = {
+      size: currentUser.totalSize,
+      CO2: currentUser.totalCO2,
+      KWH: currentUser.totalKWH
+    }
+    this.setState({ todaysUsage })
+    console.log(this.state)
   }
 
   private addUsageToUsageObject = (
@@ -28,11 +43,8 @@ export class UsageHandler extends GenericHandler<UsageState> {
   }
 
   readonly handleUsageUpdate = (usage: UsageDetails) => {
-    const todaysUsage = this.addUsageToUsageObject(
-      usage,
-      this.state.todaysUsage
-    )
+    // console.log(this.state)
     const totalUsage = this.addUsageToUsageObject(usage, this.state.totalUsage)
-    this.setState({ todaysUsage, totalUsage })
+    this.setState({ todaysUsage: usage, totalUsage })
   }
 }

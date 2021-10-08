@@ -12,16 +12,18 @@ export class GenericHandler<S> {
     this.updateState = updateState
   }
 
+  private mutateState = (newState: S) => {
+    const mutableHandler = this as Mutable<GenericHandler<S>>
+    mutableHandler.state = newState
+  }
+
   setState = (newState: Partial<S>) => {
     const oldState = { ...this.state }
-    const tmpState = { ...oldState, ...newState } as Mutable<S>
+    const tmpState = { ...oldState, ...newState }
+    this.mutateState(tmpState)
     this.updateState(tmpState)
     this.onStateUpdated(oldState, tmpState)
   }
 
   onStateUpdated = (oldState: S, newState: S) => {}
-
-  getState = () => {
-    return this.state
-  }
 }
