@@ -11,6 +11,7 @@ import { sanitizeData } from '../middlewares/sanitize-data'
 import { validateRequest } from '../middlewares/validate-request'
 import UserSchema from '../schemas/UserSchema'
 import firebaseAdmin from '../services/firebase-admin'
+import firebase from 'firebase-admin'
 
 const basePath = '/users'
 
@@ -40,8 +41,10 @@ router.post(
         name,
         uid: userAuth.uid,
         role: 'user',
-        totalCO2: 0,
-        totalSize: 0
+        totalCO2: firebase.firestore.FieldValue.increment(0),
+        totalSize: firebase.firestore.FieldValue.increment(0),
+        totalKWH: firebase.firestore.FieldValue.increment(0),
+        numberOfCalls: firebase.firestore.FieldValue.increment(0)
       }
 
       await firebaseAdmin.firestore.createUser(user)
@@ -109,8 +112,10 @@ router.post(
         name,
         uid,
         role: 'user',
-        totalCO2: 0,
-        totalSize: 0
+        totalCO2: firebase.firestore.FieldValue.increment(0),
+        totalSize: firebase.firestore.FieldValue.increment(0),
+        totalKWH: firebase.firestore.FieldValue.increment(0),
+        numberOfCalls: firebase.firestore.FieldValue.increment(0)
       }
 
       await firebaseAdmin.firestore.createUser(user)

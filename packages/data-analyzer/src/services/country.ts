@@ -48,9 +48,9 @@ class Country {
   }) => {
     if (!size) return { CO2: 0, KWH: 0 }
     const infoAboutCountry = co2PerKWH[countryCode]
-    const CO2perKWH = infoAboutCountry?.CO2perKWH || average
+    const gCO2perKWH = (infoAboutCountry?.CO2perKWH || average) * 1000
     const KWH = size * kwhPerByte
-    return { CO2: KWH * CO2perKWH, KWH }
+    return { CO2: KWH * gCO2perKWH, KWH }
   }
 }
 
