@@ -2,7 +2,7 @@ import { FunctionComponent } from 'preact';
 import { useContext, useMemo, useState } from 'preact/hooks';
 import { UserContext } from '../../contexts/UserContext';
 import UsageDisplay from './UsageDisplay';
-import Greeting from './Greeting';
+import Greeting from '../layout/Greeting';
 
 const Dashboard: FunctionComponent = () => {
   const { currentUser } = useContext(UserContext);

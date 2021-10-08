@@ -66,7 +66,7 @@ const UsageDisplay: FunctionalComponent = () => {
       </div>
       <div className="flex justify-center mt-3">
         <div className="text-center">
-          <div className="text-6xl font-medium">{totalCO2.toFixed(4)}</div>
+          <div className="text-6xl font-medium">{(totalCO2 / 1000).toFixed(4)}</div>
           <div className="text-xs font-light">kg CO2 emitted today</div>
         </div>
       </div>

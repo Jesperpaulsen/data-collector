@@ -29,7 +29,7 @@ try {
 
   chrome.runtime.onMessage.addListener((details: any) => {
     const type = details.type
-    console.log(type)
+
     switch (type) {
       case MESSAGE_TYPES.NETWORK_CALL:
         const { networkCall } = details
