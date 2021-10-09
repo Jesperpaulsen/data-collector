@@ -63,22 +63,18 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
   }
 
   useEffect(() => {
-    console.log(values)
     setMapDivId(Math.random().toString(36).substr(7))
   }, [values])
 
   return (
     <div className="w-full">
-      <div
-        id={mapDivId}
-        className="h-164 w-full"
-        key={mapDivId}
-        onMouseMove={handleMouseMouve}>
+      <div key={mapDivId} onMouseMove={handleMouseMouve}>
         <MapRenderer
           mapDivId={mapDivId}
           values={values}
           setSelectedCountry={onSelctedCountry}
         />
+        <div id={mapDivId} className="h-164 w-full" />
         <CountryLabel
           left={labelPosition.left}
           top={labelPosition.top}

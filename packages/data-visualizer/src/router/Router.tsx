@@ -8,6 +8,7 @@ import { UserContext } from '../contexts/User/UserContext'
 import ProtectedRoute from './ProtectedRoute'
 import Redirect from '../components/common/Redirect'
 import UsageByCountry from '../pages/UsageByCountry'
+import UsageByHost from '../pages/UsageByHost'
 
 export enum ROUTES {
   DASHBOARD = '/',
@@ -22,7 +23,7 @@ export const routeComponents: {[route in ROUTES]: { requireAuth?: boolean, compo
   [ROUTES.DASHBOARD]: { requireAuth: true, component: Dashboard, label: 'Dashboard' },
   [ROUTES.LOGIN]: { component: Login },
   [ROUTES.USAGE_BY_COUNTRY]: { requireAuth: true, label: 'Usage By Country', component: UsageByCountry },
-  [ROUTES.USAGE_BY_HOST]: { requireAuth: true, label: 'Usage By Host', component: () => <div>Usage By Host</div> },
+  [ROUTES.USAGE_BY_HOST]: { requireAuth: true, label: 'Usage By Host', component: UsageByHost },
   [ROUTES.STATISTICS]: { requireAuth: true, label: 'Statistics', component: () => <div>Statistics</div> },
   [ROUTES.ABOUT]: { requireAuth: true, label: 'About', component: () => <div>About</div> },
 }

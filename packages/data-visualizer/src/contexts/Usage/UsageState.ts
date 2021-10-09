@@ -1,4 +1,5 @@
 import { CountryDoc } from '../../types/country-doc'
+import { HostDoc } from '../../types/host-doc'
 import { UserState } from '../User/UserState'
 
 export interface UsageDetails {
@@ -13,6 +14,7 @@ export interface UsageState {
   todaysUsage: UsageDetails
   totalUsage: UsageDetails
   usageByCountry?: { [uid: string]: CountryDoc }
+  usageByHost?: { [uid: string]: HostDoc }
   userState?: UserState
 }
 

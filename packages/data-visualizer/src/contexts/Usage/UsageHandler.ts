@@ -54,7 +54,13 @@ export class UsageHandler extends GenericHandler<UsageState> {
     const currentUser = this.state.userState?.currentUser
     if (!currentUser) return
     const usageByCountry = await this.api.getUsageByCountry(currentUser.uid)
-    console.log(usageByCountry)
     this.setState({ usageByCountry })
+  }
+
+  getUsageByHost = async () => {
+    const currentUser = this.state.userState?.currentUser
+    if (!currentUser) return
+    const usageByHost = await this.api.getUsageByHost(currentUser.uid)
+    this.setState({ usageByHost })
   }
 }

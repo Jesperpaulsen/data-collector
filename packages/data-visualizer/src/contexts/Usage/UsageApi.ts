@@ -1,6 +1,7 @@
 import Firestore from '../../services/Firestore'
 import { HTTPClient } from '../../services/HttpClient'
 import { CountryDoc } from '../../types/country-doc'
+import { HostDoc } from '../../types/host-doc'
 import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
 import { accUsageDetails } from '../../utils/accUsageDetails'
 import { getStartOfDateInUnix } from '../../utils/date'
@@ -48,6 +49,38 @@ export class UsageApi {
           res[data.countryCode] = updatedCountryDoc
         } else {
           res[data.countryCode] = data
+        }
+      }
+      return res
+    } catch (e) {
+      console.log(e)
+      return {}
+    }
+  }
+
+  getUsageByHost = async (userId: string) => {
+    try {
+      const snapshot = await Firestore.getUsageByHostForUser(userId)
+      const res: { [uid: string]: HostDoc } = {}
+      for (const doc of snapshot.docs) {
+        const data = doc.data() as HostDoc
+        const exististingCountry = res[data.hostOrigin]
+        if (exististingCountry) {
+          const usage: UsageDetails = {
+            CO2: data.CO2,
+            KWH: data.KWH,
+            size: data.size,
+            numberOfCalls: data.numberOfCalls,
+            numberOfCallsWithoutSize: data.numberOfCallsWithoutSize
+          }
+          console.log(usage.CO2)
+          const updatedCountryDoc = accUsageDetails<HostDoc>(
+            usage,
+            exististingCountry
+          )
+          res[data.hostOrigin] = updatedCountryDoc
+        } else {
+          res[data.hostOrigin] = data
         }
       }
       return res

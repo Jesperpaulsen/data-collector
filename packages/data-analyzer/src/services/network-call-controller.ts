@@ -117,7 +117,7 @@ export class NetworkCallController {
     })
     const hostDoc: HostDoc = {
       ...networkCall,
-      hostOrigin,
+      hostOrigin: identifier,
       usageId,
       type: USAGE_TYPES.HOST,
       uid
