@@ -21,7 +21,7 @@ class Hasher {
   ) => {
     let url = `${networkCall.hostOrigin}${networkCall.hostPathname}${networkCall.targetOrigin}${networkCall.targetPathname}`
     if (fakeHash) {
-      url += Math.random().toString(36)
+      url += Math.random().toString(36).substr(7)
     }
 
     const urlAndTimestampString = this.createNetworkCallAndTimestampString(

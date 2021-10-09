@@ -20,6 +20,9 @@ module.exports = {
       colors: {
         primary: '#6B955C',
         secondary: '#E5E2E2'
+      },
+      spacing: {
+        164: '50rem'
       }
     }
   },

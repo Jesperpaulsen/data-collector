@@ -16,17 +16,21 @@ import { BaseUsageDoc, User } from '@data-collector/types'
 
 import { firebase } from './Firebase'
 import { UsageDetails } from '../contexts/Usage/UsageState'
+import { CountryDoc } from '../types/country-doc'
+import { accUsageDetails } from '../utils/accUsageDetails'
 
 const firestore = getFirestore(firebase)
 
 export class Firestore {
   private client = firestore
   usageCollection: CollectionReference<DocumentData>
+  countryCollection: CollectionReference<DocumentData>
   userCollection: CollectionReference<DocumentData>
   private unsubscribeTodaysListener?: () => void
 
   constructor() {
     this.usageCollection = collection(this.client, 'usage')
+    this.countryCollection = collection(this.client, 'countries')
     this.userCollection = collection(this.client, 'users')
   }
 
@@ -59,7 +63,6 @@ export class Firestore {
     try {
       const d = doc(this.usageCollection, `${uid}-${date}`)
       if (this.unsubscribeTodaysListener) this.unsubscribeTodaysListener()
-      console.log(uid)
       this.unsubscribeTodaysListener = onSnapshot(d, (doc) => {
         const data = doc.data() as any
         const usage = { size: data.size, CO2: data.CO2, KWH: data.KWH }
@@ -68,6 +71,11 @@ export class Firestore {
     } catch (e) {
       console.log(e)
     }
+  }
+
+  getUsageByCountryForUser = async (userId: string) => {
+    const q = query(this.countryCollection, where('userId', '==', userId))
+    return getDocs(q)
   }
 }
 

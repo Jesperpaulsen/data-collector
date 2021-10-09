@@ -15,7 +15,13 @@ export default defineConfig({
       external: ['@data-collector/types']
     }
   },
-  alias: {
-    tslib: 'tslib/tslib.es6.js'
+  resolve: {
+    alias: {
+      tslib: 'tslib/tslib.es6.js',
+      react: 'preact/compat',
+      'react-dom': 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react/jsx-runtime': 'preact/jsx-runtime'
+    }
   }
 })
