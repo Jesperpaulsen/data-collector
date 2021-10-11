@@ -12,6 +12,7 @@ try {
 
   chrome.runtime.onMessageExternal.addListener(
     (details: any, sender, sendResponse) => {
+      if (!details) return
       const type = details.type
 
       switch (type) {
@@ -28,6 +29,7 @@ try {
   )
 
   chrome.runtime.onMessage.addListener((details: any) => {
+    if (!details) return
     const type = details.type
 
     switch (type) {
