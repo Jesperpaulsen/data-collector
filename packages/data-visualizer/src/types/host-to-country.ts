@@ -1,7 +1,8 @@
-export interface BaseUsageDoc {
+export interface HostToCountry {
   uid: string
   userId: string
-  date: number
+  countryCode: string
+  hostOrigin: string
   size: number
   CO2: number
   KWH: number

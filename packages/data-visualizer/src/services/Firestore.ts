@@ -10,7 +10,8 @@ import {
   getFirestore,
   onSnapshot,
   query,
-  where
+  where,
+  orderBy
 } from 'firebase/firestore'
 
 import { BaseUsageDoc, User } from '@data-collector/types'
@@ -92,7 +93,11 @@ export class Firestore {
   }
 
   getUsageByHostForUser = async (userId: string) => {
-    const q = query(this.hostCollection, where('userId', '==', userId))
+    const q = query(
+      this.hostCollection,
+      where('userId', '==', userId),
+      orderBy('hostOrigin', 'asc')
+    )
     return getDocs(q)
   }
 }

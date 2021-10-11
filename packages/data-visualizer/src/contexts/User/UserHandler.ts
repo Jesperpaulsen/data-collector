@@ -62,8 +62,8 @@ export class UserHandler extends GenericHandler<UserState> {
         this.parseSignInResult(redirectResult)
       }
       const isAvailable = isEmulator
-        ? await this.checkIfExtensionIsAvailable()
-        : false
+        ? false
+        : await this.checkIfExtensionIsAvailable()
       this.setState({ extensionInstalled: isAvailable })
       if (isAvailable) {
         const token = await this.requestToken()

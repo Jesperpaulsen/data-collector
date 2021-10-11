@@ -1,7 +1,6 @@
 import { FunctionalComponent } from 'preact'
 import { useContext, useEffect } from 'preact/hooks'
 
-import Table from '../components/common/CustomTable'
 import HostTable from '../components/usageByHost/HostTable'
 import { UsageContext } from '../contexts/Usage/UsageContext'
 
@@ -9,7 +8,7 @@ const UsageByHost: FunctionalComponent = () => {
   const { usageState, usageHandler } = useContext(UsageContext)
 
   useEffect(() => {
-    if (!usageState.usageByCountry) {
+    if (!usageState.usageByHost) {
       usageHandler?.getUsageByHost()
     }
   }, [usageState, usageHandler])

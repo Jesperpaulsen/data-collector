@@ -10,7 +10,7 @@ interface Props {
   usageByCountry?: { [countryCode: string]: CountryDoc }
 }
 
-const mapDivId = Math.random().toString(36).substr(7)
+const mapDivId = 'worldMap'
 
 const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
   const [usageDetails, setUsageDetails] = useState<CountryDoc>()
@@ -29,7 +29,6 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
   >('CO2')
 
   const values = useMemo(() => {
-    console.log('heihei')
     const countryValues: { [countryCode: string]: number } = {}
     if (!usageByCountry) return countryValues
 
@@ -66,6 +65,10 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
       setLabelPosition({ left: event.pageX, top: event.pageY })
     }
   }
+
+  useEffect(() => {
+    setMapRerenderKey(Math.random().toString(36).substr(7))
+  }, [values])
 
   return (
     <div className="w-full">
