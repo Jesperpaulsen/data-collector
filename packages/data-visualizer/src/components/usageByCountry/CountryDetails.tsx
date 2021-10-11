@@ -90,8 +90,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
                   <li key={host.countryCode}>
                     {host.hostOrigin}: {co2Formatter(host.CO2)}{' '}
                     <span className="text-sm">
-                      ({host.numberOfCalls - host.numberOfCallsWithoutSize}{' '}
-                      calls)
+                      ({host.numberOfCalls} calls)
                     </span>
                   </li>
                 ))}
