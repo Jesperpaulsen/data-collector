@@ -1,8 +1,5 @@
 import { FunctionComponent } from 'preact'
-import { useEffect, useMemo, useState } from 'preact/hooks'
-
-import 'jsvectormap'
-import 'jsvectormap/dist/maps/world.js'
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 
 import { CountryDoc } from '../../types/country-doc'
 
@@ -13,6 +10,8 @@ interface Props {
   usageByCountry?: { [countryCode: string]: CountryDoc }
 }
 
+const mapDivId = Math.random().toString(36).substr(7)
+
 const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
   const [usageDetails, setUsageDetails] = useState<CountryDoc>()
   const [labelPosition, setLabelPosition] = useState<{
@@ -22,12 +21,15 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
     left: 0,
     top: 0
   })
-  const [mapDivId, setMapDivId] = useState(Math.random().toString(36).substr(7))
+  const [mapRerenderKey, setMapRerenderKey] = useState(
+    Math.random().toString(36).substr(7)
+  )
   const [filter, setFilter] = useState<
     'size' | 'KWH' | 'CO2' | 'numberOfCalls'
   >('CO2')
 
   const values = useMemo(() => {
+    console.log('heihei')
     const countryValues: { [countryCode: string]: number } = {}
     if (!usageByCountry) return countryValues
 
@@ -50,9 +52,12 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
     return countryValues
   }, [usageByCountry, filter])
 
-  const onSelctedCountry = (countryCode: string) => {
-    if (usageByCountry) setUsageDetails(usageByCountry[countryCode])
-  }
+  const onSelctedCountry = useCallback(
+    (countryCode: string) => {
+      if (usageByCountry) setUsageDetails(usageByCountry[countryCode])
+    },
+    [usageByCountry]
+  )
 
   const handleMouseMouve = (event: any) => {
     if (event.target?.attributes?.length !== 9) {
@@ -62,19 +67,16 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
     }
   }
 
-  useEffect(() => {
-    setMapDivId(Math.random().toString(36).substr(7))
-  }, [values])
-
   return (
     <div className="w-full">
-      <div key={mapDivId} onMouseMove={handleMouseMouve}>
-        <MapRenderer
-          mapDivId={mapDivId}
-          values={values}
-          setSelectedCountry={onSelctedCountry}
-        />
-        <div id={mapDivId} className="h-164 w-full" />
+      <div key={mapRerenderKey} id="map-wrapper" onMouseMove={handleMouseMouve}>
+        <div id={mapDivId} className="h-164 w-full">
+          <MapRenderer
+            mapDivId={mapDivId}
+            values={values}
+            setSelectedCountry={onSelctedCountry}
+          />
+        </div>
         <CountryLabel
           left={labelPosition.left}
           top={labelPosition.top}

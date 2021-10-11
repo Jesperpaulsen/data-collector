@@ -1,6 +1,7 @@
 import {
   collection,
   CollectionReference,
+  connectFirestoreEmulator,
   doc,
   DocumentChange,
   DocumentData,
@@ -20,6 +21,9 @@ import { CountryDoc } from '../types/country-doc'
 import { accUsageDetails } from '../utils/accUsageDetails'
 
 const firestore = getFirestore(firebase)
+// @ts-ignore
+if (import.meta.env.EMULATOR)
+  connectFirestoreEmulator(firestore, 'localhost', 8080)
 
 export class Firestore {
   private client = firestore
@@ -68,7 +72,13 @@ export class Firestore {
       if (this.unsubscribeTodaysListener) this.unsubscribeTodaysListener()
       this.unsubscribeTodaysListener = onSnapshot(d, (doc) => {
         const data = doc.data() as any
-        const usage = { size: data.size, CO2: data.CO2, KWH: data.KWH }
+        const usage = {
+          size: data?.size || 0,
+          CO2: data?.CO2 || 0,
+          KWH: data?.KWH || 0,
+          numberOfCalls: data?.numberOfCalls || 0,
+          numberOfCallsWithoutSize: data?.numberOfCallsWithoutSize || 0
+        }
         callback(usage)
       })
     } catch (e) {

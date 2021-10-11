@@ -1,6 +1,8 @@
 import { FunctionalComponent } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 
+import 'jsvectormap'
+import 'jsvectormap/dist/maps/world.js'
 interface Props {
   mapDivId: string
   values: { [countryCode: string]: number } | undefined
@@ -17,11 +19,9 @@ const MapRenderer: FunctionalComponent<Props> = ({
   useEffect(() => {
     if (!map) {
       try {
-        console.log(values)
         // @ts-ignore
-        // eslint-disable-next-line new-cap
         // eslint-disable-next-line
-        const map = new jsVectorMap({
+          const map = new jsVectorMap({
           selector: `#${mapDivId}`,
           map: 'world',
           showTooltip: true,

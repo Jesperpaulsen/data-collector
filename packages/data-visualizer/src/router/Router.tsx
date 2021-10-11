@@ -9,6 +9,7 @@ import ProtectedRoute from './ProtectedRoute'
 import Redirect from '../components/common/Redirect'
 import UsageByCountry from '../pages/UsageByCountry'
 import UsageByHost from '../pages/UsageByHost'
+import SignOut from '../pages/SignOut'
 
 export enum ROUTES {
   DASHBOARD = '/',
@@ -16,7 +17,8 @@ export enum ROUTES {
   USAGE_BY_COUNTRY = '/usage-by-country',
   USAGE_BY_HOST = '/usage-by-host',
   STATISTICS = '/statistics',
-  ABOUT = '/about'
+  ABOUT = '/about',
+  SIGN_OUT = '/sign-out'
 } 
 
 export const routeComponents: {[route in ROUTES]: { requireAuth?: boolean, component: FunctionComponent, label?: string }} = {
@@ -26,9 +28,11 @@ export const routeComponents: {[route in ROUTES]: { requireAuth?: boolean, compo
   [ROUTES.USAGE_BY_HOST]: { requireAuth: true, label: 'Usage By Host', component: UsageByHost },
   [ROUTES.STATISTICS]: { requireAuth: true, label: 'Statistics', component: () => <div>Statistics</div> },
   [ROUTES.ABOUT]: { requireAuth: true, label: 'About', component: () => <div>About</div> },
+  [ROUTES.SIGN_OUT]: { requireAuth: false, label: 'Sign Out', component: SignOut }
 }
 
 const initialRoute = window.location.pathname
+const routeTo = initialRoute === ROUTES.LOGIN ? ROUTES.DASHBOARD : initialRoute === ROUTES.SIGN_OUT ? ROUTES.LOGIN : initialRoute
 
 const Router: FunctionComponent = () => {
   const { userState } = useContext(UserContext)
@@ -36,7 +40,6 @@ const Router: FunctionComponent = () => {
 
   useEffect(() => {
     if (userState.currentUser) {
-      const routeTo = initialRoute === ROUTES.LOGIN ? ROUTES.DASHBOARD : initialRoute;
       route(routeTo, true)
     }
   }, [userState])

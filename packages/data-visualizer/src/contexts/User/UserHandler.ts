@@ -6,7 +6,8 @@ import {
   signInWithPopup,
   getRedirectResult,
   UserCredential,
-  onAuthStateChanged
+  onAuthStateChanged,
+  connectAuthEmulator
 } from 'firebase/auth'
 
 import { extensionID } from '../../utils/extensionID'
@@ -21,6 +22,9 @@ import { UserState } from './UserState'
 import { User } from '@data-collector/types'
 
 const auth = getAuth(firebase)
+// @ts-ignore
+const isEmulator = import.meta.env.EMULATOR
+if (isEmulator) connectAuthEmulator(auth, 'http://localhost:9099')
 
 const provider = new GoogleAuthProvider()
 provider.addScope('https://www.googleapis.com/auth/userinfo.email')
@@ -42,9 +46,12 @@ export class UserHandler extends GenericHandler<UserState> {
 
   private listenToAuthChanges = () => {
     onAuthStateChanged(this.client, async (authState) => {
-      console.log(authState)
-      const user = await this.api.getUser(authState?.uid)
-      this.setState({ currentUser: user })
+      if (authState) {
+        const user = await this.api.getUser(authState?.uid)
+        this.setState({ currentUser: user })
+      } else {
+        this.setState({ currentUser: undefined })
+      }
     })
   }
 
@@ -54,7 +61,9 @@ export class UserHandler extends GenericHandler<UserState> {
       if (redirectResult) {
         this.parseSignInResult(redirectResult)
       }
-      const isAvailable = await this.checkIfExtensionIsAvailable()
+      const isAvailable = isEmulator
+        ? await this.checkIfExtensionIsAvailable()
+        : false
       this.setState({ extensionInstalled: isAvailable })
       if (isAvailable) {
         const token = await this.requestToken()
@@ -171,5 +180,9 @@ export class UserHandler extends GenericHandler<UserState> {
     } catch (e: any) {
       console.log(e)
     }
+  }
+
+  signOut = () => {
+    this.client.signOut()
   }
 }
