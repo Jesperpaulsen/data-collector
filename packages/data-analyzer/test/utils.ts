@@ -4,6 +4,7 @@ import {
   getAuth,
   signInWithEmailAndPassword
 } from 'firebase/auth'
+import admin from 'firebase-admin'
 
 import { User } from '@data-collector/types'
 
@@ -48,8 +49,10 @@ export const getAdminToken = async () => {
     name: testUser.name!,
     role: testUser.role!,
     uid: authUser.uid,
-    totalCO2: 0,
-    totalSize: 0
+    totalCO2: admin.firestore.FieldValue.increment(0),
+    totalSize: admin.firestore.FieldValue.increment(0),
+    totalKWH: admin.firestore.FieldValue.increment(0),
+    numberOfCalls: admin.firestore.FieldValue.increment(0)
   }
 
   await firebaseAdmin.firestore.createUser(user)
@@ -83,8 +86,10 @@ export const getUserToken = async () => {
     name: testUser.name!,
     role: testUser.role!,
     uid: authUser.uid,
-    totalCO2: 0,
-    totalSize: 0
+    totalCO2: admin.firestore.FieldValue.increment(0),
+    totalSize: admin.firestore.FieldValue.increment(0),
+    totalKWH: admin.firestore.FieldValue.increment(0),
+    numberOfCalls: admin.firestore.FieldValue.increment(0)
   }
   await firebaseAdmin.firestore.createUser(user)
 

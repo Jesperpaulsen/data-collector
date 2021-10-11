@@ -2,31 +2,37 @@ import {
   BaseUsageDoc,
   CountryDoc,
   HostDoc,
+  HostToCountry,
   NetworkCall,
   User
 } from '@data-collector/types'
 import admin from 'firebase-admin'
 import Country from './country'
 import { getStartOfDateInUnix } from '../utils/date'
-import { USAGE_TYPES } from '../types/USAGE_TYPES'
+import { USAGE_TYPES } from '../../../types/src/USAGE_TYPES'
 import { Firestore } from './firestore'
 
+type CollectionType =
+  admin.firestore.CollectionReference<admin.firestore.DocumentData>
 export class NetworkCallController {
-  private hostCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
-  private countryCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
-  private usageCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  private hostCollection: CollectionType
+  private countryCollection: CollectionType
+  private usageCollection: CollectionType
+  private hostToCountryCollection: CollectionType
   private firestore: Firestore
 
   constructor(
     firestore: Firestore,
-    hostCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>,
-    countryCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>,
-    usageCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+    hostCollection: CollectionType,
+    countryCollection: CollectionType,
+    usageCollection: CollectionType,
+    hostToCountryCollection: CollectionType
   ) {
     this.firestore = firestore
     this.hostCollection = hostCollection
     this.countryCollection = countryCollection
     this.usageCollection = usageCollection
+    this.hostToCountryCollection = hostToCountryCollection
   }
 
   getAllNetworkCalls = async () => {
@@ -49,17 +55,23 @@ export class NetworkCallController {
     const promises = [
       this.hostCollection.where('userId', '==', uid).get(),
       this.countryCollection.where('userId', '==', uid).get(),
-      this.usageCollection.where('userId', '==', uid).get()
+      this.usageCollection.where('userId', '==', uid).get(),
+      this.hostToCountryCollection.where('userId', '==', uid).get()
     ]
-    const [hostCollection, countryCollection, usageCollection] =
-      await Promise.all(promises)
+    const [
+      hostCollection,
+      countryCollection,
+      usageCollection,
+      hostToCountryCollection
+    ] = await Promise.all(promises)
 
     const res: BaseUsageDoc[] = []
 
     const networkCalls = [
       ...hostCollection.docs,
       ...countryCollection.docs,
-      ...usageCollection.docs
+      ...usageCollection.docs,
+      ...hostToCountryCollection.docs
     ]
 
     for (const doc of networkCalls) {
@@ -76,10 +88,12 @@ export class NetworkCallController {
   }: {
     identifier?: string
     userId: string
-    date: number
+    date?: number
   }) => {
-    return identifier?.length
+    return identifier?.length && date
       ? `${userId}-${identifier}-${date}`
+      : identifier
+      ? `${userId}-${identifier}`
       : `${userId}-${date}`
   }
 
@@ -105,19 +119,14 @@ export class NetworkCallController {
     hostOrigin: string,
     usageId: string
   ) => {
-    const paths = hostOrigin.split('://')
-    let identifier = paths.length > 1 ? paths[1] : ''
-    if (identifier.startsWith('www')) {
-      identifier = identifier.substr(4)
-    }
     const uid = this.getDocId({
-      identifier,
+      identifier: hostOrigin,
       date: networkCall.date,
       userId: networkCall.userId
     })
     const hostDoc: HostDoc = {
       ...networkCall,
-      hostOrigin: identifier,
+      hostOrigin,
       usageId,
       type: USAGE_TYPES.HOST,
       uid
@@ -154,6 +163,30 @@ export class NetworkCallController {
       .set(networkCall, { merge: true })
   }
 
+  setHostToCountryDoc = async (
+    networkCall: BaseUsageDoc,
+    countryCode: string,
+    countryName: string,
+    hostOrigin: string
+  ) => {
+    const uid = this.getDocId({
+      identifier: `${countryCode}-${hostOrigin}`,
+      userId: networkCall.userId
+    })
+    delete networkCall.date
+
+    const hostToCountryDoc: HostToCountry = {
+      ...networkCall,
+      countryCode,
+      countryName,
+      hostOrigin
+    }
+
+    return this.hostToCountryCollection
+      .doc(uid)
+      .set(hostToCountryDoc, { merge: true })
+  }
+
   storeNetworkCall = async (networkCall: NetworkCall, userId: string) => {
     const { hostOrigin, size, targetIP } = networkCall
 
@@ -161,6 +194,13 @@ export class NetworkCallController {
     const { countryCode, countryName } = Country.getCountry(targetIP)
     const { CO2, KWH } = Country.calculateEmission({ size, countryCode })
     const usageId = this.getDocId({ userId, date })
+
+    const paths = hostOrigin.split('://')
+    let strippedHostOrigin = paths.length > 1 ? paths[1] : ''
+    if (strippedHostOrigin.startsWith('www')) {
+      strippedHostOrigin = strippedHostOrigin.substr(4)
+    }
+
     const baseUsageDoc: BaseUsageDoc = {
       uid: usageId,
       CO2: this.getFieldValue(CO2),
@@ -175,13 +215,21 @@ export class NetworkCallController {
 
     const promises = [
       this.updateUserStats(baseUsageDoc),
-      this.setHostDoc(baseUsageDoc, hostOrigin || '', usageId),
+      this.setHostDoc(baseUsageDoc, strippedHostOrigin || '', usageId),
       this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
-      this.setUsageDoc(baseUsageDoc)
+      this.setUsageDoc(baseUsageDoc),
+      this.setHostToCountryDoc(
+        baseUsageDoc,
+        countryCode,
+        countryName,
+        strippedHostOrigin
+      )
     ]
     try {
-      const [host, network, country, usage] = await Promise.all(promises)
-      return { host, network, country, usage }
+      const [host, network, country, usage, hostToCountry] = await Promise.all(
+        promises
+      )
+      return { host, network, country, usage, hostToCountry }
     } catch (e) {
       console.log(e)
     }

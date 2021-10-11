@@ -1,11 +1,11 @@
 import { FieldValue } from 'firebase/firestore'
 
-import { USAGE_TYPES } from '.'
-export interface BaseUsageDoc {
+export interface HostToCountry {
   uid: string
-  type?: USAGE_TYPES
   userId: string
-  date?: number
+  countryCode: string
+  countryName: string
+  hostOrigin: string
   size: FieldValue
   CO2: FieldValue
   KWH: FieldValue

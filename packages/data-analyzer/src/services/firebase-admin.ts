@@ -29,6 +29,7 @@ class FirebaseAdmin {
         ? admin.credential.cert(serviceAccount)
         : admin.credential.applicationDefault()
     }
+    console.log(process.env.FIRESTORE_EMULATOR_HOST)
     const initializedAdmin = admin.initializeApp(options)
     this.admin = initializedAdmin
     this.auth = new Auth(initializedAdmin.auth(), this)

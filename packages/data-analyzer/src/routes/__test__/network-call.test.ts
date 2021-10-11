@@ -77,7 +77,7 @@ describe('route: /network-call method: POST', () => {
         user.uid
       )
 
-    expect(allDocs.length).toBe(3)
+    expect(allDocs.length).toBe(4)
   })
 })
 
@@ -211,7 +211,7 @@ describe('route: /network-call/batch method: POST', () => {
         user.uid
       )
 
-    expect(allDocs.length).toBe(3)
+    expect(allDocs.length).toBe(4)
   })
 })
 
