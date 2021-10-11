@@ -11,7 +11,7 @@ const UsageByHost: FunctionalComponent = () => {
     if (!usageState.usageByHost) {
       usageHandler?.getUsageByHost()
     }
-  }, [usageState, usageHandler])
+  }, [usageState.usageByHost, usageHandler])
 
   return (
     <div>
