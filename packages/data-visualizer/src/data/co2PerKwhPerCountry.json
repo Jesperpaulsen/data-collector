@@ -1,0 +1,314 @@
+{
+  "ZA": {
+    "country": "South Africa",
+    "CO2perKWH": 0.928,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "CN": {
+    "country": "China",
+    "CO2perKWH": 0.555,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "HK": {
+    "country": "Hong Kong",
+    "CO2perKWH": 0.81,
+    "source": "Hong Kong Electric Company (2019) or CLP Group (2019) These two companies supply different areas of HK so check which one you need.",
+    "year": 2019
+  },
+  "IN": {
+    "country": "India",
+    "CO2perKWH": 0.708,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "ID": {
+    "country": "Indonesia",
+    "CO2perKWH": 0.761,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "JP": {
+    "country": "Japan",
+    "CO2perKWH": 0.506,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "KR": {
+    "country": "Korea",
+    "CO2perKWH": 0.5,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "SG": {
+    "country": "Singapore",
+    "CO2perKWH": 0.4188,
+    "source": "Singapore Energy Market Authority (EMA)",
+    "year": 2018
+  },
+  "TH": {
+    "country": "Thailand",
+    "CO2perKWH": 0.497,
+    "source": "Energy Policy and Planning Office (EPPO) Thai Government Ministry of Energy",
+    "year": 2019
+  },
+  "AU": {
+    "country": "Australia",
+    "CO2perKWH": 0.88,
+    "source": "Australian Government",
+    "year": 2018
+  },
+  "NZ": {
+    "country": "New Zealand",
+    "CO2perKWH": 0.1051,
+    "source": "Ministry for the Environment https://www.mfe.govt.nz/node/18670/",
+    "year": null
+  },
+  "SA": {
+    "country": "Saudi Arabia",
+    "CO2perKWH": 0.732,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "TR": {
+    "country": "Turkey",
+    "CO2perKWH": 0.481,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "AE": {
+    "country": "United Arab Emirates",
+    "CO2perKWH": 0.4258,
+    "source": "Dubai Electricity & Water Authority (sustainability report 2018)",
+    "year": 2018
+  },
+  "CA": {
+    "country": "Canada",
+    "CO2perKWH": 0.13,
+    "source": "UN Framework Convention on Climate Change",
+    "year": null
+  },
+  "MX": {
+    "country": "Mexico",
+    "CO2perKWH": 0.449,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "US": {
+    "country": "United States",
+    "CO2perKWH": 0.45322,
+    "source": "US Env Protection Agency (EPA) eGrid",
+    "year": 2018
+  },
+  "AR": {
+    "country": "Argentina",
+    "CO2perKWH": 0.313,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "BR": {
+    "country": "Brazil",
+    "CO2perKWH": 0.074,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2018
+  },
+  "AT": {
+    "country": "Austria",
+    "CO2perKWH": 0.13286,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "BE": {
+    "country": "Belgium",
+    "CO2perKWH": 0.15313,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "BG": {
+    "country": "Bulgaria",
+    "CO2perKWH": 0.43737,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "HR": {
+    "country": "Croatia",
+    "CO2perKWH": 0.27315,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "CY": {
+    "country": "Cyprus",
+    "CO2perKWH": 0.67729,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "CZ": {
+    "country": "Czech Republic",
+    "CO2perKWH": 0.54465,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "DK": {
+    "country": "Denmark",
+    "CO2perKWH": 0.15444,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "EE": {
+    "country": "Estonia",
+    "CO2perKWH": 0.72328,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "FI": {
+    "country": "Finland",
+    "CO2perKWH": 0.13622,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "FR": {
+    "country": "France",
+    "CO2perKWH": 0.03895,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "DE": {
+    "country": "Germany",
+    "CO2perKWH": 0.37862,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "GR": {
+    "country": "Greece",
+    "CO2perKWH": 0.54901,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "HU": {
+    "country": "Hungary",
+    "CO2perKWH": 0.25298,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "IS": {
+    "country": "Iceland",
+    "CO2perKWH": 0.00011,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "IE": {
+    "country": "Ireland",
+    "CO2perKWH": 0.34804,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "IT": {
+    "country": "Italy",
+    "CO2perKWH": 0.33854,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "LV": {
+    "country": "Latvia",
+    "CO2perKWH": 0.30333,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "LT": {
+    "country": "Lithuania",
+    "CO2perKWH": 0.14913,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "LU": {
+    "country": "Luxembourg",
+    "CO2perKWH": 0.13939,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "MT": {
+    "country": "Malta",
+    "CO2perKWH": 0.3706,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "NL": {
+    "country": "Netherlands",
+    "CO2perKWH": 0.45207,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "NO": {
+    "country": "Norway",
+    "CO2perKWH": 0.01118,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "PL": {
+    "country": "Poland",
+    "CO2perKWH": 0.79107,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "PT": {
+    "country": "Portugal",
+    "CO2perKWH": 0.25255,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "RO": {
+    "country": "Romania",
+    "CO2perKWH": 0.31011,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "RU": {
+    "country": "Russian Federation",
+    "CO2perKWH": 0.325,
+    "source": "Climate Transparency (2019 Report)",
+    "year": 2019
+  },
+  "RS": {
+    "country": "Serbia",
+    "CO2perKWH": 0.76253,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "SK": {
+    "country": "Slovakia",
+    "CO2perKWH": 0.1511,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "SI": {
+    "country": "Slovenia",
+    "CO2perKWH": 0.24385,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "ES": {
+    "country": "Spain",
+    "CO2perKWH": 0.22026,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "SE": {
+    "country": "Sweden",
+    "CO2perKWH": 0.01189,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "CH": {
+    "country": "Switzerland",
+    "CO2perKWH": 0.01182,
+    "source": "Association of Issuing Bodies (AIB)",
+    "year": 2019
+  },
+  "GB": {
+    "country": "United Kingdom",
+    "CO2perKWH": 0.25318999999999997,
+    "source": "Production: UK Govt – Defra/BEIS   Residual: Association of Issuing Bodies (AIB)",
+    "year": null
+  }
+}

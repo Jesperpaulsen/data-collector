@@ -1,4 +1,5 @@
 import { GenericHandler } from '../../types/GenericHandler'
+import { HostToCountry } from '../../types/host-to-country'
 import User from '../../types/User'
 import { accUsageDetails } from '../../utils/accUsageDetails'
 
@@ -62,5 +63,15 @@ export class UsageHandler extends GenericHandler<UsageState> {
     if (!currentUser) return
     const usageByHost = await this.api.getUsageByHost(currentUser.uid)
     this.setState({ usageByHost })
+  }
+
+  getCountryUsagePerHost = async (countryCode: string) => {
+    const currentUser = this.state.userState?.currentUser
+    if (!currentUser) return []
+    const countryUsagePerHost = await this.api.getCountryUsagePerHost(
+      currentUser.uid,
+      countryCode
+    )
+    return countryUsagePerHost
   }
 }

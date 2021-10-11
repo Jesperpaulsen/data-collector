@@ -8,11 +8,15 @@ import MapRenderer from './MapRenderer'
 
 interface Props {
   usageByCountry?: { [countryCode: string]: CountryDoc }
+  setSelectedCountry: (country?: string) => void
 }
 
 const mapDivId = 'worldMap'
 
-const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
+const WorldMap: FunctionComponent<Props> = ({
+  usageByCountry,
+  setSelectedCountry
+}) => {
   const [usageDetails, setUsageDetails] = useState<CountryDoc>()
   const [labelPosition, setLabelPosition] = useState<{
     left: number
@@ -28,7 +32,7 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
     'size' | 'KWH' | 'CO2' | 'numberOfCalls'
   >('CO2')
 
-  const values = useMemo(() => {
+  const normalizedValues = useMemo(() => {
     const countryValues: { [countryCode: string]: number } = {}
     if (!usageByCountry) return countryValues
 
@@ -51,7 +55,7 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
     return countryValues
   }, [usageByCountry, filter])
 
-  const onSelctedCountry = useCallback(
+  const onHoveringCountry = useCallback(
     (countryCode: string) => {
       if (usageByCountry) setUsageDetails(usageByCountry[countryCode])
     },
@@ -68,7 +72,7 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
 
   useEffect(() => {
     setMapRerenderKey(Math.random().toString(36).substr(7))
-  }, [values])
+  }, [normalizedValues])
 
   return (
     <div className="w-full">
@@ -76,8 +80,9 @@ const WorldMap: FunctionComponent<Props> = ({ usageByCountry }) => {
         <div id={mapDivId} className="h-164 w-full">
           <MapRenderer
             mapDivId={mapDivId}
-            values={values}
-            setSelectedCountry={onSelctedCountry}
+            values={normalizedValues}
+            setSelectedCountry={setSelectedCountry}
+            setHoveringCountry={onHoveringCountry}
           />
         </div>
         <CountryLabel

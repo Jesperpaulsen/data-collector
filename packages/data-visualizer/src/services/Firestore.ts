@@ -32,6 +32,7 @@ export class Firestore {
   countryCollection: CollectionReference<DocumentData>
   userCollection: CollectionReference<DocumentData>
   hostCollection: CollectionReference<DocumentData>
+  hostToCountryCollection: CollectionReference<DocumentData>
 
   private unsubscribeTodaysListener?: () => void
 
@@ -40,6 +41,7 @@ export class Firestore {
     this.countryCollection = collection(this.client, 'countries')
     this.userCollection = collection(this.client, 'users')
     this.hostCollection = collection(this.client, 'hosts')
+    this.hostToCountryCollection = collection(this.client, 'hostToCountry')
   }
 
   getUsageForPreviousDates = async (uid: string, dateLimit: number) => {
@@ -97,6 +99,16 @@ export class Firestore {
       this.hostCollection,
       where('userId', '==', userId),
       orderBy('hostOrigin', 'asc')
+    )
+    return getDocs(q)
+  }
+
+  getCountryUsagePerHost = async (userId: string, countryCode: string) => {
+    const q = query(
+      this.hostToCountryCollection,
+      where('userId', '==', userId),
+      where('countryCode', '==', countryCode),
+      orderBy('CO2', 'desc')
     )
     return getDocs(q)
   }

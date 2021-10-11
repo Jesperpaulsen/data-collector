@@ -2,6 +2,7 @@ import Firestore from '../../services/Firestore'
 import { HTTPClient } from '../../services/HttpClient'
 import { CountryDoc } from '../../types/country-doc'
 import { HostDoc } from '../../types/host-doc'
+import { HostToCountry } from '../../types/host-to-country'
 import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
 import { accUsageDetails } from '../../utils/accUsageDetails'
 import { getStartOfDateInUnix } from '../../utils/date'
@@ -87,6 +88,24 @@ export class UsageApi {
     } catch (e) {
       console.log(e)
       return {}
+    }
+  }
+
+  getCountryUsagePerHost = async (userId: string, countryName: string) => {
+    try {
+      const snapshot = await Firestore.getCountryUsagePerHost(
+        userId,
+        countryName
+      )
+      const res: HostToCountry[] = []
+      for (const doc of snapshot.docs) {
+        const data = doc.data() as HostToCountry
+        res.push(data)
+      }
+      return res
+    } catch (e) {
+      console.log(e)
+      return []
     }
   }
 }

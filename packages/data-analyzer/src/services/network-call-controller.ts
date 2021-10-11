@@ -9,7 +9,7 @@ import {
 import admin from 'firebase-admin'
 import Country from './country'
 import { getStartOfDateInUnix } from '../utils/date'
-import { USAGE_TYPES } from '../../../types/src/USAGE_TYPES'
+import { USAGE_TYPES } from '../types/USAGE_TYPES'
 import { Firestore } from './firestore'
 
 type CollectionType =
@@ -187,6 +187,11 @@ export class NetworkCallController {
       .set(hostToCountryDoc, { merge: true })
   }
 
+  private getHostName = (url: string) => {
+    if (!url) return ''
+    return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]
+  }
+
   storeNetworkCall = async (networkCall: NetworkCall, userId: string) => {
     const { hostOrigin, size, targetIP } = networkCall
 
@@ -194,13 +199,8 @@ export class NetworkCallController {
     const { countryCode, countryName } = Country.getCountry(targetIP)
     const { CO2, KWH } = Country.calculateEmission({ size, countryCode })
     const usageId = this.getDocId({ userId, date })
-
-    const paths = hostOrigin.split('://')
-    let strippedHostOrigin = paths.length > 1 ? paths[1] : ''
-    if (strippedHostOrigin.startsWith('www')) {
-      strippedHostOrigin = strippedHostOrigin.substr(4)
-    }
-
+    const strippedHostOrigin = this.getHostName(hostOrigin)
+    console.log(strippedHostOrigin)
     const baseUsageDoc: BaseUsageDoc = {
       uid: usageId,
       CO2: this.getFieldValue(CO2),
@@ -215,16 +215,20 @@ export class NetworkCallController {
 
     const promises = [
       this.updateUserStats(baseUsageDoc),
-      this.setHostDoc(baseUsageDoc, strippedHostOrigin || '', usageId),
+      this.setHostDoc(baseUsageDoc, strippedHostOrigin, usageId),
       this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
-      this.setUsageDoc(baseUsageDoc),
-      this.setHostToCountryDoc(
-        baseUsageDoc,
-        countryCode,
-        countryName,
-        strippedHostOrigin
-      )
+      this.setUsageDoc(baseUsageDoc)
     ]
+    if (strippedHostOrigin.length && countryCode)
+      promises.push(
+        this.setHostToCountryDoc(
+          baseUsageDoc,
+          countryCode,
+          countryName,
+          strippedHostOrigin
+        )
+      )
+
     try {
       const [host, network, country, usage, hostToCountry] = await Promise.all(
         promises

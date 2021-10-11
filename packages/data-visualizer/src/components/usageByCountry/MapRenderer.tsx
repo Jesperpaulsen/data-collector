@@ -6,12 +6,14 @@ import 'jsvectormap/dist/maps/world.js'
 interface Props {
   mapDivId: string
   values: { [countryCode: string]: number } | undefined
+  setHoveringCountry: (countryCode: string) => void
   setSelectedCountry: (countryCode: string) => void
 }
 
 const MapRenderer: FunctionalComponent<Props> = ({
   mapDivId,
   values,
+  setHoveringCountry,
   setSelectedCountry
 }) => {
   const [map, setMap] = useState<any | undefined>(undefined)
@@ -38,12 +40,15 @@ const MapRenderer: FunctionalComponent<Props> = ({
             })
           },
           onRegionTooltipShow(tooltip, code) {
-            setSelectedCountry(code)
+            setHoveringCountry(code)
             tooltip
               .css({
                 display: 'none'
               })
               .text()
+          },
+          onRegionSelected(code) {
+            setSelectedCountry(code)
           }
         })
         setMap(map)
@@ -52,7 +57,7 @@ const MapRenderer: FunctionalComponent<Props> = ({
       }
     }
     return () => window.removeEventListener('resize', map?.updateSize)
-  }, [mapDivId, values, map, setSelectedCountry])
+  }, [mapDivId, values, map, setHoveringCountry, setSelectedCountry])
 
   return null
 }
