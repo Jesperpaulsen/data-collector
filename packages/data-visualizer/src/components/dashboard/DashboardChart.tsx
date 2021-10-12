@@ -1,15 +1,13 @@
 import { createRef, FunctionalComponent } from 'preact'
 
-import LineChart from '../common/LineChart'
+import CustomChart from '../common/Charts/CustomChart'
 
 const DashboardChart: FunctionalComponent = () => {
   const chartRef = createRef()
 
   return (
-    <div>
-      <canvas ref={chartRef} height={400} width={400}>
-        <LineChart chartRef={chartRef} />
-      </canvas>
+    <div className="h-164">
+      <CustomChart type={'line'} />
     </div>
   )
 }

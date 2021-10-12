@@ -25,11 +25,17 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
   const [loading, setLoading] = useState(false)
 
   const co2ForCountry = useMemo(() => {
-    const res = { CO2perKWH: 'Unkown', source: 'Unkown', year: 0 }
+    const res = {
+      CO2perGB: 'Unkown',
+      CO2perKWH: 'Unkown',
+      source: 'Unkown',
+      year: 0
+    }
     if (!country?.countryCode || !co2PerCountry) return res
     const details = co2PerCountry[country.countryCode]
     if (!details) return res
     return {
+      CO2perGB: (details.CO2perKWH * 1.8).toFixed(4),
       CO2perKWH: details.CO2perKWH,
       source: details.source,
       year: details.year
@@ -56,10 +62,11 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
         Details for {country?.countryName}
       </div>
       <div className="text-sm">
-        Average kg CO2e per KWH: {co2ForCountry.CO2perKWH}.
+        Average CO2e per GB: {co2ForCountry.CO2perGB} kg.
       </div>
       <div className="text-xs">
-        Source: {co2ForCountry.source} ({co2ForCountry.year})
+        Based on average CO2e per KWH: {co2ForCountry.CO2perKWH}. Source:{' '}
+        {co2ForCountry.source} ({co2ForCountry.year})
       </div>
       {loading ? (
         <LoadingSpinner />

@@ -1,6 +1,22 @@
-import { Chart, ChartType } from 'chart.js'
+import {
+  CategoryScale,
+  Chart,
+  ChartType,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement
+} from 'chart.js'
 import { createRef, FunctionalComponent, RefObject } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
+
+Chart.register([
+  LineElement,
+  LinearScale,
+  LineController,
+  CategoryScale,
+  PointElement
+])
 
 interface Props {
   chartRef: RefObject<any>
@@ -12,6 +28,7 @@ const LineChart: FunctionalComponent<Props> = ({ chartRef, type }) => {
 
   useEffect(() => {
     if (!chart) {
+      console.log(chart)
       const newChart = new Chart(chartRef.current, {
         data: {
           labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],

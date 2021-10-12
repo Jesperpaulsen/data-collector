@@ -9,7 +9,7 @@ import { co2Formatter } from '../../utils/co2Formatter'
 const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
   ({ usage, label }) => {
     return (
-      <div className="pt-20">
+      <div>
         <div className="flex justify-center">
           <div className="text-center px-6">
             <div className="text-4xl font-medium">
@@ -36,7 +36,7 @@ const UsageDisplay: FunctionalComponent = () => {
   const { usageState } = useContext(UsageContext)
 
   return (
-    <div className="pt-32">
+    <div className="pt-2">
       <UsageLine usage={usageState.todaysUsage} label="Todays usage" />
       <UsageLine usage={usageState.totalUsage} label="Total usage" />
     </div>

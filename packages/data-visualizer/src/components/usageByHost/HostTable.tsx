@@ -1,8 +1,8 @@
 import { FunctionalComponent } from 'preact'
 import { useMemo } from 'preact/hooks'
 
-import CustomTable from '../../components/common/CustomTable'
 import { HostDoc } from '../../types/host-doc'
+import CustomTable from '../common/CustomTable'
 
 const headers = [
   { label: 'Host', value: 'hostOrigin' },
