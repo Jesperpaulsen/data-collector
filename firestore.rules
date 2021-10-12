@@ -5,10 +5,13 @@ service cloud.firestore {
       allow read: if request.auth != null && (request.auth.uid == resource.data.userId || !exists(request.path))
     }
     match /countries/{anyDocument} {
-      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || !resource.data.userId)
+      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || !exists(request.path))
     }
     match /hosts/{anyDocument} {
-      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || !resource.data.userId)
+      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || !exists(request.path))
+    }
+    match /hostToCountry/{anyDocument} {
+      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || !exists(request.path))
     }
     match /users/{userId}/{documents=**} {
     	allow read: if request.auth != null && request.auth.uid == userId

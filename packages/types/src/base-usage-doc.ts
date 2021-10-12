@@ -1,9 +1,8 @@
 import { FieldValue } from 'firebase/firestore'
 
-import { USAGE_TYPES } from '.'
 export interface BaseUsageDoc {
   uid: string
-  type?: USAGE_TYPES
+  type?: any
   userId: string
   date?: number
   size: FieldValue

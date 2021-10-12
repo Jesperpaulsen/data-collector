@@ -19,6 +19,7 @@ export class NetworkCallController {
   private countryCollection: CollectionType
   private usageCollection: CollectionType
   private hostToCountryCollection: CollectionType
+  private totalUsageCollection: CollectionType
   private firestore: Firestore
 
   constructor(
@@ -26,13 +27,15 @@ export class NetworkCallController {
     hostCollection: CollectionType,
     countryCollection: CollectionType,
     usageCollection: CollectionType,
-    hostToCountryCollection: CollectionType
+    hostToCountryCollection: CollectionType,
+    totalUsageCollection: CollectionType
   ) {
     this.firestore = firestore
     this.hostCollection = hostCollection
     this.countryCollection = countryCollection
     this.usageCollection = usageCollection
     this.hostToCountryCollection = hostToCountryCollection
+    this.totalUsageCollection = usageCollection
   }
 
   getAllNetworkCalls = async () => {
@@ -87,14 +90,16 @@ export class NetworkCallController {
     date
   }: {
     identifier?: string
-    userId: string
+    userId?: string
     date?: number
   }) => {
-    return identifier?.length && date
+    return identifier?.length && date && userId
       ? `${userId}-${identifier}-${date}`
-      : identifier
+      : identifier && userId
       ? `${userId}-${identifier}`
-      : `${userId}-${date}`
+      : userId
+      ? `${userId}-${date}`
+      : String(date)
   }
 
   private getFieldValue = (numberOfIncrements: number) => {
@@ -187,6 +192,13 @@ export class NetworkCallController {
       .set(hostToCountryDoc, { merge: true })
   }
 
+  updateTotalUsage = (networkCall: BaseUsageDoc) => {
+    const uid = this.getDocId({ date: networkCall.date })
+    // @ts-ignore
+    delete networkCall.userId
+    return this.totalUsageCollection.doc(uid).set(networkCall, { merge: true })
+  }
+
   private getHostName = (url: string) => {
     if (!url) return ''
     return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]
@@ -200,7 +212,7 @@ export class NetworkCallController {
     const { CO2, KWH } = Country.calculateEmission({ size, countryCode })
     const usageId = this.getDocId({ userId, date })
     const strippedHostOrigin = this.getHostName(hostOrigin)
-    console.log(strippedHostOrigin)
+
     const baseUsageDoc: BaseUsageDoc = {
       uid: usageId,
       CO2: this.getFieldValue(CO2),
@@ -217,8 +229,10 @@ export class NetworkCallController {
       this.updateUserStats(baseUsageDoc),
       this.setHostDoc(baseUsageDoc, strippedHostOrigin, usageId),
       this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
-      this.setUsageDoc(baseUsageDoc)
+      this.setUsageDoc(baseUsageDoc),
+      this.updateTotalUsage(baseUsageDoc)
     ]
+
     if (strippedHostOrigin.length && countryCode)
       promises.push(
         this.setHostToCountryDoc(
@@ -230,10 +244,9 @@ export class NetworkCallController {
       )
 
     try {
-      const [host, network, country, usage, hostToCountry] = await Promise.all(
-        promises
-      )
-      return { host, network, country, usage, hostToCountry }
+      const [host, network, country, usage, totalUsage, hostToCountry] =
+        await Promise.all(promises)
+      return { host, network, country, usage, totalUsage, hostToCountry }
     } catch (e) {
       console.log(e)
     }

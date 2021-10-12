@@ -23,7 +23,8 @@ export class Firestore {
       this.client.collection('hosts'),
       this.client.collection('countries'),
       this.client.collection('usage'),
-      this.client.collection('hostToCountry')
+      this.client.collection('hostToCountry'),
+      this.client.collection('totalUsage')
     )
   }
 

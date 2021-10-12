@@ -67,8 +67,8 @@ router.post(
       typeof firebaseAdmin.firestore.networkCallController.storeNetworkCall
     >[] = []
 
+    const userId = batchRequest.userId
     for (const networkCall of batchRequest.networkCalls) {
-      const userId = batchRequest.userId
       promises.push(
         firebaseAdmin.firestore.networkCallController.storeNetworkCall(
           {
