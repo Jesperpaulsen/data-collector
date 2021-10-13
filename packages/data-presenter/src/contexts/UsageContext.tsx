@@ -2,32 +2,31 @@ import { createContext, FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import User from '../types/User';
 import { MESSAGE_TYPES } from '../types/MESSAGE_TYPES'
+import { UsageDetails } from '../types/UsageDetails';
 
 interface UsageContextProps {
-  usage: {
-    usageToday: number
-    usageLast7Days: number
-    totalUsage: number
-  },
-  totalCO2: number
+  todaysUsage: UsageDetails
+  totalUsage: UsageDetails
 }
 
-const initialUsage = {
-  usageToday: 0, usageLast7Days: 0, totalUsage: 0
+const initialUsage: UsageDetails = {
+  CO2: 0,
+  KWH: 0,
+  size: 0
 }
 
-export const UsageContext = createContext<UsageContextProps>({ usage: initialUsage, totalCO2: 0 });
+export const UsageContext = createContext<UsageContextProps>({ todaysUsage: initialUsage, totalUsage: initialUsage });
 
 const UsageProvider: FunctionComponent = ({ children }) => {
-  const [usage, setUsage] = useState(initialUsage)
-  const [totalCO2, setTotalCO2] = useState(0)
+  const [todaysUsage, setTodaysUsage] = useState(initialUsage)
+  const [totalUsage, setTotalUsage] = useState(initialUsage)
 
   const parseMessage = (details: any) => {
     const { type } = details
       if (type === MESSAGE_TYPES.SYNC_REQUESTS) {
-        const { usageToday, usageLast7Days, totalUsage, totalCO2 } = details.payload
-        setUsage({ usageToday, usageLast7Days, totalUsage })
-        setTotalCO2(totalCO2)
+        const { todaysUsage, totalUsage } = details.payload
+        setTotalUsage(totalUsage)
+        setTodaysUsage(todaysUsage)
       }
   }
 
@@ -37,7 +36,7 @@ const UsageProvider: FunctionComponent = ({ children }) => {
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.REQUEST_USAGE }, parseMessage)
   }, [])
 
-  return <UsageContext.Provider value={{ usage, totalCO2 }}>{children}</UsageContext.Provider>;
+  return <UsageContext.Provider value={{ todaysUsage, totalUsage }}>{children}</UsageContext.Provider>;
 };
 
 export default UsageProvider;

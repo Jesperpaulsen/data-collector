@@ -1,75 +1,44 @@
-import { FunctionalComponent } from "preact";
-import { useContext, useMemo, useState } from 'preact/hooks';
-import { UsageContext } from '../../contexts/UsageContext';
+import { FunctionalComponent } from 'preact'
+import { useContext, useMemo, useState } from 'preact/hooks'
+import { UsageContext } from '../../contexts/UsageContext'
+import { UsageDetails } from '../../types/UsageDetails'
 
-interface UsageDisplay {
-  usageString: string
-  usageDescription: string
-}
+import { byteFormatter } from '../../utils/byteFormatter'
+import { co2Formatter } from '../../utils/co2Formatter'
 
+const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
+  ({ usage, label }) => {
+    return (
+      <div className="pt-5">
+        <div className="flex justify-center">
+          <div className="text-center px-6">
+            <div className="text-4xl font-medium">
+              {byteFormatter(usage.size)}
+            </div>
+          </div>
+          <div className="text-center px-6">
+            <div className="text-4xl font-medium">
+              {usage.KWH.toFixed(2)} KWH
+            </div>
+          </div>
+          <div className="text-center px-6">
+            <div className="text-4xl font-medium">
+              {co2Formatter(usage.CO2)} CO2
+            </div>
+          </div>
+        </div>
+        <div className="text-center">{label}</div>
+      </div>
+    )
+  }
 
 const UsageDisplay: FunctionalComponent = () => {
-  const { usage, totalCO2 } = useContext(UsageContext)
-  const [usageToDisplay, setUsageToDisplay] = useState<UsageDisplay[]>([])
-  
-
-  useMemo(() => {
-    const getUsageDescription = (usageKey: keyof typeof usage) => {
-      switch(usageKey) {
-        case 'usageToday':
-          return 'Amount of data collected today'
-        case 'usageLast7Days':
-          return 'Amount of data collected the last seven days'
-        case 'totalUsage':
-          return 'Total amount of data collected'
-      }
-    }
-
-    const getUsageString = (usage: number) => {
-      const kbyte = 1024
-      const mbyte = 1024 * kbyte
-      const gbyte = 1024 * mbyte
-
-      let formatedUsage = '0'
-      let usageUnit: 'KB' | 'MB' | 'GB' = 'KB'
-
-      if (usage > kbyte * mbyte) {
-        formatedUsage = (usage / gbyte).toFixed(2)
-        usageUnit = 'GB'
-      } else if (usage > kbyte * kbyte) {
-        formatedUsage = (usage / mbyte).toFixed(2)
-        usageUnit = 'MB'
-      } else {
-        formatedUsage = (usage / kbyte).toFixed(2)
-        usageUnit = 'KB'
-      }
-
-      return `${formatedUsage} ${usageUnit}`
-    }
-
-    const res: UsageDisplay[] = []
-    for (const [key, value] of Object.entries(usage)) {
-      res.push({ usageDescription: getUsageDescription(key as keyof typeof usage), usageString: getUsageString(value) })
-    }
-    setUsageToDisplay(res)
-  }, [usage])
+  const { todaysUsage, totalUsage } = useContext(UsageContext)
 
   return (
-    <div>
-      <div className="flex justify-center">
-        {usageToDisplay.map((usage) => (
-          <div className="text-center px-3">
-            <div className="text-4xl font-medium">{usage.usageString}</div>
-            <div className="text-xs font-light">{usage.usageDescription}</div>
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-center mt-3">
-        <div className="text-center">
-          <div className="text-6xl font-medium">{(totalCO2 / 1000).toFixed(4)}</div>
-          <div className="text-xs font-light">kg CO2 emitted today</div>
-        </div>
-      </div>
+    <div className="pt-2">
+      <UsageLine usage={todaysUsage} label="Todays usage" />
+      <UsageLine usage={totalUsage} label="Total usage" />
     </div>
   )
 }
