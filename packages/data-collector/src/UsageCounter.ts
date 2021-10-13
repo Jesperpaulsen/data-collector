@@ -1,42 +1,41 @@
-import { MESSAGE_TYPES } from '@data-collector/types'
+import { MESSAGE_TYPES, UsageDetails } from '@data-collector/types'
 
 import Store from './store'
+import { accUsageDetails } from './utils'
 
+const initialUsage: UsageDetails = {
+  size: 0,
+  KWH: 0,
+  CO2: 0
+}
 export class UsageCounter {
-  private usageToday?: number
-  private usageLast7Days = 0
-  private totalUsage = 0
-  private usageSinceSubscriptionStarted = 0
+  private todaysUsage: UsageDetails = initialUsage
+  private totalUsage: UsageDetails = initialUsage
+  private lastUsage: UsageDetails = initialUsage
   private store: typeof Store
-  private totalCO2 = 0
   private currentDate = new Date().setHours(0, 0, 0, 0).valueOf()
 
   constructor(store: typeof Store) {
     this.store = store
-    setTimeout(() => {
+    /* setTimeout(() => {
       chrome.notifications.create('', {
         title: 'Update on your usage',
         message: `You have used ${this.usageToday} bytes today`,
         type: 'basic',
         iconUrl: './android-chrome-192x192.png'
       })
-    }, 5000)
-  }
-
-  private getUsageLast7Days = async () => {
-    const dateLimit = this.getDateLimit(7)
-    if (!this.store.user) return
-    this.usageLast7Days = await this.store.firestore.getUsageForPreviousDates(
-      this.store.user?.uid,
-      dateLimit
-    )
+    }, 5000) */
   }
 
   private getTotalUsage = async () => {
     if (!this.store.user) return
     const userDoc = await this.store.firestore.getUserDoc(this.store.user.uid)
-    this.totalUsage = userDoc.totalSize as any
-    this.totalCO2 = userDoc.totalCO2 as any
+    this.totalUsage = {
+      CO2: userDoc.totalCO2 as any,
+      KWH: userDoc.totalKWH as any,
+      size: userDoc.totalSize as any
+    }
+    this.lastUsage = this.totalUsage
   }
 
   private listenToTodaysUsage = async () => {
@@ -57,28 +56,16 @@ export class UsageCounter {
     return false
   }
 
-  private handleUsageUpdate = ({
-    size,
-    CO2
-  }: {
-    size: number
-    CO2: number
-  }) => {
-    if (this.checkIfDateHasChanged()) {
-      this.usageSinceSubscriptionStarted = 0
-      this.usageToday = 0
-      this.usageLast7Days = 0
-      this.totalUsage = 0
-      this.totalCO2 = 0
-      this.listenToChanges()
-      return
+  private handleUsageUpdate = (usage: UsageDetails) => {
+    const totalUsageDifference: UsageDetails = {
+      CO2: usage.CO2 - this.lastUsage.CO2,
+      KWH: usage.KWH - this.lastUsage.KWH,
+      size: usage.size - this.lastUsage.size
     }
-    if (!this.usageToday) this.usageToday = size
-    this.usageSinceSubscriptionStarted = size - this.usageToday
-    this.usageToday += this.usageSinceSubscriptionStarted
-    this.usageLast7Days += this.usageSinceSubscriptionStarted
-    this.totalUsage += this.usageSinceSubscriptionStarted
-    this.totalCO2 = CO2
+    const totalUsage = accUsageDetails(totalUsageDifference, this.totalUsage)
+    this.lastUsage = usage
+    this.todaysUsage = usage
+    this.totalUsage = totalUsage
     this.sendUsageUpdate()
   }
 
@@ -92,8 +79,7 @@ export class UsageCounter {
   }
 
   listenToChanges = async () => {
-    const promises = [this.getUsageLast7Days(), this.getTotalUsage()]
-    await Promise.all(promises)
+    await this.getTotalUsage()
     this.listenToTodaysUsage()
   }
 
@@ -101,10 +87,8 @@ export class UsageCounter {
     chrome.runtime.sendMessage({
       type: MESSAGE_TYPES.SYNC_REQUESTS,
       payload: {
-        usageToday: this.usageToday,
-        usageLast7Days: this.usageLast7Days,
         totalUsage: this.totalUsage,
-        totalCO2: this.totalCO2
+        todaysUsage: this.todaysUsage
       }
     })
   }
