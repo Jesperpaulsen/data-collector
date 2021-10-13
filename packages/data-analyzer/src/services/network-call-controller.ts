@@ -1,5 +1,6 @@
 import {
   BaseUsageDoc,
+  BaseUsageDocResponse,
   CountryDoc,
   HostDoc,
   HostToCountry,
@@ -35,23 +36,46 @@ export class NetworkCallController {
     this.countryCollection = countryCollection
     this.usageCollection = usageCollection
     this.hostToCountryCollection = hostToCountryCollection
-    this.totalUsageCollection = usageCollection
+    this.totalUsageCollection = totalUsageCollection
   }
 
   getAllNetworkCalls = async () => {
     const promises = [
       this.hostCollection.get(),
       this.countryCollection.get(),
-      this.usageCollection.get()
+      this.usageCollection.get(),
+      this.hostToCountryCollection.get()
     ]
-    const [hostDocs, countryDocs, usageDocs] = await Promise.all(promises)
-    return [...hostDocs.docs, ...countryDocs.docs, ...usageDocs.docs]
+    const [hostDocs, countryDocs, usageDocs, hostToCountryCollection] =
+      await Promise.all(promises)
+    return [
+      ...hostDocs.docs,
+      ...countryDocs.docs,
+      ...usageDocs.docs,
+      ...hostToCountryCollection.docs
+    ]
   }
 
   getCollection = (type: USAGE_TYPES) => {
     return type === USAGE_TYPES.COUNTRY
       ? this.countryCollection
       : this.hostCollection
+  }
+
+  getTotalUsageAfterDate = async (dateLimit: number) => {
+    const res: BaseUsageDocResponse[] = []
+    try {
+      const snapshot = await this.totalUsageCollection
+        .where('date', '>', dateLimit)
+        .get()
+
+      for (const doc of snapshot.docs) {
+        res.push(doc.data() as BaseUsageDocResponse)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    return res
   }
 
   getNetworkCallsForUser = async (uid: string) => {
@@ -68,7 +92,7 @@ export class NetworkCallController {
       hostToCountryCollection
     ] = await Promise.all(promises)
 
-    const res: BaseUsageDoc[] = []
+    const res: BaseUsageDocResponse[] = []
 
     const networkCalls = [
       ...hostCollection.docs,
@@ -78,7 +102,7 @@ export class NetworkCallController {
     ]
 
     for (const doc of networkCalls) {
-      res.push(doc.data() as BaseUsageDoc)
+      res.push(doc.data() as BaseUsageDocResponse)
     }
 
     return res
@@ -93,13 +117,20 @@ export class NetworkCallController {
     userId?: string
     date?: number
   }) => {
-    return identifier?.length && date && userId
-      ? `${userId}-${identifier}-${date}`
-      : identifier && userId
-      ? `${userId}-${identifier}`
-      : userId
-      ? `${userId}-${date}`
-      : String(date)
+    if (identifier?.length && date && userId) {
+      return `${userId}-${identifier}-${date}`
+    } else if (identifier?.length && userId) {
+      return `${userId}-${identifier}`
+    } else if (identifier?.length && date) {
+      return `${identifier}-${date}`
+    } else if (userId && date) {
+      return `${userId}-${date}`
+    } else if (identifier?.length) {
+      return identifier
+    } else if (date) {
+      return String(date)
+    }
+    return `unkown-${getStartOfDateInUnix(new Date())}`
   }
 
   private getFieldValue = (numberOfIncrements: number) => {
@@ -178,10 +209,12 @@ export class NetworkCallController {
       identifier: `${countryCode}-${hostOrigin}`,
       userId: networkCall.userId
     })
-    delete networkCall.date
+    const tmpNetworkCall = { ...networkCall }
+    // @ts-ignore
+    delete tmpNetworkCall.date
 
     const hostToCountryDoc: HostToCountry = {
-      ...networkCall,
+      ...tmpNetworkCall,
       countryCode,
       countryName,
       hostOrigin
@@ -194,9 +227,12 @@ export class NetworkCallController {
 
   updateTotalUsage = (networkCall: BaseUsageDoc) => {
     const uid = this.getDocId({ date: networkCall.date })
+    const tmpNetworkCall = { ...networkCall }
     // @ts-ignore
-    delete networkCall.userId
-    return this.totalUsageCollection.doc(uid).set(networkCall, { merge: true })
+    delete tmpNetworkCall.userId
+    return this.totalUsageCollection
+      .doc(uid)
+      .set(tmpNetworkCall, { merge: true })
   }
 
   private getHostName = (url: string) => {
@@ -233,7 +269,7 @@ export class NetworkCallController {
       this.updateTotalUsage(baseUsageDoc)
     ]
 
-    if (strippedHostOrigin.length && countryCode)
+    if (strippedHostOrigin.length && countryCode) {
       promises.push(
         this.setHostToCountryDoc(
           baseUsageDoc,
@@ -242,6 +278,7 @@ export class NetworkCallController {
           strippedHostOrigin
         )
       )
+    }
 
     try {
       const [host, network, country, usage, totalUsage, hostToCountry] =

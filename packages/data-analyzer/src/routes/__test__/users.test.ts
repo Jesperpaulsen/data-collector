@@ -7,7 +7,7 @@ import { app } from '../../app'
 import firebaseAdmin from '../../services/firebase-admin'
 
 const createUser = async (expectedCode = 201) => {
-  const testUser: Partial<User> = {
+  const testUser = {
     email: 'test@test.com',
     name: 'Test Testesen'
   }
@@ -71,7 +71,6 @@ describe('route: /users method: POST', () => {
     const userInDatabase = await firebaseAdmin.firestore.getUser(res.body.uid)
 
     expect(userInDatabase?.uid.length).toBe(28)
-    expect(userInDatabase?.email).toEqual(testUser.email)
     expect(userInDatabase?.name).toEqual(testUser.name)
     expect(userInDatabase?.role).toEqual('user')
     // @ts-ignore

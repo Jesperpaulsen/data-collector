@@ -1,7 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 
-import { NetworkCall } from '@data-collector/types'
+import {
+  BaseUsageDoc,
+  BaseUsageDocResponse,
+  NetworkCall
+} from '@data-collector/types'
 
 import { BadRequestError } from '../errors/bad-request-error'
 import { DatabaseConnectionError } from '../errors/database-connection-error'
@@ -13,6 +17,7 @@ import NetworkCallSchema, {
   NetworkCallSchemaInArray
 } from '../schemas/NetworkCallSchema'
 import firebaseAdmin from '../services/firebase-admin'
+import { getDateLimit } from '../utils/date'
 
 const basePath = '/network-call'
 
@@ -153,7 +158,7 @@ router.get(
 )
 
 router.get(
-  generateRoute('users/usage-details/:uid'),
+  generateRoute('/users/usage-details/:uid'),
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     const { uid } = req.params
@@ -167,6 +172,44 @@ router.get(
       last7Days: 0,
       totalUsage: 0
     }
+  }
+)
+
+router.get(
+  generateRoute('/total-usage/:numberOfDays'),
+  requireAuth,
+  async (req: Request, res: Response) => {
+    const { numberOfDays } = req.params
+
+    const limit = getDateLimit(Number(numberOfDays) || 7)
+
+    const userDocs = await firebaseAdmin.firestore.getAllUsers()
+    const numberOfUsers = userDocs.docs.length
+
+    const usageDocs =
+      await firebaseAdmin.firestore.networkCallController.getTotalUsageAfterDate(
+        limit
+      )
+
+    const usage: {
+      [date: number]: {
+        CO2: number
+        KWH: number
+        size: number
+        numberOfCalls: number
+      }
+    } = {}
+
+    for (const doc of usageDocs) {
+      const usageDetails = {
+        CO2: doc.CO2 / numberOfUsers,
+        KWH: doc.KWH / numberOfUsers,
+        size: doc.size / numberOfUsers,
+        numberOfCalls: doc.numberOfCalls / numberOfUsers
+      }
+      usage[doc.date] = usageDetails
+    }
+    return res.status(200).send({ usage, numberOfUsers })
   }
 )
 

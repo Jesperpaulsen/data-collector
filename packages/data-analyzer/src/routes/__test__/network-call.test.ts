@@ -76,8 +76,7 @@ describe('route: /network-call method: POST', () => {
         user.uid
       )
 
-    // It seems to be a firebase emulator bug. Only 2 docs are returned even though 4 is created.
-    expect(allDocs.length).toBe(2)
+    expect(allDocs.length).toBe(3)
   })
 })
 
@@ -211,8 +210,7 @@ describe('route: /network-call/batch method: POST', () => {
         user.uid
       )
 
-    // TODO: This should be 4. Seems to only be a problem in tests when using emulator.
-    expect(allDocs.length).toBe(2)
+    expect(allDocs.length).toBe(3)
   })
 })
 

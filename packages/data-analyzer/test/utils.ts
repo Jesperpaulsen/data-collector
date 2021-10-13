@@ -30,7 +30,7 @@ const authMock = getAuth(firebase)
 connectAuthEmulator(authMock, 'http://localhost:9099')
 
 export const getAdminToken = async () => {
-  const testUser: Partial<User> = {
+  const testUser = {
     email: 'admin@admin.com',
     name: 'Admin',
     role: 'admin'
@@ -45,9 +45,8 @@ export const getAdminToken = async () => {
   })
 
   const user: User = {
-    email: testUser.email!,
     name: testUser.name!,
-    role: testUser.role!,
+    role: 'admin',
     uid: authUser.uid,
     totalCO2: admin.firestore.FieldValue.increment(0),
     totalSize: admin.firestore.FieldValue.increment(0),
@@ -67,7 +66,7 @@ export const getAdminToken = async () => {
 }
 
 export const getUserToken = async () => {
-  const testUser: Partial<User> = {
+  const testUser = {
     email: `test-${Math.random() * 100}@test.com`,
     name: 'Test testesen',
     role: 'user'
@@ -82,9 +81,8 @@ export const getUserToken = async () => {
   })
 
   const user: User = {
-    email: testUser.email!,
     name: testUser.name!,
-    role: testUser.role!,
+    role: 'user',
     uid: authUser.uid,
     totalCO2: admin.firestore.FieldValue.increment(0),
     totalSize: admin.firestore.FieldValue.increment(0),

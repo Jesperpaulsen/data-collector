@@ -37,7 +37,6 @@ router.post(
       })
 
       const user: User = {
-        email,
         name,
         uid: userAuth.uid,
         role: 'user',
@@ -49,9 +48,7 @@ router.post(
 
       await firebaseAdmin.firestore.createUser(user)
 
-      res
-        .status(201)
-        .send({ email: user.email, name: user.name, uid: user.uid })
+      res.status(201).send({ name: user.name, uid: user.uid })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }
@@ -108,7 +105,6 @@ router.post(
       }
 
       const user: User = {
-        email,
         name,
         uid,
         role: 'user',
@@ -120,9 +116,7 @@ router.post(
 
       await firebaseAdmin.firestore.createUser(user)
 
-      res
-        .status(201)
-        .send({ email: user.email, name: user.name, uid: user.uid })
+      res.status(201).send({ name: user.name, uid: user.uid })
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }
