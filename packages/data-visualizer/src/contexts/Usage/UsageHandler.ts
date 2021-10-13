@@ -2,6 +2,7 @@ import { GenericHandler } from '../../types/GenericHandler'
 import { HostToCountry } from '../../types/host-to-country'
 import User from '../../types/User'
 import { accUsageDetails } from '../../utils/accUsageDetails'
+import { getDateLimit, getStartOfDateInUnix } from '../../utils/date'
 
 import { UsageApi } from './UsageApi'
 import { UsageDetails, UsageState } from './UsageState'
@@ -23,6 +24,10 @@ export class UsageHandler extends GenericHandler<UsageState> {
       if (currentUser) {
         this.setTotalUsage(currentUser)
         this.api.listenToUsage(currentUser.uid)
+        this.getOwnUsageFromLastWeek(currentUser.uid)
+        if (newState.userHandler) {
+          this.api.createHTTPClient(newState.userHandler.getUserToken)
+        }
       }
     }
   }
@@ -73,5 +78,11 @@ export class UsageHandler extends GenericHandler<UsageState> {
       countryCode
     )
     return countryUsagePerHost
+  }
+
+  getOwnUsageFromLastWeek = async (userId: string) => {
+    const lastWeekLimit = getDateLimit(7)
+    const usage = await this.api.getOwnUsageForLastWeek(userId, lastWeekLimit)
+    this.setState({ ownUsageLastWeek: usage })
   }
 }

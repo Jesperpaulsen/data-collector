@@ -1,4 +1,4 @@
-export interface BaseUsageDoc {
+export interface BaseUsageDocResponse {
   uid: string
   userId: string
   date: number

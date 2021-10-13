@@ -14,8 +14,8 @@ import {
   orderBy
 } from 'firebase/firestore'
 
-import { BaseUsageDoc, User } from '@data-collector/types'
-
+import User from '../types/User'
+import { BaseUsageDocResponse } from '../types/base-usage-doc'
 import { firebase } from './Firebase'
 import { UsageDetails } from '../contexts/Usage/UsageState'
 import { CountryDoc } from '../types/country-doc'
@@ -33,6 +33,7 @@ export class Firestore {
   userCollection: CollectionReference<DocumentData>
   hostCollection: CollectionReference<DocumentData>
   hostToCountryCollection: CollectionReference<DocumentData>
+  totalUsageCollection: CollectionReference<DocumentData>
 
   private unsubscribeTodaysListener?: () => void
 
@@ -42,6 +43,7 @@ export class Firestore {
     this.userCollection = collection(this.client, 'users')
     this.hostCollection = collection(this.client, 'hosts')
     this.hostToCountryCollection = collection(this.client, 'hostToCountry')
+    this.totalUsageCollection = collection(this.client, 'totalUsage')
   }
 
   getUsageForPreviousDates = async (uid: string, dateLimit: number) => {
@@ -51,10 +53,24 @@ export class Firestore {
       where('date', '>', dateLimit)
     )
     const snapshot = await getDocs(q)
-    let usage = 0
+
+    const usage: {
+      [date: number]: {
+        CO2: number
+        KWH: number
+        size: number
+        numberOfCalls: number
+      }
+    } = {}
+
     for (const doc of snapshot.docs) {
-      const usageDoc = doc.data() as any
-      usage += usageDoc.size
+      const data = doc.data() as BaseUsageDocResponse
+      usage[data.date] = {
+        CO2: data.CO2,
+        KWH: data.KWH,
+        size: data.size,
+        numberOfCalls: data.numberOfCalls
+      }
     }
     return usage
   }

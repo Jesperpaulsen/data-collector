@@ -1,4 +1,4 @@
-import { doc, getDoc, query } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 
 import Firestore from '../../services/Firestore'
 import { HTTPClient } from '../../services/HttpClient'

@@ -1,7 +1,7 @@
 export type { NetworkCall } from './network-call'
 export type { User } from './user'
 export { MESSAGE_TYPES } from './MESSAGE_TYPES'
-export type { BaseUsageDoc } from './base-usage-doc'
+export type { BaseUsageDoc, BaseUsageDocResponse } from './base-usage-doc'
 export type { CountryDoc } from './country-doc'
 export type { HostDoc } from './host-doc'
 export type { CO2PerKWHCountry } from './co2-per-kwh-country'

@@ -1,6 +1,7 @@
 import {
   CategoryScale,
   Chart,
+  ChartDataset,
   ChartType,
   LinearScale,
   LineController,
@@ -8,7 +9,9 @@ import {
   PointElement
 } from 'chart.js'
 import { createRef, FunctionalComponent, RefObject } from 'preact'
-import { useEffect, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
+
+import { Dataset, Labels } from '../../../types/chart-types'
 
 Chart.register([
   LineElement,
@@ -21,24 +24,24 @@ Chart.register([
 interface Props {
   chartRef: RefObject<any>
   type: ChartType
+  labels: string[]
+  datasets: ChartDataset[]
 }
 
-const LineChart: FunctionalComponent<Props> = ({ chartRef, type }) => {
+const LineChart: FunctionalComponent<Props> = ({
+  chartRef,
+  type,
+  labels,
+  datasets
+}) => {
   const [chart, setChart] = useState<Chart | undefined>()
 
   useEffect(() => {
-    if (!chart) {
-      console.log(chart)
+    if (!chart && datasets && labels) {
       const newChart = new Chart(chartRef.current, {
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [
-            {
-              label: '# of Votes',
-              data: [12, 19, 3, 5, 2, 3],
-              borderWidth: 1
-            }
-          ]
+          labels,
+          datasets
         },
         options: {
           scales: {
@@ -51,7 +54,7 @@ const LineChart: FunctionalComponent<Props> = ({ chartRef, type }) => {
       })
       setChart(newChart)
     }
-  }, [chart, chartRef, type])
+  }, [chart, chartRef, type, datasets, labels])
 
   return null
 }

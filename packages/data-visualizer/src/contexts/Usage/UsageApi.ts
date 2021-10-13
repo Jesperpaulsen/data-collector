@@ -3,19 +3,23 @@ import { HTTPClient } from '../../services/HttpClient'
 import { CountryDoc } from '../../types/country-doc'
 import { HostDoc } from '../../types/host-doc'
 import { HostToCountry } from '../../types/host-to-country'
-import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
 import { accUsageDetails } from '../../utils/accUsageDetails'
 import { getStartOfDateInUnix } from '../../utils/date'
-import { extensionID } from '../../utils/extensionID'
 
 import { UsageHandler } from './UsageHandler'
 import { UsageDetails } from './UsageState'
 
 export class UsageApi {
   private usageHandler: UsageHandler
+  private HTTPClient?: HTTPClient
 
   constructor(usageHandler: UsageHandler) {
     this.usageHandler = usageHandler
+  }
+
+  createHTTPClient = (getUserToken: () => Promise<string>) => {
+    this.HTTPClient = new HTTPClient(getUserToken)
+    this.getTotalUsageForLastWeek()
   }
 
   listenToUsage = (userId: string) => {
@@ -107,5 +111,27 @@ export class UsageApi {
       console.log(e)
       return []
     }
+  }
+
+  getTotalUsageForLastWeek = async () => {
+    try {
+      const res = await this.HTTPClient?.doRequest(
+        '/network-call/total-usage/7',
+        'GET'
+      )
+      const { usage, numberOfUsers } = await res?.json()
+      console.log(usage)
+      this.usageHandler.setState({
+        numberOfUsers,
+        allUsersUsageLastWeek: usage
+      })
+    } catch (e) {
+      console.log(e)
+      return []
+    }
+  }
+
+  getOwnUsageForLastWeek = async (userId: string, dateLimit: number) => {
+    return Firestore.getUsageForPreviousDates(userId, dateLimit)
   }
 }

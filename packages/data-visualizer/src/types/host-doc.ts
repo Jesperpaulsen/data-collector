@@ -1,6 +1,6 @@
-import { BaseUsageDoc } from './base-usage-doc'
+import { BaseUsageDocResponse } from './base-usage-doc'
 
-export interface HostDoc extends BaseUsageDoc {
+export interface HostDoc extends BaseUsageDocResponse {
   usageId: string
   hostOrigin: string
 }

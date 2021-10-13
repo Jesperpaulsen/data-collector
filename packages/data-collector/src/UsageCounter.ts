@@ -35,8 +35,8 @@ export class UsageCounter {
   private getTotalUsage = async () => {
     if (!this.store.user) return
     const userDoc = await this.store.firestore.getUserDoc(this.store.user.uid)
-    this.totalUsage = userDoc.totalSize
-    this.totalCO2 = userDoc.totalCO2
+    this.totalUsage = userDoc.totalSize as any
+    this.totalCO2 = userDoc.totalCO2 as any
   }
 
   private listenToTodaysUsage = async () => {

@@ -17,11 +17,15 @@ export const UsageContext = createContext<UsageContextProps>({ usageState: initi
 const UsageProvider: FunctionComponent = ({ children }) => {
   const [usageState, setUsageState] = useState<UsageState>(initialState)
   const [usageHandler, setUsageHandler] = useState<UsageHandler | undefined>(undefined)
-  const { userState } = useContext(UserContext)
+  const { userState, userHandler } = useContext(UserContext)
 
   useEffect(() => {
     if (!usageHandler) setUsageHandler(new UsageHandler(usageState, setUsageState))
   }, [])
+
+  useEffect(() => {
+    if (userHandler && !usageState.userHandler) usageHandler?.setState({ userHandler }) 
+  }, [userHandler])
 
   useEffect(() => {
     if (userState) usageHandler?.setState({ userState })

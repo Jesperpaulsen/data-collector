@@ -1,7 +1,6 @@
 import { FieldValue } from 'firebase/firestore'
 
 export interface User {
-  email: string
   name: string
   uid: string
   role: 'user' | 'admin'
