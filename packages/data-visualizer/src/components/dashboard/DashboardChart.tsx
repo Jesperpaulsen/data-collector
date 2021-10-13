@@ -29,7 +29,7 @@ const DashboardChart: FunctionalComponent = () => {
     for (let i = 0; i < goBackDays; i++) {
       const newDate = new Date(tomorrow.setDate(tomorrow.getDate() - 1))
       const value = getStartOfDateInUnix(newDate)
-      const label = days[newDate.getDay()]
+      const label = i === 0 ? 'Today' : days[newDate.getDay()]
       daysSorted.push({ value, label })
     }
 
