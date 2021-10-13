@@ -40,7 +40,6 @@ const Router: FunctionComponent = () => {
 
   useEffect(() => {
     if (userState.currentUser) {
-      console.log(routeTo)
       route(routeTo, true)
     }
   }, [userState.currentUser])
