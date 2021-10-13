@@ -12,13 +12,13 @@ const DashboardChart: FunctionalComponent = () => {
 
   const labels = useMemo(() => {
     const days = [
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saterday',
-      'sunday'
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saterday',
+      'Sunday'
     ]
     const goBackDays = 7
 
@@ -32,7 +32,7 @@ const DashboardChart: FunctionalComponent = () => {
       daysSorted.push({ value, label })
     }
 
-    return daysSorted
+    return daysSorted.reverse()
   }, [])
 
   const allUsersUsage = useMemo(() => {

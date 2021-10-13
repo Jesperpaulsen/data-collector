@@ -19,7 +19,6 @@ const CustomChart: FunctionalComponent<Props> = ({
 }) => {
   const chartRef = createRef()
   const [key, setKey] = useState(Math.random().toString(36).substr(7))
-  console.log('yo')
   const reducedLabels = useMemo(() => {
     const res: string[] = []
     for (const label of labels) {
@@ -30,7 +29,6 @@ const CustomChart: FunctionalComponent<Props> = ({
 
   const reducedDatasets = useMemo(() => {
     const res: ChartDataset[] = []
-    console.log('recalc')
     for (const dataset of datasets) {
       const reducedData: number[] = []
       for (const label of labels) {
