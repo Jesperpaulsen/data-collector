@@ -65,10 +65,11 @@ export class UsageCounter {
     }
 
     const totalUsageDifference: UsageDetails = {
-      CO2: usage.CO2 - this.lastUsage.CO2,
-      KWH: usage.KWH - this.lastUsage.KWH,
-      size: usage.size - this.lastUsage.size
+      CO2: Math.max(usage.CO2 - this.lastUsage.CO2, 0),
+      KWH: Math.max(usage.KWH - this.lastUsage.KWH, 0),
+      size: Math.max(usage.size - this.lastUsage.size, 0)
     }
+
     const totalUsage = accUsageDetails(totalUsageDifference, this.totalUsage)
     this.lastUsage = usage
     this.todaysUsage = usage

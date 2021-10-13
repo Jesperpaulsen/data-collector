@@ -38,16 +38,18 @@ export class UsageHandler extends GenericHandler<UsageState> {
       CO2: currentUser.totalCO2,
       KWH: currentUser.totalKWH
     }
+    console.log(totalUsage)
     this.setState({ totalUsage })
     this.lastUsage = totalUsage
   }
 
   readonly handleUsageUpdate = (usage: UsageDetails) => {
     const totalUsageDifference: UsageDetails = {
-      CO2: usage.CO2 - this.lastUsage.CO2,
-      KWH: usage.KWH - this.lastUsage.KWH,
-      size: usage.size - this.lastUsage.size
+      CO2: Math.max(usage.CO2 - this.lastUsage.CO2, 0),
+      KWH: Math.max(usage.KWH - this.lastUsage.KWH, 0),
+      size: Math.max(usage.size - this.lastUsage.size, 0)
     }
+
     const totalUsage = accUsageDetails(
       totalUsageDifference,
       this.state.totalUsage
