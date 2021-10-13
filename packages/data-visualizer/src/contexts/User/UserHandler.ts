@@ -19,7 +19,6 @@ import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
 import { UserApi } from './UserApi'
 
 import { UserState } from './UserState'
-import { User } from '@data-collector/types'
 
 const auth = getAuth(firebase)
 // @ts-ignore
@@ -47,8 +46,22 @@ export class UserHandler extends GenericHandler<UserState> {
   private listenToAuthChanges = () => {
     onAuthStateChanged(this.client, async (authState) => {
       if (authState) {
-        const user = await this.api.getUser(authState?.uid)
-        this.setState({ currentUser: user })
+        const user = await this.api.getUser(authState.uid)
+        if (user) {
+          this.setState({ currentUser: user })
+        } else {
+          this.setState({
+            currentUser: {
+              name: authState.displayName || '',
+              uid: authState.uid,
+              numberOfCalls: 0,
+              role: 'user',
+              totalCO2: 0,
+              totalKWH: 0,
+              totalSize: 0
+            }
+          })
+        }
       } else {
         this.setState({ currentUser: undefined })
       }
@@ -171,7 +184,7 @@ export class UserHandler extends GenericHandler<UserState> {
         displayName =
           result.user.providerData[0].displayName?.split(' ')[0] || ''
       }
-      const user: Pick<User, 'email' | 'name' | 'uid'> = {
+      const user: { email: string; name: string; uid: string } = {
         email: result.user.email || '',
         name: displayName,
         uid: result.user.uid

@@ -26,7 +26,7 @@ export class UserApi {
     }
   }
 
-  createUser = async (user: Pick<User, 'email' | 'name' | 'uid'>) => {
+  createUser = async (user: { email: string; name: string; uid: string }) => {
     try {
       await this.httpClient.doRequest(
         `/users/extension/${user.uid}`,

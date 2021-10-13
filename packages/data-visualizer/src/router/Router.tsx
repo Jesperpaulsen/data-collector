@@ -40,9 +40,10 @@ const Router: FunctionComponent = () => {
 
   useEffect(() => {
     if (userState.currentUser) {
+      console.log(routeTo)
       route(routeTo, true)
     }
-  }, [userState])
+  }, [userState.currentUser])
 
   return <PreactRouter>
     {Object.entries(routeComponents).map(([key, value]) => (

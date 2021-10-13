@@ -39,7 +39,7 @@ export class UsageHandler extends GenericHandler<UsageState> {
       KWH: currentUser.totalKWH
     }
     this.setState({ totalUsage })
-    console.log(this.state.totalUsage)
+    this.lastUsage = totalUsage
   }
 
   readonly handleUsageUpdate = (usage: UsageDetails) => {
