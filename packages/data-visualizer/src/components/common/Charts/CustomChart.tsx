@@ -60,7 +60,10 @@ const CustomChart: FunctionalComponent<Props> = ({
 
   return (
     <div className="h-full w-full px-10 pt-4 relative">
-      <canvas key={key} ref={chartRef} className="z-50 bg-secondary">
+      <canvas
+        key={key}
+        ref={chartRef}
+        className="z-50 bg-secondary rounded-lg p-2 shadow-lg max-h-164">
         <ChartRenderer
           chartRef={chartRef}
           type={type}
