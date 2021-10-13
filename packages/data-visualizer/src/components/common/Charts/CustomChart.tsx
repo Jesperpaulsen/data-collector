@@ -46,6 +46,7 @@ const CustomChart: FunctionalComponent<Props> = ({
         data: reducedData,
         fill: false,
         borderColor: colors[i],
+        backgroundColor: colors[i],
         tension: 0.1
       })
       i++

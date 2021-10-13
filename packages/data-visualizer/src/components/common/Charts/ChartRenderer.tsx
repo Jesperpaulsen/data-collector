@@ -3,6 +3,7 @@ import {
   Chart,
   ChartDataset,
   ChartType,
+  Legend,
   LinearScale,
   LineController,
   LineElement,
@@ -21,7 +22,8 @@ Chart.register([
   LineController,
   CategoryScale,
   PointElement,
-  Tooltip
+  Tooltip,
+  Legend
 ])
 
 Chart.defaults.interaction.mode = 'nearest'
