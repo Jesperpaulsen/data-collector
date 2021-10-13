@@ -12,7 +12,7 @@ interface Props {
   datasets: Dataset[]
 }
 
-const colors = ['red', 'blue']
+const colors = ['#82AC85', '#E2CFC9', '#BFD8C4', '#D1ACA5']
 
 const CustomChart: FunctionalComponent<Props> = ({
   type,
@@ -59,7 +59,7 @@ const CustomChart: FunctionalComponent<Props> = ({
   }, [setKey, reducedLabels, reducedDatasets])
 
   return (
-    <div className="h-full w-full relative">
+    <div className="h-full w-full px-10 pt-4 relative">
       <canvas key={key} ref={chartRef} className="z-50 bg-secondary">
         <ChartRenderer
           chartRef={chartRef}
