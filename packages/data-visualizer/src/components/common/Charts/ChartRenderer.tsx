@@ -6,8 +6,10 @@ import {
   LinearScale,
   LineController,
   LineElement,
-  PointElement
+  PointElement,
+  Tooltip
 } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { createRef, FunctionalComponent, RefObject } from 'preact'
 import { useEffect, useMemo, useState } from 'preact/hooks'
 
@@ -18,8 +20,14 @@ Chart.register([
   LinearScale,
   LineController,
   CategoryScale,
-  PointElement
+  PointElement,
+  Tooltip
 ])
+
+Chart.defaults.interaction.mode = 'nearest'
+Chart.defaults.hover.mode = 'nearest'
+
+Chart.defaults.plugins.tooltip.enabled = true
 
 interface Props {
   chartRef: RefObject<any>
@@ -43,14 +51,21 @@ const LineChart: FunctionalComponent<Props> = ({
           labels,
           datasets
         },
+        type: type,
         options: {
+          backgroundColor: 'white',
           scales: {
             y: {
               beginAtZero: true
             }
+          },
+          elements: {
+            point: {
+              // radius: 0,
+              hitRadius: 5
+            }
           }
-        },
-        type: type
+        }
       })
       setChart(newChart)
     }

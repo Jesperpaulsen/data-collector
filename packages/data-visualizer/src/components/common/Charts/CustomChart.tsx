@@ -12,6 +12,8 @@ interface Props {
   datasets: Dataset[]
 }
 
+const colors = ['red', 'blue']
+
 const CustomChart: FunctionalComponent<Props> = ({
   type,
   labels,
@@ -29,6 +31,7 @@ const CustomChart: FunctionalComponent<Props> = ({
 
   const reducedDatasets = useMemo(() => {
     const res: ChartDataset[] = []
+    let i = 0
     for (const dataset of datasets) {
       console.log(dataset.data)
       const reducedData: number[] = []
@@ -38,8 +41,14 @@ const CustomChart: FunctionalComponent<Props> = ({
         reducedData.push(data)
       }
 
-      console.log(res)
-      res.push({ label: dataset.label, data: reducedData })
+      res.push({
+        label: dataset.label,
+        data: reducedData,
+        fill: false,
+        borderColor: colors[i],
+        tension: 0.1
+      })
+      i++
     }
     return res
   }, [datasets, labels])
@@ -49,11 +58,8 @@ const CustomChart: FunctionalComponent<Props> = ({
   }, [setKey, reducedLabels, reducedDatasets])
 
   return (
-    <div className="h-full w-full">
-      <canvas
-        key={key}
-        ref={chartRef}
-        className="max-h-full w-full bg-secondary">
+    <div className="h-full w-full relative">
+      <canvas key={key} ref={chartRef} className="z-50 bg-secondary">
         <ChartRenderer
           chartRef={chartRef}
           type={type}

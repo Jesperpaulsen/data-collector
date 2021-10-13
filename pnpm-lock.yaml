@@ -200,6 +200,7 @@ importers:
       '@typescript-eslint/parser': ^4.33.0
       autoprefixer: ^10.3.7
       chart.js: ^3.5.1
+      chartjs-plugin-datalabels: ^2.0.0
       classnames: ^2.3.1
       cross-env: ^7.0.3
       dayjs: ^1.10.7
@@ -228,6 +229,7 @@ importers:
       webextension-polyfill-ts: ^0.26.0
     dependencies:
       chart.js: 3.5.1
+      chartjs-plugin-datalabels: 2.0.0_chart.js@3.5.1
       classnames: 2.3.1
       dayjs: 1.10.7
       firebase: 9.1.1
@@ -5519,6 +5521,14 @@ packages:
 
   /chart.js/3.5.1:
     resolution: {integrity: sha512-m5kzt72I1WQ9LILwQC4syla/LD/N413RYv2Dx2nnTkRS9iv/ey1xLTt0DnPc/eWV4zI+BgEgDYBIzbQhZHc/PQ==}
+    dev: false
+
+  /chartjs-plugin-datalabels/2.0.0_chart.js@3.5.1:
+    resolution: {integrity: sha512-WBsWihphzM0Y8fmQVm89+iy99mmgejmj5/jcsYqwxSioLRL/zqJ4Scv/eXq5ZqvG3TpojlGzZLeaOaSvDm7fwA==}
+    peerDependencies:
+      chart.js: ^3.0.0
+    dependencies:
+      chart.js: 3.5.1
     dev: false
 
   /chokidar/3.5.2:
