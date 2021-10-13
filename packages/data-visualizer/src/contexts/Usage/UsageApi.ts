@@ -46,7 +46,6 @@ export class UsageApi {
             numberOfCalls: data.numberOfCalls,
             numberOfCallsWithoutSize: data.numberOfCallsWithoutSize
           }
-          console.log(usage.CO2)
           const updatedCountryDoc = accUsageDetails<CountryDoc>(
             usage,
             exististingCountry
@@ -120,7 +119,6 @@ export class UsageApi {
         'GET'
       )
       const { usage, numberOfUsers } = await res?.json()
-      console.log(usage)
       this.usageHandler.setState({
         numberOfUsers,
         allUsersUsageLastWeek: usage

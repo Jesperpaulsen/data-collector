@@ -39,14 +39,3 @@ export const accUsageDetails = <T>(usage: UsageDetails, usageObject: T) => {
   }
   return res
 }
-
-export const convertDateToUTC = (date: Date) => {
-  return new Date(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours(),
-    date.getUTCMinutes(),
-    date.getUTCSeconds()
-  )
-}

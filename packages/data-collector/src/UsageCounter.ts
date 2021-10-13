@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES, UsageDetails } from '@data-collector/types'
 
+import { getStartOfDateInUnix } from './date'
 import Store from './store'
 import { accUsageDetails, convertDateToUTC } from './utils'
 
@@ -42,7 +43,7 @@ export class UsageCounter {
     if (!this.store.user) return
     this.store.firestore.listenToTodaysUsage(
       this.store.user.uid,
-      convertDateToUTC(new Date()).valueOf() / 1000,
+      getStartOfDateInUnix(new Date()),
       this.handleUsageUpdate
     )
   }
@@ -57,6 +58,12 @@ export class UsageCounter {
   }
 
   private handleUsageUpdate = (usage: UsageDetails) => {
+    if (this.checkIfDateHasChanged()) {
+      this.todaysUsage = initialUsage
+      this.totalUsage = initialUsage
+      return
+    }
+
     const totalUsageDifference: UsageDetails = {
       CO2: usage.CO2 - this.lastUsage.CO2,
       KWH: usage.KWH - this.lastUsage.KWH,

@@ -12,21 +12,22 @@ const DashboardChart: FunctionalComponent = () => {
 
   const labels = useMemo(() => {
     const days = [
+      'Sunday',
       'Monday',
       'Tuesday',
       'Wednesday',
       'Thursday',
       'Friday',
-      'Saterday',
-      'Sunday'
+      'Saturday'
     ]
     const goBackDays = 7
 
-    const today = new Date()
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
     const daysSorted: Labels = []
 
     for (let i = 0; i < goBackDays; i++) {
-      const newDate = new Date(today.setDate(today.getDate() - 1))
+      const newDate = new Date(tomorrow.setDate(tomorrow.getDate() - 1))
       const value = getStartOfDateInUnix(newDate)
       const label = days[newDate.getDay()]
       daysSorted.push({ value, label })
@@ -59,7 +60,6 @@ const DashboardChart: FunctionalComponent = () => {
     for (const [date, usage] of Object.entries(usageState.ownUsageLastWeek)) {
       data[date] = usage.CO2
     }
-
     res.label = 'Your usage'
     res.data = data
     return res

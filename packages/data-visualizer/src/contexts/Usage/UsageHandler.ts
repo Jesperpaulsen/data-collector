@@ -83,6 +83,7 @@ export class UsageHandler extends GenericHandler<UsageState> {
   getOwnUsageFromLastWeek = async (userId: string) => {
     const lastWeekLimit = getDateLimit(7)
     const usage = await this.api.getOwnUsageForLastWeek(userId, lastWeekLimit)
+    console.log(usage)
     this.setState({ ownUsageLastWeek: usage })
   }
 }

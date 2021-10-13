@@ -30,11 +30,15 @@ const CustomChart: FunctionalComponent<Props> = ({
   const reducedDatasets = useMemo(() => {
     const res: ChartDataset[] = []
     for (const dataset of datasets) {
+      console.log(dataset.data)
       const reducedData: number[] = []
       for (const label of labels) {
+        console.log(label.value)
         const data = dataset.data[label.value] || 0
         reducedData.push(data)
       }
+
+      console.log(res)
       res.push({ label: dataset.label, data: reducedData })
     }
     return res
