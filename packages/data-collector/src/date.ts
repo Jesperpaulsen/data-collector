@@ -9,5 +9,5 @@ export const getStartOfDateInUnix = (date: Date) => {
 }
 
 export const getDateLimit = (numberOfDaysToSubtract: number) => {
-  dayjs().utc().subtract(numberOfDaysToSubtract, 'days')
+  return dayjs().utc().subtract(numberOfDaysToSubtract, 'days').unix()
 }
