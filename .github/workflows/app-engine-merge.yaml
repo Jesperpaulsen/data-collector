@@ -34,6 +34,11 @@ jobs:
       - name: 'check env file'
         run: cat .env-for-app-yaml
         working-directory: ./packages/data-analyzer
+      - name: 'update IP database'
+        working-directory: ./packages/data-analyzer
+        env:
+          GEOLITE2_LICENSE_KEY: ${{ secrets.GEOLITE2_LICENSE_KEY }}
+        run: pnpm update-ip
       - id: deploy
         uses: google-github-actions/deploy-appengine@main
         env:
