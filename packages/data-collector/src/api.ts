@@ -4,7 +4,7 @@ import { firebase } from './firebase'
 import Store from './store'
 export class API {
   private store: typeof Store
-  private baseUrl = 'http://localhost:3333'
+  private baseUrl = 'https://data-collector-ff33b.ew.r.appspot.com'
 
   constructor(store: typeof Store) {
     this.store = store
