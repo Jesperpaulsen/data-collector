@@ -2,7 +2,7 @@
   "name": "data-analyzer",
   "version": "1.0.0",
   "description": "Responsible for serving data-collector and data-presenter",
-  "main": "src/wrapper.ts",
+  "main": "src/index",
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon",
@@ -18,7 +18,7 @@
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
     "build": "rm -rf ./dist && esbuild src/index.ts --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --platform=node",
     "update-ip": "node ./node_modules/geoip-country/scripts/updatedb.js",
-    "gcp-build": "esbuild-node-tsc && npm run update-ip"
+    "gcp-build": "esbuild-node-tsc"
   },
   "author": "Jesper Paulsen",
   "license": "MIT",
