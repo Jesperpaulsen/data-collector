@@ -31,6 +31,9 @@ jobs:
           env-file: packages/data-analyzer/.env-for-app-yaml
           in-file: packages/data-analyzer/app.yaml.template
           out-file: packages/data-analyzer/app.yaml
+      - name: 'check env file'
+        run: cat app.yaml
+        working-directory: ./packages/data-analyzer
       - id: deploy
         uses: google-github-actions/deploy-appengine@main
         env:
