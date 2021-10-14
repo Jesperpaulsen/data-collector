@@ -41,14 +41,21 @@ export class Firestore {
   ) => {
     const d = doc(this.usageCollection, `${uid}-${date}`)
     if (this.unsubscribeTodaysListener) this.unsubscribeTodaysListener()
-    this.unsubscribeTodaysListener = onSnapshot(d, (doc) => {
-      const data = doc.data() as any
-      const usage: UsageDetails = {
-        size: data.size,
-        CO2: data.CO2,
-        KWH: data.KWH
+    this.unsubscribeTodaysListener = onSnapshot(
+      d,
+      (doc) => {
+        const data = doc.data() as any
+        const usage: UsageDetails = {
+          size: data.size,
+          CO2: data.CO2,
+          KWH: data.KWH
+        }
+        callback(usage)
+      },
+      (error) => {
+        console.log(error)
+        this.listenToTodaysUsage(uid, date, callback)
       }
-      callback(usage)
-    })
+    )
   }
 }

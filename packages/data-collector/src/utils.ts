@@ -8,7 +8,7 @@ export const knownHeaderTypes: XMLHttpRequestResponseType[] = [
 
 export const getContentType = (header: string): XMLHttpRequestResponseType => {
   if (header in knownHeaderTypes) return header as XMLHttpRequestResponseType
-  if (header === 'octet-stream') return 'blob'
+  if (header === 'octet-stream') return 'arraybuffer'
   return 'json'
 }
 

@@ -33,10 +33,8 @@ const CustomChart: FunctionalComponent<Props> = ({
     const res: ChartDataset[] = []
     let i = 0
     for (const dataset of datasets) {
-      console.log(dataset.data)
       const reducedData: number[] = []
       for (const label of labels) {
-        console.log(label.value)
         const data = dataset.data[label.value] || 0
         reducedData.push(data)
       }

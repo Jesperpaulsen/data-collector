@@ -49,6 +49,9 @@ try {
       case MESSAGE_TYPES.REQUEST_CREDENTIALS:
         store.auth.sendCredentials()
         return
+      case MESSAGE_TYPES.REQUEST_RESET_COUNTER:
+        store.usageCounter.listenToChanges()
+        return
       default:
         console.log(type)
     }

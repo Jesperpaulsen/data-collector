@@ -2,7 +2,7 @@ import { MESSAGE_TYPES, UsageDetails } from '@data-collector/types'
 
 import { getStartOfDateInUnix } from './date'
 import Store from './store'
-import { accUsageDetails, convertDateToUTC } from './utils'
+import { accUsageDetails } from './utils'
 
 const initialUsage: UsageDetails = {
   size: 0,
@@ -60,7 +60,7 @@ export class UsageCounter {
   private handleUsageUpdate = (usage: UsageDetails) => {
     if (this.checkIfDateHasChanged()) {
       this.todaysUsage = initialUsage
-      this.totalUsage = initialUsage
+      this.listenToTodaysUsage()
       return
     }
 

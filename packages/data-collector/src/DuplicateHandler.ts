@@ -82,6 +82,7 @@ export class DuplicateHandler {
       console.log('Duplicate')
       this.storeLargestNetworkCall(hash, existingNetworkCall, networkCall)
     } else {
+      console.log('Not duplicate')
       const fakeHash = Hasher.createNetworkCallHash(networkCall, {
         fakeHash: true
       })
