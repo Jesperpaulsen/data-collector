@@ -40,9 +40,9 @@ const CustomTable: FunctionalComponent<Props> = ({ headers, data }) => {
   console.log(sortedDataKeys)
 
   return (
-    <div className="container">
+    <div className="flex justify-center">
       <table className="border-collapse overflow-auto max-h-164">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-100">
           <tr>
             {headers.map((header, i) => (
               <th
@@ -56,7 +56,7 @@ const CustomTable: FunctionalComponent<Props> = ({ headers, data }) => {
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white">
+        <tbody className="bg-white overflow-auto max-h-96">
           {sortedDataKeys.map((dataKey, i) => (
             <tr
               key={`table-${dataKey}`}

@@ -88,4 +88,11 @@ export class UsageHandler extends GenericHandler<UsageState> {
     console.log(usage)
     this.setState({ ownUsageLastWeek: usage })
   }
+
+  refreshUsageFromLastWeek = async () => {
+    const currentUser = this.state.userState?.currentUser
+    if (!currentUser) return
+    this.getOwnUsageFromLastWeek(currentUser.uid)
+    this.api.getTotalUsageForLastWeek()
+  }
 }

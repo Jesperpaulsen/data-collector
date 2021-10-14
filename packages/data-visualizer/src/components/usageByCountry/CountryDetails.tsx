@@ -56,11 +56,14 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
     loadDataForCountry()
   }, [loadDataForCountry])
 
+  const countryName = useMemo(() => {
+    if (country?.countryName?.endsWith('s')) return `the ${country.countryName}`
+    else return country?.countryName
+  }, [country])
+
   return (
     <div>
-      <div className="text-lg text-primary">
-        Details for {country?.countryName}
-      </div>
+      <div className="text-lg text-primary">Details for {countryName}</div>
       <div className="text-sm">
         Average CO2e per GB: {co2ForCountry.CO2perGB} kg.
       </div>
@@ -73,7 +76,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
       ) : country ? (
         <div className="pt-4">
           <div className="text-sm font-medium">
-            Your total usage in {country.countryName} is:
+            Your total usage in {countryName} is:
             <ul className="list-inside list-disc">
               <li>CO2: {co2Formatter(country.CO2)}</li>
               <li>KWH: {country.KWH.toFixed(2)}</li>
@@ -90,7 +93,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
           {hostsForCountry.length > 0 && (
             <div className="py-2">
               <div className="font-semibold">
-                Websites that has polluted most in this country:
+                Websites that have polluted most in this country:
               </div>
               <ul className="list-disc list-inside">
                 {hostsForCountry.slice(0, 5).map((host) => (

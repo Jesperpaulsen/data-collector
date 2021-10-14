@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact'
 import { useCallback, useContext, useEffect, useState } from 'preact/hooks'
 
+import Button from '../components/common/Button'
 import Modal from '../components/common/Modal'
 import CountryDetails from '../components/usageByCountry/CountryDetails'
 import WorldMap from '../components/usageByCountry/WorldMap'
@@ -39,6 +40,11 @@ const UsageByCountry: FunctionComponent = () => {
           <CountryDetails country={selectedCountry} />
         </Modal>
       )}
+      <div className="flex justify-end">
+        <Button small onClick={() => usageHandler?.getUsageByCountry()}>
+          Refresh
+        </Button>
+      </div>
       <WorldMap
         usageByCountry={usageState.usageByCountry}
         setSelectedCountry={onSelectedCountry}

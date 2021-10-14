@@ -1,14 +1,15 @@
 import { createRef, FunctionalComponent } from 'preact'
-import { memo } from 'preact/compat'
 import { useContext, useEffect, useMemo } from 'preact/hooks'
 
 import { UsageContext } from '../../contexts/Usage/UsageContext'
+import { UsageHandler } from '../../contexts/Usage/UsageHandler'
 import { Dataset, Labels } from '../../types/chart-types'
 import { getStartOfDateInUnix } from '../../utils/date'
+import Button from '../common/Button'
 import CustomChart from '../common/Charts/CustomChart'
 
 const DashboardChart: FunctionalComponent = () => {
-  const { usageState } = useContext(UsageContext)
+  const { usageState, usageHandler } = useContext(UsageContext)
 
   const labels = useMemo(() => {
     const days = [
@@ -68,6 +69,13 @@ const DashboardChart: FunctionalComponent = () => {
   return useMemo(() => {
     return (
       <div className="h-164">
+        <div className="flex justify-end">
+          <Button
+            small
+            onClick={() => usageHandler?.refreshUsageFromLastWeek()}>
+            Refresh
+          </Button>
+        </div>
         <CustomChart
           type={'line'}
           labels={labels}
@@ -75,7 +83,7 @@ const DashboardChart: FunctionalComponent = () => {
         />
       </div>
     )
-  }, [labels, allUsersUsage, ownUsage])
+  }, [labels, allUsersUsage, ownUsage, usageHandler])
 }
 
 export default DashboardChart

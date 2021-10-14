@@ -1,23 +1,28 @@
-import { FunctionComponent, Fragment } from 'preact';
-import {} from 'preact/compat';
-import { useState } from 'preact/hooks';
+import { Fragment, FunctionComponent } from 'preact'
+import { useState } from 'preact/hooks'
 
 interface InputProps {
-  initialValue?: string;
-  label?: string;
-  placeholder?: string;
-  onChange: (input: string) => void;
-  type?: string;
+  initialValue?: string
+  label?: string
+  placeholder?: string
+  onChange: (input: string) => void
+  type?: string
 }
 
-const Input: FunctionComponent<InputProps> = ({ initialValue, label, placeholder, onChange, type }) => {
-  const [value, setValue] = useState(initialValue);
+const Input: FunctionComponent<InputProps> = ({
+  initialValue,
+  label,
+  placeholder,
+  onChange,
+  type
+}) => {
+  const [value, setValue] = useState(initialValue)
 
   const handleChange = (e: any) => {
-    const value = e.target.value;
-    setValue(value);
-    onChange(value);
-  };
+    const value = e.target.value
+    setValue(value)
+    onChange(value)
+  }
 
   return (
     <Fragment>
@@ -30,7 +35,7 @@ const Input: FunctionComponent<InputProps> = ({ initialValue, label, placeholder
         onChange={handleChange}
       />
     </Fragment>
-  );
-};
+  )
+}
 
-export default Input;
+export default Input
