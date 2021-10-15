@@ -63,7 +63,9 @@ export class DuplicateHandler {
     return (
       networkCall.targetOrigin ===
         'chrome-extension://jkoeemadehedckholhdkcjnadckenjgd' ||
-      networkCall.targetIP === '::1'
+      networkCall.targetIP === '::1' ||
+      networkCall.targetOrigin ===
+        'https://data-collector-ff33b.ew.r.appspot.com'
     )
   }
 

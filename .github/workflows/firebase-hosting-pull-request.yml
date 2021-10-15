@@ -4,39 +4,8 @@
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
 jobs:
-  test:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.0.2
-      - name: Cache .pnpm-store
-        uses: actions/cache@v1
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - name: pnpm install
-        run: pnpm install
-      - uses: w9jds/firebase-action@master
-        with:
-          args: emulators:exec --only firestore,auth 'npm run test:ci'
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-          FB_SA_KEY: ${{ secrets.FB_SA_KEY }}
-          FIREBASE_apiKey: ${{ secrets.FIREBASE_APIKEY }}
-          FIREBASE_authDomain: ${{ secrets.FIREBASE_AUTHDOMAIN }}
-          FIREBASE_projectId: ${{ secrets.FIREBASE_PROJECTID }}
-          FIREBASE_storageBucket: ${{ secrets.FIREBASE_STORAGEBUCKET }}
-          FIREBASE_messagingSenderId: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
-          FIREBASE_appId: ${{ secrets.FIREBASE_APPID }}
   build_and_deploy:
-    needs: test
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
       - run: pnpm build
