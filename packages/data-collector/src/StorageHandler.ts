@@ -1,4 +1,8 @@
-import { NetworkCall } from '@data-collector/types'
+import {
+  BaseUsageDoc,
+  NetworkCall,
+  StrippedNetworkCall
+} from '@data-collector/types'
 
 import { Scheduler } from './Scheduler'
 import Store from './store'
@@ -70,9 +74,18 @@ export class StorageHandler {
 
   getFilteredNetworkCalls = async () => {
     await this.fetchAndUpdateNetworkCalls()
-    return Object.values(this.networkCalls).filter(
-      (request) => request.fromCache === undefined || !request.fromCache
-    )
+    const res: StrippedNetworkCall[] = []
+    for (const networkCall of Object.values(this.networkCalls)) {
+      if (networkCall.fromCache) continue
+      const usageDoc: StrippedNetworkCall = {
+        hostOrigin: networkCall.hostOrigin,
+        size: networkCall.size,
+        targetIP: networkCall.targetIP,
+        userId: networkCall.userId
+      }
+      res.push(usageDoc)
+    }
+    return res
   }
 
   getNetworkCallsToSync = async (): Promise<NetworkCall[]> => {

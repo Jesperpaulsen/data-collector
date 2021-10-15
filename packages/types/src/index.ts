@@ -1,4 +1,4 @@
-export type { NetworkCall } from './network-call'
+export type { NetworkCall, StrippedNetworkCall } from './network-call'
 export type { User } from './user'
 export { MESSAGE_TYPES } from './MESSAGE_TYPES'
 export type { BaseUsageDoc, BaseUsageDocResponse } from './base-usage-doc'

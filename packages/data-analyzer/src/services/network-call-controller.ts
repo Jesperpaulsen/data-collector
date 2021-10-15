@@ -4,8 +4,8 @@ import {
   CountryDoc,
   HostDoc,
   HostToCountry,
-  NetworkCall,
-  User
+  User,
+  StrippedNetworkCall
 } from '@data-collector/types'
 import admin from 'firebase-admin'
 import Country from './country'
@@ -240,7 +240,10 @@ export class NetworkCallController {
     return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]
   }
 
-  storeNetworkCall = async (networkCall: NetworkCall, userId: string) => {
+  storeNetworkCall = async (
+    networkCall: StrippedNetworkCall,
+    userId: string
+  ) => {
     const { hostOrigin, size, targetIP } = networkCall
 
     const date = getStartOfDateInUnix(new Date())

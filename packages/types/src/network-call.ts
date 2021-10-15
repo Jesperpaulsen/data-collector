@@ -14,3 +14,8 @@ export interface NetworkCall {
   targetIP?: string
   fromCache?: boolean
 }
+
+export type StrippedNetworkCall = Pick<
+  NetworkCall,
+  'size' | 'userId' | 'hostOrigin' | 'targetIP'
+>
