@@ -3,47 +3,11 @@ import { Schema } from 'express-validator'
 const getBaseSchema = (isUpdate?: true): Schema => {
   const exists = isUpdate ? undefined : true
   return {
-    type: {
-      in: ['body'],
-      exists,
-      isString: true,
-      errorMessage: 'Type is not valid'
-    },
     size: {
       in: ['body'],
       exists,
       isNumeric: true,
       errorMessage: 'Size is not valid'
-    },
-    targetOrigin: {
-      in: ['body'],
-      exists,
-      isString: true,
-      errorMessage: 'targetOrigin is not valid'
-    },
-    targetPathname: {
-      in: ['body'],
-      exists,
-      isString: true,
-      errorMessage: 'targetPathname is not valid'
-    },
-    headers: {
-      in: ['body'],
-      exists,
-      isString: true,
-      errorMessage: 'Headers are not valid'
-    },
-    timestamp: {
-      in: ['body'],
-      exists,
-      isNumeric: true,
-      errorMessage: 'Timestamp is not valid'
-    },
-    manuallyCalculated: {
-      in: ['body'],
-      exists,
-      isBoolean: true,
-      errorMessage: 'Manully created is not provided'
     },
     hostOrigin: {
       in: ['body'],
@@ -51,7 +15,7 @@ const getBaseSchema = (isUpdate?: true): Schema => {
       isString: true,
       errorMessage: 'Host origin is not valid'
     },
-    hostPathname: {
+    targetIP: {
       in: ['body'],
       exists,
       isString: true,
