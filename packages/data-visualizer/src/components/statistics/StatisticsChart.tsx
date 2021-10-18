@@ -8,7 +8,7 @@ import { getStartOfDateInUnix } from '../../utils/date'
 import Button from '../common/Button'
 import CustomChart from '../common/Charts/CustomChart'
 
-const DashboardChart: FunctionalComponent = () => {
+const StatisticsChart: FunctionalComponent = () => {
   const { usageState, usageHandler } = useContext(UsageContext)
 
   const labels = useMemo(() => {
@@ -37,6 +37,22 @@ const DashboardChart: FunctionalComponent = () => {
     return daysSorted.reverse()
   }, [])
 
+  const allUsersUsage = useMemo(() => {
+    const res: Dataset = { label: '', data: { 0: 0 } }
+    const data: { [date: number]: number } = {}
+    if (!usageState.allUsersUsageLastWeek) return res
+
+    for (const [date, usage] of Object.entries(
+      usageState.allUsersUsageLastWeek
+    )) {
+      data[date] = usage.CO2
+    }
+
+    res.label = 'Average use from all users'
+    res.data = data
+    return res
+  }, [usageState.allUsersUsageLastWeek])
+
   const ownUsage = useMemo(() => {
     const res: Dataset = { label: '', data: { 0: 0 } }
     const data: { [date: number]: number } = {}
@@ -52,7 +68,7 @@ const DashboardChart: FunctionalComponent = () => {
 
   return useMemo(() => {
     return (
-      <div className="flex items-center">
+      <div className="h-164">
         <div className="flex justify-end">
           <Button
             small
@@ -60,12 +76,14 @@ const DashboardChart: FunctionalComponent = () => {
             Refresh
           </Button>
         </div>
-        <div className="w-2/3">
-          <CustomChart type={'line'} labels={labels} datasets={[ownUsage]} />
-        </div>
+        <CustomChart
+          type={'line'}
+          labels={labels}
+          datasets={[allUsersUsage, ownUsage]}
+        />
       </div>
     )
-  }, [labels, ownUsage, usageHandler])
+  }, [labels, allUsersUsage, ownUsage, usageHandler])
 }
 
-export default DashboardChart
+export default StatisticsChart

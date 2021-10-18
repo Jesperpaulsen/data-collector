@@ -10,6 +10,7 @@ import Redirect from '../components/common/Redirect'
 import UsageByCountry from '../pages/UsageByCountry'
 import UsageByHost from '../pages/UsageByHost'
 import SignOut from '../pages/SignOut'
+import { Statistics } from '../pages/Statistics'
 
 export enum ROUTES {
   DASHBOARD = '/',
@@ -19,24 +20,61 @@ export enum ROUTES {
   STATISTICS = '/statistics',
   ABOUT = '/about',
   SIGN_OUT = '/sign-out'
-} 
+}
 
-export const routeComponents: {[route in ROUTES]: { requireAuth?: boolean, component: FunctionComponent, label?: string }} = {
-  [ROUTES.DASHBOARD]: { requireAuth: true, component: Dashboard, label: 'Dashboard' },
+export const routeComponents: {
+  [route in ROUTES]: {
+    requireAuth?: boolean
+    component: FunctionComponent
+    label?: string
+  }
+} = {
+  [ROUTES.DASHBOARD]: {
+    requireAuth: true,
+    component: Dashboard,
+    label: 'Dashboard'
+  },
   [ROUTES.LOGIN]: { component: Login },
-  [ROUTES.USAGE_BY_COUNTRY]: { requireAuth: true, label: 'Usage By Country', component: UsageByCountry },
-  [ROUTES.USAGE_BY_HOST]: { requireAuth: true, label: 'Usage By Host', component: UsageByHost },
-  [ROUTES.STATISTICS]: { requireAuth: true, label: 'Statistics', component: () => <div>Statistics</div> },
-  [ROUTES.ABOUT]: { requireAuth: true, label: 'About', component: () => <div>About</div> },
-  [ROUTES.SIGN_OUT]: { requireAuth: false, label: 'Sign Out', component: SignOut }
+  [ROUTES.USAGE_BY_COUNTRY]: {
+    requireAuth: true,
+    label: 'Usage By Country',
+    component: UsageByCountry
+  },
+  [ROUTES.USAGE_BY_HOST]: {
+    requireAuth: true,
+    label: 'Usage By Host',
+    component: UsageByHost
+  },
+  [ROUTES.STATISTICS]: {
+    requireAuth: true,
+    label: 'Statistics',
+    component: Statistics
+  },
+  [ROUTES.ABOUT]: {
+    requireAuth: true,
+    label: 'About',
+    component: () => {
+      window.open('https://climate.jesper.no/about', '_blank')
+      return null
+    }
+  },
+  [ROUTES.SIGN_OUT]: {
+    requireAuth: false,
+    label: 'Sign Out',
+    component: SignOut
+  }
 }
 
 const initialRoute = window.location.pathname
-const routeTo = initialRoute === ROUTES.LOGIN ? ROUTES.DASHBOARD : initialRoute === ROUTES.SIGN_OUT ? ROUTES.LOGIN : initialRoute
+const routeTo =
+  initialRoute === ROUTES.LOGIN
+    ? ROUTES.DASHBOARD
+    : initialRoute === ROUTES.SIGN_OUT
+    ? ROUTES.LOGIN
+    : initialRoute
 
 const Router: FunctionComponent = () => {
   const { userState } = useContext(UserContext)
-
 
   useEffect(() => {
     if (userState.currentUser) {
@@ -44,14 +82,22 @@ const Router: FunctionComponent = () => {
     }
   }, [userState.currentUser])
 
-  return <PreactRouter>
-    {Object.entries(routeComponents).map(([key, value]) => (
-      value.requireAuth ? 
-        <ProtectedRoute children={value.component} path={key} redirect={ROUTES.LOGIN} /> 
-        : 
-        <Route component={value.component} path={key} />
-    ))}
-  </PreactRouter>
+  return (
+    <PreactRouter>
+      {Object.entries(routeComponents).map(([key, value]) =>
+        value.requireAuth ? (
+          <ProtectedRoute
+            children={value.component}
+            path={key}
+            redirect={ROUTES.LOGIN}
+          />
+        ) : (
+          <Route component={value.component} path={key} />
+        )
+      )}
+      <Dashboard default />
+    </PreactRouter>
+  )
 }
 
 export default Router

@@ -17,7 +17,6 @@ export interface UsageState {
   totalUsage: UsageDetails
   allUsersUsageLastWeek: { [date: number]: UsageDetails }
   ownUsageLastWeek: { [date: number]: UsageDetails }
-  numberOfUsers: number
   usageByCountry?: { [uid: string]: CountryDoc }
   usageByHost?: { [uid: string]: HostDoc }
   userState?: UserState
@@ -34,6 +33,5 @@ export const initialState: UsageState = {
   todaysUsage: initialUsage,
   totalUsage: initialUsage,
   allUsersUsageLastWeek: {},
-  ownUsageLastWeek: {},
-  numberOfUsers: 1
+  ownUsageLastWeek: {}
 }

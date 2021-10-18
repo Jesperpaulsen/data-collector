@@ -10,6 +10,7 @@ interface Props {
   type: ChartType
   labels: Labels
   datasets: Dataset[]
+  small?: boolean
 }
 
 const colors = ['#82AC85', '#E2CFC9', '#BFD8C4', '#D1ACA5']
@@ -17,7 +18,8 @@ const colors = ['#82AC85', '#E2CFC9', '#BFD8C4', '#D1ACA5']
 const CustomChart: FunctionalComponent<Props> = ({
   type,
   labels,
-  datasets
+  datasets,
+  small
 }) => {
   const chartRef = createRef()
   const [key, setKey] = useState(Math.random().toString(36).substr(7))
@@ -54,14 +56,16 @@ const CustomChart: FunctionalComponent<Props> = ({
 
   useEffect(() => {
     setKey(Math.random().toString(36).substr(7))
-  }, [setKey, reducedLabels, reducedDatasets])
+  }, [setKey, reducedLabels, reducedDatasets, small])
 
   return (
     <div className="h-full w-full px-10 pt-4 relative">
       <canvas
         key={key}
         ref={chartRef}
-        className="z-50 bg-secondary rounded-lg p-2 shadow-lg max-h-164">
+        className={`z-50 bg-secondary rounded-lg p-2 shadow-lg ${
+          small ? 'max-h-96' : 'max-h-164'
+        }'`}>
         <ChartRenderer
           chartRef={chartRef}
           type={type}

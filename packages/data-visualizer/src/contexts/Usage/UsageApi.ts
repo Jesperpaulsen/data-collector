@@ -118,9 +118,8 @@ export class UsageApi {
         '/network-call/total-usage/7',
         'GET'
       )
-      const { usage, numberOfUsers } = await res?.json()
+      const { usage } = await res?.json()
       this.usageHandler.setState({
-        numberOfUsers,
         allUsersUsageLastWeek: usage
       })
     } catch (e) {

@@ -33,7 +33,7 @@ const Layout: FunctionComponent = ({ children }) => {
           )
         })}
       </div>
-      <div className="pt-3 px-4 md:px-10 w-full">
+      <div className="pt-3 px-4 md:px-10 flex-grow">
         <div className="flex justify-between">
           <Greeting name={userState.currentUser?.name} />
           <div>
