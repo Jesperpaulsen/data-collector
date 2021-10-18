@@ -9,6 +9,7 @@ export class Firestore {
   client: admin.firestore.Firestore
   private firebaseAdmin: typeof FirebaseAdmin
   private userCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  private signUpCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
   networkCallController: NetworkCallController
 
   constructor(
@@ -18,6 +19,7 @@ export class Firestore {
     this.client = firestore
     this.firebaseAdmin = firebaseAdmin
     this.userCollection = this.client.collection('users')
+    this.signUpCollection = this.client.collection('signUps')
     this.networkCallController = new NetworkCallController(
       this,
       this.client.collection('hosts'),
@@ -52,5 +54,9 @@ export class Firestore {
 
   deleteUser = (uid: string) => {
     return this.userCollection.doc(uid).delete()
+  }
+
+  addSignUp = (email: string) => {
+    return this.signUpCollection.add({ email })
   }
 }

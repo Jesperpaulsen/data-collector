@@ -158,4 +158,21 @@ router.put(
   }
 )
 
+router.post(
+  generateRoute('/sign-up'),
+  checkSchema({ email: { in: ['body'], exists: true, isEmail: true } }),
+  validateRequest,
+  sanitizeData,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body
+
+    try {
+      await firebaseAdmin.firestore.addSignUp(email)
+      res.status(201).send()
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
 export { router as userRouter }
