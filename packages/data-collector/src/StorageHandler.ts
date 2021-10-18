@@ -88,12 +88,12 @@ export class StorageHandler {
     return res
   }
 
-  getNetworkCallsToSync = async (): Promise<NetworkCall[]> => {
+  getNetworkCallsToSync = async (): Promise<StrippedNetworkCall[]> => {
     if (this.syncInProgress) {
       await this.sleep()
       return this.getNetworkCallsToSync()
     }
-    let requestsToSync: NetworkCall[] = []
+    let requestsToSync: StrippedNetworkCall[] = []
     this.syncInProgress = true
     try {
       requestsToSync = await this.getFilteredNetworkCalls()

@@ -182,4 +182,35 @@ router.post(
   }
 )
 
+router.put(
+  generateRoute('/active/:uid'),
+  requireAuth,
+  checkSchema({
+    uid: {
+      in: ['params'],
+      exists: true,
+      isString: true,
+      isLength: {
+        errorMessage: 'uid is not valid',
+        options: {
+          min: 28,
+          max: 28
+        }
+      }
+    }
+  }),
+  validateRequest,
+  sanitizeData,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { uid } = req.params
+
+    try {
+      await firebaseAdmin.firestore.addActiveUser(uid)
+      res.status(200).send()
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
 export { router as userRouter }

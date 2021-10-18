@@ -1,10 +1,10 @@
-import { NetworkCall } from '../../types/src/network-call'
+import { StrippedNetworkCall } from '../../types/src/network-call'
 
 import { Scheduler } from './Scheduler'
 import Store from './store'
 
 export class DataReporter {
-  private currentRequests: NetworkCall[] = []
+  private currentRequests: StrippedNetworkCall[] = []
   private store: typeof Store
   private scheduler = new Scheduler(5000)
 

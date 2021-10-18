@@ -183,8 +183,9 @@ router.get(
 
     const limit = getDateLimit(Number(numberOfDays) || 7)
 
-    const userDocs = await firebaseAdmin.firestore.getAllUsers()
-    const numberOfUsers = userDocs.docs.length
+    const activeUsers = await firebaseAdmin.firestore.getActiveUsersAfterLimit(
+      limit
+    )
 
     const usageDocs =
       await firebaseAdmin.firestore.networkCallController.getTotalUsageAfterDate(
@@ -201,15 +202,17 @@ router.get(
     } = {}
 
     for (const doc of usageDocs) {
+      const numberOfActiveUsers = activeUsers[doc.date] || 1
+
       const usageDetails = {
-        CO2: doc.CO2 / numberOfUsers,
-        KWH: doc.KWH / numberOfUsers,
-        size: doc.size / numberOfUsers,
-        numberOfCalls: doc.numberOfCalls / numberOfUsers
+        CO2: doc.CO2 / numberOfActiveUsers,
+        KWH: doc.KWH / numberOfActiveUsers,
+        size: doc.size / numberOfActiveUsers,
+        numberOfCalls: doc.numberOfCalls / numberOfActiveUsers
       }
       usage[doc.date] = usageDetails
     }
-    return res.status(200).send({ usage, numberOfUsers })
+    return res.status(200).send({ usage })
   }
 )
 

@@ -59,8 +59,9 @@ export class UsageCounter {
 
   private handleUsageUpdate = (usage: UsageDetails) => {
     if (this.checkIfDateHasChanged()) {
-      this.todaysUsage = initialUsage
       this.listenToTodaysUsage()
+      this.store.api.reportUserActive()
+      this.todaysUsage = initialUsage
       return
     }
 

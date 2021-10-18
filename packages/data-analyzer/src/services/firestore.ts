@@ -1,6 +1,8 @@
 import admin from 'firebase-admin'
 
-import { User } from '@data-collector/types'
+import { ActiveUserDoc, User } from '@data-collector/types'
+
+import { getStartOfDateInUnix } from '../utils/date'
 
 import FirebaseAdmin from './firebase-admin'
 import { NetworkCallController } from './network-call-controller'
@@ -10,6 +12,7 @@ export class Firestore {
   private firebaseAdmin: typeof FirebaseAdmin
   private userCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
   private signUpCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
+  private activeUsersCollection: admin.firestore.CollectionReference<admin.firestore.DocumentData>
   networkCallController: NetworkCallController
 
   constructor(
@@ -20,6 +23,7 @@ export class Firestore {
     this.firebaseAdmin = firebaseAdmin
     this.userCollection = this.client.collection('users')
     this.signUpCollection = this.client.collection('signUps')
+    this.activeUsersCollection = this.client.collection('activeUsers')
     this.networkCallController = new NetworkCallController(
       this,
       this.client.collection('hosts'),
@@ -58,5 +62,33 @@ export class Firestore {
 
   addSignUp = (email: string) => {
     return this.signUpCollection.add({ email })
+  }
+
+  getActiveUsersAfterLimit = async (limit: number) => {
+    const res: { [date: number]: number } = {}
+
+    const snapshot = await this.activeUsersCollection
+      .where('date', '>', limit)
+      .get()
+
+    for (const doc of snapshot.docs) {
+      const data = doc.data() as ActiveUserDoc
+      res[data.date] = data.activeUsers.length
+    }
+    return res
+  }
+
+  addActiveUser = async (uid: string) => {
+    const startOfToday = getStartOfDateInUnix(new Date())
+
+    const docRef = this.activeUsersCollection.doc(String(startOfToday))
+
+    await docRef.set(
+      {
+        numberOfUsers: admin.firestore.FieldValue.arrayUnion([uid]),
+        date: startOfToday
+      },
+      { merge: true }
+    )
   }
 }

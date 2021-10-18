@@ -1,4 +1,4 @@
-import { NetworkCall } from '@data-collector/types'
+import { NetworkCall, StrippedNetworkCall } from '@data-collector/types'
 
 import { firebase } from './firebase'
 import Store from './store'
@@ -46,7 +46,7 @@ export class API {
     }
   }
 
-  createNetworkCalls = async (networkCalls: NetworkCall[]) => {
+  createNetworkCalls = async (networkCalls: StrippedNetworkCall[]) => {
     const res = await this.doRequest('/network-call/batch', 'POST', {
       userId: this.store.user?.uid,
       networkCalls
@@ -54,6 +54,14 @@ export class API {
     if (!res.ok) {
       res.json().then((body) => console.log(body))
     }
+  }
+
+  reportUserActive = async () => {
+    const res = await this.doRequest(
+      `/users/active/${this.store.user?.uid}`,
+      'PUT'
+    )
+    return res.json()
   }
 
   getAllNetworkCallsForUser = async () => {
