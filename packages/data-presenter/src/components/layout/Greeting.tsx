@@ -1,14 +1,14 @@
-import { FunctionalComponent } from "preact";
-import { useMemo, useState } from "preact/hooks";
+import { FunctionalComponent } from 'preact'
+import { useMemo, useState } from 'preact/hooks'
 
 interface Props {
   name?: string
 }
 
 enum GREETINGS {
-  GOOD_MORNING = 'Good morning', 
+  GOOD_MORNING = 'Good morning',
   GOOD_DAY = 'Good day',
-  GOOD_AFTERNOON = 'Good afternoon', 
+  GOOD_AFTERNOON = 'Good afternoon',
   GOOD_EVENING = 'Good evening',
   GOOD_NIGHT = 'Good night'
 }
@@ -22,15 +22,16 @@ const getGreeting = (hours: number) => {
 }
 
 const Greeting: FunctionalComponent<Props> = ({ name }) => {
-
   const greeting = useMemo(() => {
     const hours = new Date().getHours()
     return getGreeting(hours)
   }, [])
 
-  return ( 
-    <div className="text-2xl pt-10 pl-5">
-      <div>{greeting}, {name}!</div>
+  return (
+    <div className="text-2xl pt-2 pl-2 pb-2">
+      <div>
+        {greeting}, {name}!
+      </div>
       <div>We're currently collecting your data.</div>
     </div>
   )
