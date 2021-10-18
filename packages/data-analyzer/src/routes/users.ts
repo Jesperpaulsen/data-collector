@@ -160,7 +160,14 @@ router.put(
 
 router.post(
   generateRoute('/sign-up'),
-  checkSchema({ email: { in: ['body'], exists: true, isEmail: true } }),
+  checkSchema({
+    email: {
+      in: ['body'],
+      exists: true,
+      isEmail: true,
+      errorMessage: 'Email is not valid'
+    }
+  }),
   validateRequest,
   sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
