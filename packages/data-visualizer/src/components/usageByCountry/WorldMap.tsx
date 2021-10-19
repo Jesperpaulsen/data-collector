@@ -47,7 +47,7 @@ const WorldMap: FunctionComponent<Props> = ({
       if (value > maxValue) maxValue = value
     }
 
-    const ratio = 300 / maxValue
+    const ratio = 100 / maxValue
 
     for (const country of usage) {
       countryValues[country.countryCode] = country[filter] * ratio

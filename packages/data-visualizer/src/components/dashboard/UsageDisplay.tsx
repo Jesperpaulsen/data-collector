@@ -5,6 +5,7 @@ import { UsageContext } from '../../contexts/Usage/UsageContext'
 import { UsageDetails } from '../../contexts/Usage/UsageState'
 import { byteFormatter } from '../../utils/byteFormatter'
 import { co2Formatter } from '../../utils/co2Formatter'
+import Hover from '../common/Hover'
 
 import car from './car.svg'
 import electricCar from './electric-car.svg'
@@ -35,19 +36,25 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
           </div>
         </div>
         <div className="flex justify-center text-lg pt-2">
-          <div className="pr-1">
-            <img src={electricCar} className="w-6 h-6" />
-          </div>
           <div className="pr-2">
             {(usage.KWH / model3KWHPerKm).toFixed(2)} km
-            <sup>*</sup>
           </div>
-          <div className="pl-2">
-            <img src={car} className="w-6 h-6" />
+          <div className="pr-2">
+            <Hover
+              infoText="The distance you would have been able to drive a Tesla Model 3 with the
+        same amount of energy that you have used.">
+              <img src={electricCar} alt="Icon of electric car" />
+            </Hover>
           </div>
           <div className="pl-1">
             {(usage.CO2 / averageCO2PerPetrolCarPerKm).toFixed(2)} km
-            <sup>**</sup>{' '}
+          </div>
+          <div className="pl-1">
+            <Hover
+              infoText="The distance you would have been able to drive an average petrol car to
+            equalize the amount of CO2 you have polluted.">
+              <img src={car} alt="Icon of petrol car" />
+            </Hover>
           </div>
         </div>
       </div>
@@ -61,16 +68,6 @@ const UsageDisplay: FunctionalComponent = () => {
     <div className="pt-2">
       <UsageLine usage={usageState.todaysUsage} label="Todays usage" />
       <UsageLine usage={usageState.totalUsage} label="Total usage" />
-      <div className="text-center pt-4 text-sm">
-        <sup>*</sup>
-        The distance you would have been able to drive a Tesla Model 3 with the
-        same amount of energy that you have used.
-      </div>
-      <div className="text-center text-sm">
-        <sup>**</sup>
-        The distance you would have been able to drive an average petrol car to
-        equalize the amount of CO2 you have polluted.
-      </div>
     </div>
   )
 }
