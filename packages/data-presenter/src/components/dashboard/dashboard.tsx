@@ -7,15 +7,12 @@ import Button from '../common/Button'
 import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
 
 const Dashboard: FunctionComponent = () => {
-  const { currentUser } = useContext(UserContext)
-
   const resetCounter = () => {
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.REQUEST_RESET_COUNTER })
   }
 
   return (
     <div className="w-full h-screen">
-      <Greeting name={currentUser?.name} />
       <div className="w-full">
         <UsageDisplay />
         <div className="flex justify-center pt-2">

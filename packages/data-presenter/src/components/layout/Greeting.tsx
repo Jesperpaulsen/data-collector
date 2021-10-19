@@ -28,8 +28,8 @@ const Greeting: FunctionalComponent<Props> = ({ name }) => {
   }, [])
 
   return (
-    <div className="text-2xl pt-2 pl-2 pb-2">
-      <div>
+    <div className="p-2">
+      <div className="text-lg">
         {greeting}, {name}!
       </div>
       <div>We're currently collecting your data.</div>
