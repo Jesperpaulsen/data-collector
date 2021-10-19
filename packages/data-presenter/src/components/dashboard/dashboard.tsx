@@ -18,6 +18,14 @@ const Dashboard: FunctionComponent = () => {
         <div className="flex justify-center pt-2">
           <Button onClick={resetCounter}>Reset counter</Button>
         </div>
+        <div className="flex justify-center pt-2">
+          <Button
+            onClick={() =>
+              window.open('https://dashboard.jesper.no', '_blank')
+            }>
+            Explore results
+          </Button>
+        </div>
       </div>
     </div>
   )
