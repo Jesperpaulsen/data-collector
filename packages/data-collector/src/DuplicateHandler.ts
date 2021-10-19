@@ -79,7 +79,7 @@ export class DuplicateHandler {
       this.store.storageHandler.storeNetworkCall(hash, networkCall)
       return
     }
-
+    console.log(`${networkCall?.targetOrigin} ${networkCall?.targetPathname}`)
     if (this.checkIfDuplicate(existingNetworkCall, networkCall)) {
       console.log('Duplicate')
       this.storeLargestNetworkCall(hash, existingNetworkCall, networkCall)

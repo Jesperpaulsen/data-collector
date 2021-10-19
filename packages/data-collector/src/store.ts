@@ -7,6 +7,7 @@ import { DataReporter } from './DataReporter'
 import { StorageHandler } from './StorageHandler'
 import { UsageCounter } from './UsageCounter'
 import { Firestore } from './Firestore'
+import { BlackLister } from './BlackLister'
 
 class Store {
   api: API
@@ -17,6 +18,7 @@ class Store {
   storageHandler: StorageHandler
   usageCounter: UsageCounter
   user?: UserCredential['user']
+  blackLister: BlackLister
 
   constructor() {
     this.api = new API(this)
@@ -26,6 +28,7 @@ class Store {
     this.dataReporter = new DataReporter(this)
     this.storageHandler = new StorageHandler(this)
     this.usageCounter = new UsageCounter(this)
+    this.blackLister = new BlackLister(this)
   }
 
   setUser = (user: UserCredential['user']) => {

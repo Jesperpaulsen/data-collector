@@ -30,7 +30,7 @@ try {
 
   chrome.runtime.onMessage.addListener((details: any) => {
     if (!details) return
-    const type = details.type
+    const { payload, type } = details
 
     switch (type) {
       case MESSAGE_TYPES.NETWORK_CALL:
@@ -51,6 +51,15 @@ try {
         return
       case MESSAGE_TYPES.REQUEST_RESET_COUNTER:
         store.usageCounter.listenToChanges()
+        return
+      case MESSAGE_TYPES.REQUEST_BLACKLISTED_PAGES:
+        store.blackLister.sendBlackListedPages()
+        return
+      case MESSAGE_TYPES.ADD_BLACKLISTED_PAGE:
+        store.blackLister.addBlackListedPage(payload)
+        return
+      case MESSAGE_TYPES.DELETE_BLACKLISTED_PAGE:
+        store.blackLister.removeBlackListedPage(payload)
         return
       default:
         console.log(type)

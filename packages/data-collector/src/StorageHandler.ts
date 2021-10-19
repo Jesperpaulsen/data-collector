@@ -76,7 +76,11 @@ export class StorageHandler {
     await this.fetchAndUpdateNetworkCalls()
     const res: StrippedNetworkCall[] = []
     for (const networkCall of Object.values(this.networkCalls)) {
-      if (networkCall.fromCache) continue
+      if (
+        networkCall.fromCache ||
+        this.store.blackLister.checkIfUrlIsBlackListed(networkCall.hostOrigin)
+      )
+        continue
       const usageDoc: StrippedNetworkCall = {
         hostOrigin: networkCall.hostOrigin,
         size: networkCall.size,

@@ -61,7 +61,7 @@ const Settings: FunctionalComponent = () => {
             <Input
               key={inputKey}
               onChange={setPageToBlackList}
-              placeholder="Enter the url you want to blacklist. E.g www.cnn.com."
+              placeholder="Enter the url you want to blacklist. E.g https://www.cnn.com"
             />
           </div>
           <div
