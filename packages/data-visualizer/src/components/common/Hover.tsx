@@ -3,9 +3,10 @@ import { useState } from 'preact/hooks'
 
 interface Props {
   infoText: string
+  left?: boolean
 }
 
-const Hover: FunctionalComponent<Props> = ({ infoText, children }) => {
+const Hover: FunctionalComponent<Props> = ({ infoText, left, children }) => {
   const [showInfo, setShowInfo] = useState(false)
 
   return (
@@ -17,7 +18,10 @@ const Hover: FunctionalComponent<Props> = ({ infoText, children }) => {
         {children}
       </div>
       {showInfo && (
-        <div className="absolute w-96 text-sm bg-gray-700 z-50 rounded pl-4 py-2 cursor-default">
+        <div
+          className={`absolute w-96 text-sm bg-gray-700 z-50 rounded pl-4 py-2 cursor-default ${
+            left ? 'right-0' : ''
+          }`}>
           {infoText}
         </div>
       )}

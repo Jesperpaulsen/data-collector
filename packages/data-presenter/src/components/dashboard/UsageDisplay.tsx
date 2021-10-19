@@ -51,6 +51,7 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
           </div>
           <div className="pl-1">
             <Hover
+              left
               infoText="The distance you would have been able to drive an average petrol car to
             equalize the amount of CO2 you have polluted.">
               <img src={car} alt="Icon of petrol car" />
