@@ -10,11 +10,8 @@ import {
   PointElement,
   Tooltip
 } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { createRef, FunctionalComponent, RefObject } from 'preact'
-import { useEffect, useMemo, useState } from 'preact/hooks'
-
-import { Dataset, Labels } from '../../../types/chart-types'
+import { FunctionalComponent, RefObject } from 'preact'
+import { useEffect, useState } from 'preact/hooks'
 
 Chart.register([
   LineElement,
@@ -63,7 +60,6 @@ const LineChart: FunctionalComponent<Props> = ({
           },
           elements: {
             point: {
-              // radius: 0,
               hitRadius: 5
             }
           }
@@ -72,6 +68,21 @@ const LineChart: FunctionalComponent<Props> = ({
       setChart(newChart)
     }
   }, [chart, chartRef, type, datasets, labels])
+
+  useEffect(() => {
+    const updateData = (
+      chart: Chart,
+      labels: string[],
+      datasets: ChartDataset[]
+    ) => {
+      chart.data = { labels, datasets }
+      chart.update()
+    }
+
+    if (chart) {
+      updateData(chart, labels, datasets)
+    }
+  }, [datasets, chart, labels])
 
   return null
 }

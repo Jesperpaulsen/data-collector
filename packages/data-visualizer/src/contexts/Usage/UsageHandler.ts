@@ -54,8 +54,16 @@ export class UsageHandler extends GenericHandler<UsageState> {
       totalUsageDifference,
       this.state.totalUsage
     )
+    this.updateLastDayInOwnUsage(usage)
     this.lastUsage = usage
     this.setState({ todaysUsage: usage, totalUsage })
+  }
+
+  private updateLastDayInOwnUsage = (usage: UsageDetails) => {
+    const today = getStartOfDateInUnix(new Date())
+    const tmpUsage = { ...this.state.ownUsageLastWeek }
+    tmpUsage[today] = usage
+    this.setState({ ownUsageLastWeek: tmpUsage })
   }
 
   getUsageByCountry = async () => {
@@ -85,7 +93,6 @@ export class UsageHandler extends GenericHandler<UsageState> {
   getOwnUsageFromLastWeek = async (userId: string) => {
     const lastWeekLimit = getDateLimit(7)
     const usage = await this.api.getOwnUsageForLastWeek(userId, lastWeekLimit)
-    console.log(usage)
     this.setState({ ownUsageLastWeek: usage })
   }
 

@@ -40,14 +40,14 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
           </div>
           <div className="pr-2">
             {(usage.KWH / model3KWHPerKm).toFixed(2)} km
-            <sup>1</sup>
+            <sup>*</sup>
           </div>
           <div className="pl-2">
             <img src={car} className="w-6 h-6" />
           </div>
           <div className="pl-1">
             {(usage.CO2 / averageCO2PerPetrolCarPerKm).toFixed(2)} km
-            <sup>2</sup>{' '}
+            <sup>**</sup>{' '}
           </div>
         </div>
       </div>
@@ -62,12 +62,12 @@ const UsageDisplay: FunctionalComponent = () => {
       <UsageLine usage={usageState.todaysUsage} label="Todays usage" />
       <UsageLine usage={usageState.totalUsage} label="Total usage" />
       <div className="text-center pt-4 text-sm">
-        <sup>1</sup>
+        <sup>*</sup>
         The distance you would have been able to drive a Tesla Model 3 with the
         same amount of energy that you have used.
       </div>
       <div className="text-center text-sm">
-        <sup>2</sup>
+        <sup>**</sup>
         The distance you would have been able to drive an average petrol car to
         equalize the amount of CO2 you have polluted.
       </div>

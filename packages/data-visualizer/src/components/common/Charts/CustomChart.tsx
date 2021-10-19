@@ -22,7 +22,6 @@ const CustomChart: FunctionalComponent<Props> = ({
   small
 }) => {
   const chartRef = createRef()
-  const [key, setKey] = useState(Math.random().toString(36).substr(7))
   const reducedLabels = useMemo(() => {
     const res: string[] = []
     for (const label of labels) {
@@ -54,14 +53,9 @@ const CustomChart: FunctionalComponent<Props> = ({
     return res
   }, [datasets, labels])
 
-  useEffect(() => {
-    setKey(Math.random().toString(36).substr(7))
-  }, [setKey, reducedLabels, reducedDatasets, small])
-
   return (
     <div className="h-full w-full px-10 pt-4 relative">
       <canvas
-        key={key}
         ref={chartRef}
         className={`z-50 bg-secondary rounded-lg p-2 shadow-lg ${
           small ? 'max-h-96' : 'max-h-164'

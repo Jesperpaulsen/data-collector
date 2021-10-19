@@ -52,20 +52,13 @@ const DashboardChart: FunctionalComponent = () => {
 
   return useMemo(() => {
     return (
-      <div className="flex items-center">
-        <div className="flex justify-end">
-          <Button
-            small
-            onClick={() => usageHandler?.refreshUsageFromLastWeek()}>
-            Refresh
-          </Button>
-        </div>
+      <div className="flex justify-center">
         <div className="w-2/3">
           <CustomChart type={'line'} labels={labels} datasets={[ownUsage]} />
         </div>
       </div>
     )
-  }, [labels, ownUsage, usageHandler])
+  }, [labels, ownUsage])
 }
 
 export default DashboardChart
