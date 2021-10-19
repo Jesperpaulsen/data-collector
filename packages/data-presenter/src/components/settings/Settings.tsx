@@ -41,34 +41,38 @@ const Settings: FunctionalComponent = () => {
 
   return (
     <div>
-      <div>Settings</div>
-      <div className="">
+      <div className="pt-4 text-base">Blacklisted domains.</div>
+      <div className="text-sm">
+        We won't report the usage from these urls. The list of urls are only
+        stored on your computer and not in our database.
+      </div>
+      <div className="bg-white rounded shadow-lg text-black p-2">
         {blackListedPages.map((url, i) => (
           <div key={`url-${i}`}>
-            <hr />
             <div className="flex items-center py-1">
-              <div className="w-10/12">{url}</div>
+              <div className="w-10/12 text-sm">{url}</div>
               <div
                 className="flex-grow pl-2 cursor-pointer hover:underline"
                 onClick={() => removeBlackList(url)}>
                 Delete
               </div>
             </div>
+            <hr className="bg-black" />
           </div>
         ))}
-        <div className="flex items-center">
-          <div className="w-10/12">
-            <Input
-              key={inputKey}
-              onChange={setPageToBlackList}
-              placeholder="Enter the url you want to blacklist. E.g https://www.cnn.com"
-            />
-          </div>
-          <div
-            className="flex-grow pl-2 cursor-pointer hover:underline"
-            onClick={() => addBlackList(pageToBlackList)}>
-            Add
-          </div>
+      </div>
+      <div className="flex items-center pt-4">
+        <div className="w-10/12">
+          <Input
+            key={inputKey}
+            onChange={setPageToBlackList}
+            placeholder="Enter the url you want to blacklist. E.g https://www.cnn.com"
+          />
+        </div>
+        <div
+          className="flex-grow pl-2 cursor-pointer hover:underline"
+          onClick={() => addBlackList(pageToBlackList)}>
+          Add
         </div>
       </div>
     </div>

@@ -134,6 +134,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^4.14.0
       '@typescript-eslint/parser': ^4.14.0
       autoprefixer: ^10.2.1
+      chart.js: ^3.5.1
       classnames: ^2.3.1
       cross-env: ^7.0.3
       dayjs: ^1.10.7
@@ -159,6 +160,7 @@ importers:
       vite-plugin-pwa: ^0.3.9
       webextension-polyfill-ts: ^0.26.0
     dependencies:
+      chart.js: 3.5.1
       classnames: 2.3.1
       dayjs: 1.10.7
       firebase: 9.0.2

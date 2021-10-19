@@ -28,7 +28,7 @@ const Greeting: FunctionalComponent<Props> = ({ name }) => {
   }, [])
 
   return (
-    <div className="p-2">
+    <div className="py-2">
       <div className="text-lg">
         {greeting}, {name}!
       </div>

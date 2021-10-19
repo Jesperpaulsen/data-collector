@@ -4,12 +4,16 @@ import {
   doc,
   DocumentData,
   getDoc,
+  getDocs,
   getFirestore,
-  onSnapshot
+  onSnapshot,
+  query,
+  where
 } from 'firebase/firestore'
 
-import { UsageDetails, User } from '@data-collector/types'
+import { BaseUsageDocResponse, UsageDetails, User } from '@data-collector/types'
 
+import { getDateLimit } from './date'
 import { firebase } from './firebase'
 import Store from './store'
 
@@ -57,5 +61,35 @@ export class Firestore {
         this.listenToTodaysUsage(uid, date, callback)
       }
     )
+  }
+
+  getOwnUsageFromLastWeek = async (uid: string) => {
+    const lastWeekLimit = getDateLimit(7)
+    const q = query(
+      this.usageCollection,
+      where('userId', '==', uid),
+      where('date', '>', lastWeekLimit)
+    )
+    const snapshot = await getDocs(q)
+
+    const usage: {
+      [date: number]: {
+        CO2: number
+        KWH: number
+        size: number
+        numberOfCalls: number
+      }
+    } = {}
+
+    for (const doc of snapshot.docs) {
+      const data = doc.data() as BaseUsageDocResponse
+      usage[data.date] = {
+        CO2: data.CO2,
+        KWH: data.KWH,
+        size: data.size,
+        numberOfCalls: data.numberOfCalls
+      }
+    }
+    return usage
   }
 }

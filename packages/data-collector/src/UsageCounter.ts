@@ -13,8 +13,10 @@ export class UsageCounter {
   private todaysUsage: UsageDetails = initialUsage
   private totalUsage: UsageDetails = initialUsage
   private lastUsage: UsageDetails = initialUsage
+  private ownUsageLastWeek: { [date: number]: UsageDetails } = {}
   private store: typeof Store
   private currentDate = new Date().setHours(0, 0, 0, 0).valueOf()
+  private dateChangeInProgess = false
 
   constructor(store: typeof Store) {
     this.store = store
@@ -49,19 +51,34 @@ export class UsageCounter {
   }
 
   private checkIfDateHasChanged = () => {
-    const now = new Date().setHours(0, 0, 0, 0).valueOf()
-    if (this.currentDate !== now) {
-      this.currentDate = now
+    const today = getStartOfDateInUnix(new Date())
+    if (this.currentDate !== today) {
+      this.currentDate = today
       return true
     }
     return false
   }
 
+  private resetData = async () => {
+    this.dateChangeInProgess = true
+    this.todaysUsage = initialUsage
+    this.ownUsageLastWeek = {}
+    await this.listenToTodaysUsage()
+    await this.store.api.reportUserActive()
+    await this.getUsageFromLastWeek()
+    this.dateChangeInProgess = false
+  }
+
+  private getUsageFromLastWeek = async () => {
+    const userId = this.store.user?.uid
+    if (!userId) return
+    const usage = await this.store.firestore.getOwnUsageFromLastWeek(userId)
+    this.ownUsageLastWeek = usage
+  }
+
   private handleUsageUpdate = (usage: UsageDetails) => {
-    if (this.checkIfDateHasChanged()) {
-      this.listenToTodaysUsage()
-      this.store.api.reportUserActive()
-      this.todaysUsage = initialUsage
+    if (this.checkIfDateHasChanged() || this.dateChangeInProgess) {
+      this.resetData()
       return
     }
 
@@ -72,6 +89,8 @@ export class UsageCounter {
     }
 
     const totalUsage = accUsageDetails(totalUsageDifference, this.totalUsage)
+    const today = getStartOfDateInUnix(new Date())
+    this.ownUsageLastWeek[today] = usage
     this.lastUsage = usage
     this.todaysUsage = usage
     this.totalUsage = totalUsage
@@ -88,7 +107,8 @@ export class UsageCounter {
       type: MESSAGE_TYPES.SYNC_REQUESTS,
       payload: {
         totalUsage: this.totalUsage,
-        todaysUsage: this.todaysUsage
+        todaysUsage: this.todaysUsage,
+        ownUsageLastWeek: this.ownUsageLastWeek
       }
     })
   }

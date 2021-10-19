@@ -42,7 +42,7 @@ const CustomTable: FunctionalComponent<Props> = ({ headers, data }) => {
   return (
     <div className="flex justify-center">
       <table className="border-collapse overflow-auto max-h-164">
-        <thead className="bg-gray-100">
+        <thead className="bg-gray-100 rounded-l-xr rounded-r-xl shadow-lg">
           <tr>
             {headers.map((header, i) => (
               <th
