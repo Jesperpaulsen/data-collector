@@ -38,8 +38,7 @@
     "webRequest",
     "tabs",
     "identity",
-    "storage",
-    "notifications"
+    "storage"
   ],
   "externally_connectable": {
     "matches": [
