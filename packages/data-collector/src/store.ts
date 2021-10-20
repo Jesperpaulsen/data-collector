@@ -1,6 +1,6 @@
 import { UserCredential } from 'firebase/auth'
-import { API } from './API'
-import { Auth } from './Auth'
+import { API } from './api'
+import { Auth } from './auth'
 import { MESSAGE_TYPES } from '@data-collector/types'
 import { DuplicateHandler } from './DuplicateHandler'
 import { DataReporter } from './DataReporter'
