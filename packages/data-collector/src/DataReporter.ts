@@ -14,6 +14,7 @@ export class DataReporter {
   }
 
   sendRequests = async () => {
+    if (!this.store.user) return
     await this.getRequests()
     const requests = [...this.currentRequests]
     if (!requests?.length) return
