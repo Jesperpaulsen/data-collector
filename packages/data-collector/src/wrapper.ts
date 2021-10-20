@@ -1,6 +1,10 @@
 import { MESSAGE_TYPES } from '@data-collector/types'
 
-import { headerListener, onBeforeRequestListener } from './headerListener'
+import {
+  headerListener,
+  onBeforeRequestListener,
+  onSendHeaderListener
+} from './headerListener'
 import store from './store'
 
 try {

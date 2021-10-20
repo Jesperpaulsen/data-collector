@@ -29,6 +29,13 @@ export class SentRequestsHandler {
     this.requests.set(networkCall.requestId!, networkCall)
   }
 
+  updateSizeToRequest = (requestId: string, sizeToAdd: number) => {
+    const request = this.requests.get(requestId)
+    if (!request) return
+    request.size = (request?.size || 0) + sizeToAdd
+    this.requests.set(requestId, request)
+  }
+
   getRequest = (requestId: string) => {
     const request = this.requests.get(requestId)
     if (request) this.requests.delete(requestId)

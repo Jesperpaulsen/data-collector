@@ -64,15 +64,22 @@ export const headerListener = (
   })
 }
 
+const getSizeFromRawRequestBody = (
+  rawData?: chrome.webRequest.UploadData[]
+) => {
+  let size = 0
+  if (!rawData) return size
+  for (const data of rawData) {
+    size += data.bytes?.byteLength || 0
+  }
+  return size
+}
+
 export const onBeforeRequestListener = (
   details: chrome.webRequest.WebRequestBodyDetails
 ) => {
-  console.log(details)
   const timestamp = getNetworkCallTimestamp()
-  // const size = getSizeFromHeaders(details.requestHeaders)
-  const size = details.requestBody?.raw
-    ? new Blob(details.requestBody.raw).size
-    : 0
+  const size = getSizeFromRawRequestBody(details.requestBody?.raw)
   const url = new URL(details.url)
 
   getUrlForTab(details.tabId).then((host) => {
@@ -89,4 +96,11 @@ export const onBeforeRequestListener = (
     }
     store.sentRequestsHandler.addRequest(networkCall)
   })
+}
+
+export const onSendHeaderListener = (
+  details: chrome.webRequest.WebRequestHeadersDetails
+) => {
+  const size = getSizeFromHeaders(details.requestHeaders)
+  store.sentRequestsHandler.updateSizeToRequest(details.requestId, size)
 }
