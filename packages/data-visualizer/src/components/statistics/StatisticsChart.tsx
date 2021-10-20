@@ -79,7 +79,7 @@ const StatisticsChart: FunctionalComponent = () => {
         <CustomChart
           type={'line'}
           labels={labels}
-          datasets={[allUsersUsage, ownUsage]}
+          datasets={[ownUsage, allUsersUsage]}
         />
       </div>
     )
