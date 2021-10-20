@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES, NetworkCall } from '@data-collector/types'
 
+import { getNetworkCallTimestamp } from './date'
 import { getContentTypeHeader } from './utils'
 const bodyParserMethods: { [key: string]: (body: any) => Promise<void> } = {
   json: (body) => body.json(),
@@ -55,7 +56,7 @@ window.fetch = constantMock
           .then((response) => {
             const resClone = response.clone()
             const headerString = parseHeaders(resClone.headers)
-            const timestamp = Math.floor(Date.now().valueOf() / 100)
+            const timestamp = getNetworkCallTimestamp()
             const url = new URL(resClone.url)
             const targetPathname = url.pathname
             const targetOrigin = url.origin

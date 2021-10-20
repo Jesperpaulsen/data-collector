@@ -1,4 +1,4 @@
-import { UsageDetails } from '@data-collector/types'
+import { NetworkCall, UsageDetails } from '@data-collector/types'
 export const knownHeaderTypes: XMLHttpRequestResponseType[] = [
   'arraybuffer',
   'blob',
@@ -38,4 +38,7 @@ export const accUsageDetails = <T>(usage: UsageDetails, usageObject: T) => {
     res[key] = (value || 0) + (res[key] || 0)
   }
   return res
+}
+export const getUrlFromNetworkCall = (networkCall: NetworkCall) => {
+  return `${networkCall.hostOrigin}${networkCall.hostPathname}${networkCall.targetOrigin}${networkCall.targetPathname}`
 }

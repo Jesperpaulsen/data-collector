@@ -2,6 +2,7 @@ import { NetworkCall } from '@data-collector/types'
 
 import Hasher from './Hasher'
 import Store from './store'
+import { getUrlFromNetworkCall } from './utils'
 
 export class DuplicateHandler {
   private store: typeof Store
@@ -44,9 +45,11 @@ export class DuplicateHandler {
     newNetworkCall: NetworkCall
   ) => {
     const networkCallToStore =
-      (newNetworkCall.size || 0) > (existingNetworkCall.size || 0)
+      (newNetworkCall.size || 0) + (newNetworkCall.outgoingSize || 0) >
+      (existingNetworkCall.size || 0) + (existingNetworkCall.outgoingSize || 0)
         ? newNetworkCall
         : existingNetworkCall
+
     networkCallToStore.targetIP = this.getIPAdress(
       existingNetworkCall,
       newNetworkCall
@@ -69,17 +72,28 @@ export class DuplicateHandler {
     )
   }
 
+  private getSizeFromOutgoingRequest = (networkCall: NetworkCall) => {
+    if (!networkCall.requestId) return 0
+
+    const sentRequest = this.store.sentRequestsHandler.getRequest(
+      networkCall.requestId
+    )
+
+    return sentRequest?.size || 0
+  }
+
   handleNetworkCall = (networkCall: NetworkCall) => {
     if (this.isInternalNetworkCall(networkCall)) return
 
     const hash = Hasher.createNetworkCallHash(networkCall)
     const existingNetworkCall = this.store.storageHandler.getNetworkCall(hash)
+    networkCall.outgoingSize = this.getSizeFromOutgoingRequest(networkCall)
 
     if (!existingNetworkCall) {
       this.store.storageHandler.storeNetworkCall(hash, networkCall)
       return
     }
-    console.log(`${networkCall?.targetOrigin} ${networkCall?.targetPathname}`)
+
     if (this.checkIfDuplicate(existingNetworkCall, networkCall)) {
       console.log('Duplicate')
       this.storeLargestNetworkCall(hash, existingNetworkCall, networkCall)

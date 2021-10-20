@@ -1,14 +1,14 @@
 export class Scheduler {
   private interval: number
   private timeout?: ReturnType<typeof setTimeout>
-  private callback?: () => Promise<void>
+  private callback?: () => void | Promise<void>
   private nextCallbackTime = Date.now()
 
   constructor(interval: number) {
     this.interval = interval
   }
 
-  setCallback = (callback: () => Promise<void>) => {
+  setCallback = (callback: () => void | Promise<void>) => {
     this.callback = callback
     this.setNextCallbackTime(this.interval)
   }

@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES, NetworkCall } from '@data-collector/types'
 
+import { getNetworkCallTimestamp } from './date'
 import { getContentTypeHeader } from './utils'
 ;(function () {
   const origOpen = XMLHttpRequest.prototype.open
@@ -13,7 +14,7 @@ import { getContentTypeHeader } from './utils'
         targetOrigin: url.origin,
         targetPathname: url.pathname,
         data: this.response,
-        timestamp: Math.floor(Date.now().valueOf() / 100),
+        timestamp: getNetworkCallTimestamp(),
         hostPathname: window.location.pathname,
         hostOrigin: window.location.origin
       }

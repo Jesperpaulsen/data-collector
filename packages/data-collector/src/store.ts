@@ -8,6 +8,7 @@ import { StorageHandler } from './StorageHandler'
 import { UsageCounter } from './UsageCounter'
 import { Firestore } from './Firestore'
 import { BlackLister } from './BlackLister'
+import { SentRequestsHandler } from './SentRequestsHandler'
 
 class Store {
   api: API
@@ -19,6 +20,7 @@ class Store {
   usageCounter: UsageCounter
   user?: UserCredential['user']
   blackLister: BlackLister
+  sentRequestsHandler: SentRequestsHandler
 
   constructor() {
     this.api = new API(this)
@@ -29,6 +31,7 @@ class Store {
     this.storageHandler = new StorageHandler(this)
     this.usageCounter = new UsageCounter(this)
     this.blackLister = new BlackLister(this)
+    this.sentRequestsHandler = new SentRequestsHandler(this)
   }
 
   setUser = (user: UserCredential['user']) => {

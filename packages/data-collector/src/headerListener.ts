@@ -1,5 +1,6 @@
 import { NetworkCall } from '@data-collector/types'
 
+import { getNetworkCallTimestamp } from './date'
 import store from './store'
 
 const getUrlForTab = async (
@@ -22,34 +23,66 @@ const getUrlForTab = async (
   })
 }
 
+const getSizeFromHeaders = (headers?: chrome.webRequest.HttpHeader[]) => {
+  let bodySize = 0
+  let tmpHeaderString = ''
+  if (!headers) return 0
+
+  for (const header of headers) {
+    tmpHeaderString += `${header.name}${header.value || header.binaryValue}`
+    if (header.name.toLowerCase() === 'content-length') {
+      bodySize = Number(header.value || header.binaryValue || 0)
+    }
+  }
+  const headerSize = new Blob([tmpHeaderString]).size
+  return bodySize + headerSize
+}
+
 export const headerListener = (
   details: chrome.webRequest.WebResponseCacheDetails
 ) => {
-  let fileSize: number
-  let headers = ''
-  const timestamp = Math.floor(Date.now().valueOf() / 100)
-  details.responseHeaders?.forEach((header) => {
-    headers += `${header.name}: ${header.value}`
-    if (header.name.toLowerCase() === 'content-length')
-      fileSize = Number(header.value)
-  })
+  const timestamp = getNetworkCallTimestamp()
+  const size = getSizeFromHeaders(details.responseHeaders)
 
   const url = new URL(details.url)
 
   getUrlForTab(details.tabId).then((host) => {
     const networkCall: NetworkCall = {
-      headers,
       timestamp,
       type: 'text', // TODO: Check if we need this
       targetOrigin: url.origin,
       targetPathname: url.pathname,
-      size: fileSize,
+      size,
       manuallyCalculated: false,
       hostOrigin: host.origin,
       hostPathname: host.pathname,
       targetIP: details.ip,
-      fromCache: details.fromCache
+      fromCache: details.fromCache,
+      requestId: details.requestId
     }
     store.duplicateHandler.handleNetworkCall(networkCall)
+  })
+}
+
+export const onSendListener = (
+  details: chrome.webRequest.WebRequestHeadersDetails
+) => {
+  const timestamp = getNetworkCallTimestamp()
+  const size = getSizeFromHeaders(details.requestHeaders)
+  const url = new URL(details.url)
+
+  getUrlForTab(details.tabId).then((host) => {
+    const networkCall: NetworkCall = {
+      timestamp,
+      type: 'text',
+      targetOrigin: url.origin,
+      targetPathname: url.pathname,
+      size,
+      manuallyCalculated: false,
+      hostOrigin: host.origin,
+      hostPathname: host.pathname,
+      requestId: details.requestId
+    }
+    store.sentRequestsHandler.addRequest(networkCall)
   })
 }

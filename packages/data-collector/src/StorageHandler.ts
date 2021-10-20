@@ -83,7 +83,7 @@ export class StorageHandler {
         continue
       const usageDoc: StrippedNetworkCall = {
         hostOrigin: networkCall.hostOrigin,
-        size: networkCall.size,
+        size: (networkCall.size || 0) + (networkCall.outgoingSize || 0),
         targetIP: networkCall.targetIP,
         userId: networkCall.userId
       }

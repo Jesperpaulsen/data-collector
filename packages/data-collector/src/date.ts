@@ -11,3 +11,13 @@ export const getStartOfDateInUnix = (date: Date) => {
 export const getDateLimit = (numberOfDaysToSubtract: number) => {
   return dayjs().utc().subtract(numberOfDaysToSubtract, 'days').unix()
 }
+
+export const subtractSeconds = (secondsToSubtract: number) => {
+  return Math.floor(
+    dayjs().utc().subtract(secondsToSubtract, 'seconds').valueOf() / 100
+  )
+}
+
+export const getNetworkCallTimestamp = () => {
+  return Math.floor(Date.now().valueOf() / 100)
+}

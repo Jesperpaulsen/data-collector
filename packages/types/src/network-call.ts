@@ -3,7 +3,7 @@ export interface NetworkCall {
   type: XMLHttpRequestResponseType
   size?: number | null
   data?: any
-  headers: string
+  headers?: string
   timestamp: number
   manuallyCalculated?: boolean
   hostOrigin: string
@@ -13,6 +13,8 @@ export interface NetworkCall {
   targetPathname?: string
   targetIP?: string
   fromCache?: boolean
+  requestId?: string
+  outgoingSize?: number
 }
 
 export type StrippedNetworkCall = Pick<
