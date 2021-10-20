@@ -64,11 +64,15 @@ export const headerListener = (
   })
 }
 
-export const onSendListener = (
-  details: chrome.webRequest.WebRequestHeadersDetails
+export const onBeforeRequestListener = (
+  details: chrome.webRequest.WebRequestBodyDetails
 ) => {
+  console.log(details)
   const timestamp = getNetworkCallTimestamp()
-  const size = getSizeFromHeaders(details.requestHeaders)
+  // const size = getSizeFromHeaders(details.requestHeaders)
+  const size = details.requestBody?.raw
+    ? new Blob(details.requestBody.raw).size
+    : 0
   const url = new URL(details.url)
 
   getUrlForTab(details.tabId).then((host) => {

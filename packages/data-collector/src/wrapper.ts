@@ -1,6 +1,6 @@
 import { MESSAGE_TYPES } from '@data-collector/types'
 
-import { headerListener, onSendListener } from './headerListener'
+import { headerListener, onBeforeRequestListener } from './headerListener'
 import store from './store'
 
 try {
@@ -10,8 +10,14 @@ try {
     ['responseHeaders']
   )
 
+  chrome.webRequest.onBeforeRequest.addListener(
+    onBeforeRequestListener,
+    { urls: ['<all_urls>'] },
+    ['requestBody']
+  )
+
   chrome.webRequest.onSendHeaders.addListener(
-    onSendListener,
+    onSendHeaderListener,
     { urls: ['<all_urls>'] },
     ['requestHeaders']
   )

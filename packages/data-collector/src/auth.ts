@@ -44,7 +44,9 @@ export class Auth {
   }
 
   signIn = async () => {
+    await this.client.signOut()
     const token = await this.forceLogin()
+    console.log('token' + token)
     await this.signInWithGoogle(token)
     if (this.store.user) {
       await this.store.api.reportUserActive()
