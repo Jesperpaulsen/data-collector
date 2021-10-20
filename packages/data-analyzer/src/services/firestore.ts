@@ -85,7 +85,7 @@ export class Firestore {
 
     await docRef.set(
       {
-        numberOfUsers: admin.firestore.FieldValue.arrayUnion(uid),
+        users: admin.firestore.FieldValue.arrayUnion(uid),
         date: startOfToday
       },
       { merge: true }
