@@ -15,7 +15,7 @@ export class UsageCounter {
   private lastUsage: UsageDetails = initialUsage
   private ownUsageLastWeek: { [date: number]: UsageDetails } = {}
   private store: typeof Store
-  private currentDate = new Date().setHours(0, 0, 0, 0).valueOf()
+  private currentDate = getStartOfDateInUnix(new Date())
   private dateChangeInProgess = false
 
   constructor(store: typeof Store) {
@@ -53,6 +53,7 @@ export class UsageCounter {
   private checkIfDateHasChanged = () => {
     const today = getStartOfDateInUnix(new Date())
     if (this.currentDate !== today) {
+      console.log('Date has changed')
       this.currentDate = today
       return true
     }
@@ -76,9 +77,9 @@ export class UsageCounter {
     this.ownUsageLastWeek = usage
   }
 
-  private handleUsageUpdate = (usage: UsageDetails) => {
+  private handleUsageUpdate = async (usage: UsageDetails) => {
     if (this.checkIfDateHasChanged() || this.dateChangeInProgess) {
-      this.resetData()
+      if (!this.dateChangeInProgess) await this.resetData()
       return
     }
 
