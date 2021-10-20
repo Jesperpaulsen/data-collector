@@ -202,7 +202,6 @@ importers:
       '@typescript-eslint/parser': ^4.33.0
       autoprefixer: ^10.3.7
       chart.js: ^3.5.1
-      chartjs-plugin-datalabels: ^2.0.0
       classnames: ^2.3.1
       cross-env: ^7.0.3
       dayjs: ^1.10.7
@@ -231,7 +230,6 @@ importers:
       webextension-polyfill-ts: ^0.26.0
     dependencies:
       chart.js: 3.5.1
-      chartjs-plugin-datalabels: 2.0.0_chart.js@3.5.1
       classnames: 2.3.1
       dayjs: 1.10.7
       firebase: 9.1.1
@@ -514,6 +512,16 @@ packages:
       '@babel/core': ^7.0.0
     dependencies:
       '@babel/core': 7.12.10
+      '@babel/helper-annotate-as-pure': 7.12.10
+      regexpu-core: 4.7.1
+    dev: true
+
+  /@babel/helper-create-regexp-features-plugin/7.12.7_@babel+core@7.15.8:
+    resolution: {integrity: sha512-idnutvQPdpbduutvi3JVfEgcVIHooQnhvhx0Nk9isOINOIGYkZea1Pk2JlJRiUnMefrlvr0vkByATBY/mB4vjQ==}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+    dependencies:
+      '@babel/core': 7.15.8
       '@babel/helper-annotate-as-pure': 7.12.10
       regexpu-core: 4.7.1
     dev: true
@@ -1208,6 +1216,17 @@ packages:
       '@babel/helper-plugin-utils': 7.14.5
     dev: true
 
+  /@babel/plugin-proposal-unicode-property-regex/7.12.1_@babel+core@7.15.8:
+    resolution: {integrity: sha512-MYq+l+PvHuw/rKUz1at/vb6nCnQ2gmJBNaM62z0OgH7B2W1D9pvkpYtlti9bGtizNIU1K3zm4bZF9F91efVY0w==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.15.8
+      '@babel/helper-create-regexp-features-plugin': 7.12.7_@babel+core@7.15.8
+      '@babel/helper-plugin-utils': 7.14.5
+    dev: true
+
   /@babel/plugin-proposal-unicode-property-regex/7.14.5_@babel+core@7.15.8:
     resolution: {integrity: sha512-6axIeOU5LnY471KenAB9vI8I5j7NQ2d652hIYwVyRfgaZT5UpiqFKCuVXCDMSrU+3VFafnu2c5m3lrWIlr6A5Q==}
     engines: {node: '>=4'}
@@ -1778,6 +1797,16 @@ packages:
       '@babel/helper-plugin-utils': 7.14.5
     dev: true
 
+  /@babel/plugin-transform-dotall-regex/7.12.1_@babel+core@7.15.8:
+    resolution: {integrity: sha512-B2pXeRKoLszfEW7J4Hg9LoFaWEbr/kzo3teWHmtFCszjRNa/b40f9mfeqZsIDLLt/FjwQ6pz/Gdlwy85xNckBA==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.15.8
+      '@babel/helper-create-regexp-features-plugin': 7.12.7_@babel+core@7.15.8
+      '@babel/helper-plugin-utils': 7.14.5
+    dev: true
+
   /@babel/plugin-transform-dotall-regex/7.14.5_@babel+core@7.15.8:
     resolution: {integrity: sha512-loGlnBdj02MDsFaHhAIJzh7euK89lBrGIdM9EAtHFo6xKygCUGuuWe07o1oZVk287amtW1n0808sQM99aZt3gw==}
     engines: {node: '>=6.9.0'}
@@ -1970,7 +1999,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.15.8
-      '@babel/helper-module-transforms': 7.15.8
+      '@babel/helper-module-transforms': 7.15.4
       '@babel/helper-plugin-utils': 7.14.5
       '@babel/helper-simple-access': 7.15.4
       babel-plugin-dynamic-import-node: 2.3.3
@@ -2490,9 +2519,9 @@ packages:
     dependencies:
       '@babel/core': 7.15.8
       '@babel/helper-plugin-utils': 7.14.5
-      '@babel/plugin-proposal-unicode-property-regex': 7.14.5_@babel+core@7.15.8
-      '@babel/plugin-transform-dotall-regex': 7.14.5_@babel+core@7.15.8
-      '@babel/types': 7.15.6
+      '@babel/plugin-proposal-unicode-property-regex': 7.12.1_@babel+core@7.15.8
+      '@babel/plugin-transform-dotall-regex': 7.12.1_@babel+core@7.15.8
+      '@babel/types': 7.12.12
       esutils: 2.0.3
     dev: true
 
@@ -5523,14 +5552,6 @@ packages:
 
   /chart.js/3.5.1:
     resolution: {integrity: sha512-m5kzt72I1WQ9LILwQC4syla/LD/N413RYv2Dx2nnTkRS9iv/ey1xLTt0DnPc/eWV4zI+BgEgDYBIzbQhZHc/PQ==}
-    dev: false
-
-  /chartjs-plugin-datalabels/2.0.0_chart.js@3.5.1:
-    resolution: {integrity: sha512-WBsWihphzM0Y8fmQVm89+iy99mmgejmj5/jcsYqwxSioLRL/zqJ4Scv/eXq5ZqvG3TpojlGzZLeaOaSvDm7fwA==}
-    peerDependencies:
-      chart.js: ^3.0.0
-    dependencies:
-      chart.js: 3.5.1
     dev: false
 
   /chokidar/3.5.2:
@@ -11388,11 +11409,11 @@ packages:
     peerDependencies:
       rollup: ^2.0.0
     dependencies:
-      '@babel/code-frame': 7.15.8
+      '@babel/code-frame': 7.14.5
       jest-worker: 26.6.2
       rollup: 2.58.0
       serialize-javascript: 4.0.0
-      terser: 5.9.0
+      terser: 5.5.1
     dev: true
 
   /rollup/2.37.0:
@@ -12251,16 +12272,6 @@ packages:
       commander: 2.20.3
       source-map: 0.7.3
       source-map-support: 0.5.19
-    dev: true
-
-  /terser/5.9.0:
-    resolution: {integrity: sha512-h5hxa23sCdpzcye/7b8YqbE5OwKca/ni0RQz1uRX3tGh8haaGHqcuSqbGRybuAKNdntZ0mDgFNXPJ48xQ2RXKQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      commander: 2.20.3
-      source-map: 0.7.3
-      source-map-support: 0.5.20
     dev: true
 
   /test-exclude/6.0.0:
