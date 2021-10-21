@@ -56,11 +56,7 @@ export class API {
   }
 
   reportUserActive = async () => {
-    const res = await this.doRequest(
-      `/users/active/${this.store.user?.uid}`,
-      'PUT'
-    )
-    return res.json()
+    await this.doRequest(`/users/active/${this.store.user?.uid}`, 'PUT')
   }
 
   getAllNetworkCallsForUser = async () => {

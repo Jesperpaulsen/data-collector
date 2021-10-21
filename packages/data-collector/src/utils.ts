@@ -15,7 +15,6 @@ export const getContentType = (header: string): XMLHttpRequestResponseType => {
 export const getContentTypeHeader = (
   header: string | null
 ): XMLHttpRequestResponseType => {
-  console.log(header)
   if (!header) return 'json'
   const contentTypeHeaders = header.split('/')
   if (contentTypeHeaders[0] === 'text') {

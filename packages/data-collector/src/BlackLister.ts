@@ -42,7 +42,6 @@ export class BlackLister {
   }
 
   checkIfUrlIsBlackListed = (url: string) => {
-    console.log('checking ' + url)
     return this.blackListedPages.has(url)
   }
 

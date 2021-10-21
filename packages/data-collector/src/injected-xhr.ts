@@ -5,7 +5,6 @@ import { getContentTypeHeader } from './utils'
 ;(function () {
   const origOpen = XMLHttpRequest.prototype.open
   XMLHttpRequest.prototype.open = function () {
-    console.log('request started!')
     this.addEventListener('load', function () {
       const url = new URL(this.responseURL)
       const networkCall: NetworkCall = {

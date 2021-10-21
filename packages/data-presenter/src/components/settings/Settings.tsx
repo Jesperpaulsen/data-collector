@@ -2,6 +2,7 @@ import { FunctionalComponent } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
 import Input from '../common/Input'
+import Button from '../common/Button'
 
 const Settings: FunctionalComponent = () => {
   const [blackListedPages, setBlackListedPages] = useState<string[]>([])
@@ -39,8 +40,19 @@ const Settings: FunctionalComponent = () => {
     })
   }
 
+  const resetCounter = () => {
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPES.REQUEST_RESET_COUNTER })
+  }
+
   return (
     <div>
+      <div>
+        If the reported usage doesn't look correct, you can try to reset todays
+        usage manually:
+      </div>
+      <div className="flex justify-center pt-2">
+        <Button onClick={resetCounter}>Reset counter</Button>
+      </div>
       <div className="pt-4 text-base">Blacklisted domains.</div>
       <div className="text-sm">
         We won't report the usage from these urls. The list of urls are only

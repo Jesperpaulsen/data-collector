@@ -41,7 +41,7 @@ export class UsageCounter {
     this.lastUsage = this.totalUsage
   }
 
-  private listenToTodaysUsage = async () => {
+  private listenToTodaysUsage = () => {
     if (!this.store.user) return
     this.store.firestore.listenToTodaysUsage(
       this.store.user.uid,
@@ -64,10 +64,10 @@ export class UsageCounter {
     this.dateChangeInProgess = true
     this.todaysUsage = initialUsage
     this.ownUsageLastWeek = {}
-    await this.listenToTodaysUsage()
-    await this.store.api.reportUserActive()
     await this.getUsageFromLastWeek()
+    await this.store.api.reportUserActive()
     this.dateChangeInProgess = false
+    this.listenToTodaysUsage()
   }
 
   private getUsageFromLastWeek = async () => {
@@ -100,7 +100,7 @@ export class UsageCounter {
 
   listenToChanges = async () => {
     await this.getTotalUsage()
-    this.listenToTodaysUsage()
+    this.resetData()
   }
 
   sendUsageUpdate = () => {

@@ -50,9 +50,9 @@ export class Firestore {
       (doc) => {
         const data = doc.data() as any
         const usage: UsageDetails = {
-          size: data.size,
-          CO2: data.CO2,
-          KWH: data.KWH
+          size: data?.size || 0,
+          CO2: data?.CO2 || 0,
+          KWH: data?.KWH || 0
         }
         callback(usage)
       },
