@@ -82,6 +82,7 @@ export class DuplicateHandler {
   }
 
   handleNetworkCall = (networkCall: NetworkCall) => {
+    this.store.dateHandler.userIsActive()
     if (this.isInternalNetworkCall(networkCall)) return
 
     const hash = Hasher.createNetworkCallHash(networkCall)

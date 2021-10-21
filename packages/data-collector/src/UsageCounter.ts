@@ -50,22 +50,11 @@ export class UsageCounter {
     )
   }
 
-  private checkIfDateHasChanged = () => {
-    const today = getStartOfDateInUnix(new Date())
-    if (this.currentDate !== today) {
-      console.log('Date has changed')
-      this.currentDate = today
-      return true
-    }
-    return false
-  }
-
-  private resetData = async () => {
+  resetData = async () => {
     this.dateChangeInProgess = true
     this.todaysUsage = initialUsage
     this.ownUsageLastWeek = {}
     await this.getUsageFromLastWeek()
-    await this.store.api.reportUserActive()
     this.dateChangeInProgess = false
     this.listenToTodaysUsage()
   }
@@ -78,8 +67,7 @@ export class UsageCounter {
   }
 
   private handleUsageUpdate = async (usage: UsageDetails) => {
-    if (this.checkIfDateHasChanged() || this.dateChangeInProgess) {
-      if (!this.dateChangeInProgess) await this.resetData()
+    if (this.dateChangeInProgess) {
       return
     }
 
