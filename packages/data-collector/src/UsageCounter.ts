@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES, UsageDetails } from '@data-collector/types'
 
+import { co2Formatter } from './co2Formatter'
 import { getStartOfDateInUnix } from './date'
 import Store from './store'
 import { accUsageDetails } from './utils'
@@ -66,6 +67,13 @@ export class UsageCounter {
     this.ownUsageLastWeek = usage
   }
 
+  private updateBadge = (usage: number) => {
+    const color: chrome.browserAction.ColorArray =
+      usage < 1000 ? [107, 149, 92, 255] : [255, 127, 127, 255]
+    chrome.browserAction.setBadgeBackgroundColor({ color })
+    chrome.browserAction.setBadgeText({ text: co2Formatter(usage) })
+  }
+
   private handleUsageUpdate = async (usage: UsageDetails) => {
     if (this.dateChangeInProgess) {
       return
@@ -77,6 +85,7 @@ export class UsageCounter {
       size: Math.max(usage.size - this.lastUsage.size, 0)
     }
 
+    this.updateBadge(usage.CO2)
     const totalUsage = accUsageDetails(totalUsageDifference, this.totalUsage)
     const today = getStartOfDateInUnix(new Date())
     this.ownUsageLastWeek[today] = usage
