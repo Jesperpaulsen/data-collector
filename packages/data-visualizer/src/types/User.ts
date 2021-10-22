@@ -6,6 +6,6 @@ export default interface User {
   role: 'user' | 'admin'
   totalSize: number
   totalCO2: number
-  totalKWH: number
+  totalkWh: number
   numberOfCalls: number
 }

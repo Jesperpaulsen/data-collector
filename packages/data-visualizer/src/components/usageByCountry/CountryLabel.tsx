@@ -23,7 +23,7 @@ const CountryLabel: FunctionalComponent<Props> = ({
       <div className="text-black">{co2Formatter(usageDetails.CO2)} CO2</div>
       <div className="text-black">{byteFormatter(usageDetails.size)}</div>
       <div className="text-black">
-        {usageDetails.KWH?.toFixed(2) || '0.00'} KWH
+        {usageDetails.kWh?.toFixed(2) || '0.00'} kWh
       </div>
       <div className="text-sm text-gray-600">Click to see details</div>
     </div>

@@ -6,7 +6,7 @@ import { UsageHandler } from './UsageHandler'
 
 export interface UsageDetails {
   size: number
-  KWH: number
+  kWh: number
   CO2: number
   numberOfCalls?: number
   numberOfCallsWithoutSize?: number
@@ -25,7 +25,7 @@ export interface UsageState {
 
 const initialUsage: UsageDetails = {
   size: 0,
-  KWH: 0,
+  kWh: 0,
   CO2: 0
 }
 

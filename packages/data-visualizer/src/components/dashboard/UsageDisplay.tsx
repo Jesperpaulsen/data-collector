@@ -11,7 +11,7 @@ import car from './car.svg'
 import electricCar from './electric-car.svg'
 
 const averageCO2PerPetrolCarPerKm = 123.4
-const model3KWHPerKm = 0.149
+const model3kWhPerKm = 0.149
 
 const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
   ({ usage, label }) => {
@@ -26,7 +26,7 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
           </div>
           <div className="text-center px-6">
             <div className="text-4xl font-medium">
-              {usage.KWH.toFixed(2)} KWH
+              {usage.kWh?.toFixed(2)} kWh
             </div>
           </div>
           <div className="text-center px-6">
@@ -37,7 +37,7 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
         </div>
         <div className="flex justify-center text-lg pt-2">
           <div className="pr-2">
-            {(usage.KWH / model3KWHPerKm).toFixed(2)} km
+            {(usage.kWh / model3kWhPerKm).toFixed(2)} km
           </div>
           <div className="pr-2">
             <Hover

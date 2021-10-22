@@ -7,7 +7,7 @@ import { accUsageDetails } from './utils'
 
 const initialUsage: UsageDetails = {
   size: 0,
-  KWH: 0,
+  kWh: 0,
   CO2: 0
 }
 export class UsageCounter {
@@ -36,7 +36,7 @@ export class UsageCounter {
     const userDoc = await this.store.firestore.getUserDoc(this.store.user.uid)
     this.totalUsage = {
       CO2: userDoc.totalCO2 as any,
-      KWH: userDoc.totalKWH as any,
+      kWh: userDoc.totalkWh as any,
       size: userDoc.totalSize as any
     }
     this.lastUsage = this.totalUsage
@@ -81,7 +81,7 @@ export class UsageCounter {
 
     const totalUsageDifference: UsageDetails = {
       CO2: Math.max(usage.CO2 - this.lastUsage.CO2, 0),
-      KWH: Math.max(usage.KWH - this.lastUsage.KWH, 0),
+      kWh: Math.max(usage.kWh - this.lastUsage.kWh, 0),
       size: Math.max(usage.size - this.lastUsage.size, 0)
     }
 

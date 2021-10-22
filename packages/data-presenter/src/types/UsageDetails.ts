@@ -1,6 +1,6 @@
 export interface UsageDetails {
   size: number
-  KWH: number
+  kWh: number
   CO2: number
   numberOfCalls?: number
   numberOfCallsWithoutSize?: number

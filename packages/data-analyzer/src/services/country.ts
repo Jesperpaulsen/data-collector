@@ -1,13 +1,13 @@
 import geoip from 'geoip-country'
 
-import { CO2PerKWHCountry } from '@data-collector/types'
-const co2PerKWH = require('../data/co2PerKwhPerCountry.json') as {
-  [countryISO: string]: CO2PerKWHCountry
+import { CO2PerkWhCountry } from '@data-collector/types'
+const co2PerkWh = require('../data/co2PerKwhPerCountry.json') as {
+  [countryISO: string]: CO2PerkWhCountry
 }
 
-const valuesArray = Object.values(co2PerKWH)
+const valuesArray = Object.values(co2PerkWh)
 const total = valuesArray.reduce(
-  (prevValue, country) => (prevValue += country.CO2perKWH),
+  (prevValue, country) => (prevValue += country.CO2perkWh),
   0
 )
 const length = valuesArray.length
@@ -46,11 +46,11 @@ class Country {
     size?: number | null
     countryCode?: string
   }) => {
-    if (!size) return { CO2: 0, KWH: 0 }
-    const infoAboutCountry = co2PerKWH[countryCode]
-    const gCO2perKWH = (infoAboutCountry?.CO2perKWH || average) * 1000
-    const KWH = size * kwhPerByte
-    return { CO2: KWH * gCO2perKWH, KWH }
+    if (!size) return { CO2: 0, kWh: 0 }
+    const infoAboutCountry = co2PerkWh[countryCode]
+    const gCO2perkWh = (infoAboutCountry?.CO2perkWh || average) * 1000
+    const kWh = size * kwhPerByte
+    return { CO2: kWh * gCO2perkWh, kWh }
   }
 }
 

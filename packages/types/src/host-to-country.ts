@@ -8,7 +8,7 @@ export interface HostToCountry {
   hostOrigin: string
   size: FieldValue
   CO2: FieldValue
-  KWH: FieldValue
+  kWh: FieldValue
   numberOfCalls: FieldValue
   numberOfCallsWithoutSize: FieldValue
 }

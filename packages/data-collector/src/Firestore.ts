@@ -52,7 +52,7 @@ export class Firestore {
         const usage: UsageDetails = {
           size: data?.size || 0,
           CO2: data?.CO2 || 0,
-          KWH: data?.KWH || 0
+          kWh: data?.kWh || 0
         }
         callback(usage)
       },
@@ -75,7 +75,7 @@ export class Firestore {
     const usage: {
       [date: number]: {
         CO2: number
-        KWH: number
+        kWh: number
         size: number
         numberOfCalls: number
       }
@@ -85,7 +85,7 @@ export class Firestore {
       const data = doc.data() as BaseUsageDocResponse
       usage[data.date] = {
         CO2: data.CO2,
-        KWH: data.KWH,
+        kWh: data.kWh,
         size: data.size,
         numberOfCalls: data.numberOfCalls
       }

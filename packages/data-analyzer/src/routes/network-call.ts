@@ -195,7 +195,7 @@ router.get(
     const usage: {
       [date: number]: {
         CO2: number
-        KWH: number
+        kWh: number
         size: number
         numberOfCalls: number
       }
@@ -206,7 +206,7 @@ router.get(
 
       const usageDetails = {
         CO2: doc.CO2 / numberOfActiveUsers,
-        KWH: doc.KWH / numberOfActiveUsers,
+        kWh: doc.kWh / numberOfActiveUsers,
         size: doc.size / numberOfActiveUsers,
         numberOfCalls: doc.numberOfCalls / numberOfActiveUsers
       }

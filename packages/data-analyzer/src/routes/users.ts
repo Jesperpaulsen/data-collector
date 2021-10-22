@@ -42,7 +42,7 @@ router.post(
         role: 'user',
         totalCO2: firebase.firestore.FieldValue.increment(0),
         totalSize: firebase.firestore.FieldValue.increment(0),
-        totalKWH: firebase.firestore.FieldValue.increment(0),
+        totalkWh: firebase.firestore.FieldValue.increment(0),
         numberOfCalls: firebase.firestore.FieldValue.increment(0)
       }
 
@@ -110,7 +110,7 @@ router.post(
         role: 'user',
         totalCO2: firebase.firestore.FieldValue.increment(0),
         totalSize: firebase.firestore.FieldValue.increment(0),
-        totalKWH: firebase.firestore.FieldValue.increment(0),
+        totalkWh: firebase.firestore.FieldValue.increment(0),
         numberOfCalls: firebase.firestore.FieldValue.increment(0)
       }
 

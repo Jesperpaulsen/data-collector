@@ -14,7 +14,7 @@ interface UsageContextProps {
 
 const initialUsage: UsageDetails = {
   CO2: 0,
-  KWH: 0,
+  kWh: 0,
   size: 0
 }
 

@@ -24,16 +24,16 @@ const parse = (result) => {
       country = country.trim()
       const isoCode = countryToISO[country]
       if (isoCode) {
-        let CO2perKWH = Number(table[2])
+        let CO2perkWh = Number(table[2])
 
-        if (isNaN(CO2perKWH)) {
+        if (isNaN(CO2perkWh)) {
           if (table[2].includes('or')) {
-            CO2perKWH = Number(table[2].split(' ')[0])
+            CO2perkWh = Number(table[2].split(' ')[0])
           } else if (table[2].includes('Gen')) {
             const split = table[2].split('\n')
             const gen = Number(split[0].substring(5))
             const TD = Number(split[1].substring(5))
-            CO2perKWH = gen + TD
+            CO2perkWh = gen + TD
           }
         }
 
@@ -41,7 +41,7 @@ const parse = (result) => {
         const year = Number(table[5].trim())
         res[isoCode] = {
           country,
-          CO2perKWH,
+          CO2perkWh,
           source,
           year
         }

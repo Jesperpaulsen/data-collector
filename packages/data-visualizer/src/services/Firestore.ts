@@ -57,7 +57,7 @@ export class Firestore {
     const usage: {
       [date: number]: {
         CO2: number
-        KWH: number
+        kWh: number
         size: number
         numberOfCalls: number
       }
@@ -67,7 +67,7 @@ export class Firestore {
       const data = doc.data() as BaseUsageDocResponse
       usage[data.date] = {
         CO2: data.CO2,
-        KWH: data.KWH,
+        kWh: data.kWh,
         size: data.size,
         numberOfCalls: data.numberOfCalls
       }
@@ -94,7 +94,7 @@ export class Firestore {
         const usage = {
           size: data?.size || 0,
           CO2: data?.CO2 || 0,
-          KWH: data?.KWH || 0,
+          kWh: data?.kWh || 0,
           numberOfCalls: data?.numberOfCalls || 0,
           numberOfCallsWithoutSize: data?.numberOfCallsWithoutSize || 0
         }

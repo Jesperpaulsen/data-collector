@@ -6,7 +6,7 @@ export interface HostToCountry {
   hostOrigin: string
   size: number
   CO2: number
-  KWH: number
+  kWh: number
   numberOfCalls: number
   numberOfCallsWithoutSize: number
 }

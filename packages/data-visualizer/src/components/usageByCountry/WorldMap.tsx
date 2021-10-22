@@ -29,7 +29,7 @@ const WorldMap: FunctionComponent<Props> = ({
     Math.random().toString(36).substr(7)
   )
   const [filter, setFilter] = useState<
-    'size' | 'KWH' | 'CO2' | 'numberOfCalls'
+    'size' | 'kWh' | 'CO2' | 'numberOfCalls'
   >('CO2')
 
   const normalizedValues = useMemo(() => {

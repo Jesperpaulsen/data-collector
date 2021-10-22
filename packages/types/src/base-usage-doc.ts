@@ -7,7 +7,7 @@ export interface BaseUsageDoc {
   date: number
   size: FieldValue
   CO2: FieldValue
-  KWH: FieldValue
+  kWh: FieldValue
   numberOfCalls: FieldValue
   numberOfCallsWithoutSize: FieldValue
 }
@@ -19,6 +19,6 @@ export interface BaseUsageDocResponse {
   date: number
   size: number
   CO2: number
-  KWH: number
+  kWh: number
   numberOfCalls: number
 }

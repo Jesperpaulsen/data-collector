@@ -7,7 +7,7 @@ import CustomTable from '../common/CustomTable'
 const headers = [
   { label: 'Host', value: 'hostOrigin' },
   { label: 'Bytes', value: 'size' },
-  { label: 'KWH', value: 'KWH' },
+  { label: 'kWh', value: 'kWh' },
   { label: 'CO2', value: 'CO2' },
   { label: 'Number of calls', value: 'numberOfCalls' },
   { label: 'Number of calls without size', value: 'numberOfCallsWithoutSize' }

@@ -9,6 +9,6 @@
     },
     "module": "ESNext"
   },
-  "include": ["src", "../data-visualizer/src/types/USAGE_TYPES.ts"],
+  "include": ["src", "../data-visualizer/src/types/USAGE_TYPES.ts", "../data-collector/src/co2Formatter.ts"],
   "references": [{ "path": "../types/tsconfig.json" }]
 }

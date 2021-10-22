@@ -4,7 +4,7 @@ export interface BaseUsageDocResponse {
   date: number
   size: number
   CO2: number
-  KWH: number
+  kWh: number
   numberOfCalls: number
   numberOfCallsWithoutSize: number
 }

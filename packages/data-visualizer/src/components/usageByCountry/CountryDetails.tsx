@@ -27,7 +27,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
   const co2ForCountry = useMemo(() => {
     const res = {
       CO2perGB: 'Unkown',
-      CO2perKWH: 'Unkown',
+      CO2perkWh: 'Unkown',
       source: 'Unkown',
       year: 0
     }
@@ -35,8 +35,8 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
     const details = co2PerCountry[country.countryCode]
     if (!details) return res
     return {
-      CO2perGB: (details.CO2perKWH * 1.8).toFixed(4),
-      CO2perKWH: details.CO2perKWH,
+      CO2perGB: (details.CO2perkWh * 1.8).toFixed(4),
+      CO2perkWh: details.CO2perkWh,
       source: details.source,
       year: details.year
     }
@@ -68,7 +68,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
         Average CO2e per GB: {co2ForCountry.CO2perGB} kg.
       </div>
       <div className="text-xs">
-        Based on average CO2e per KWH: {co2ForCountry.CO2perKWH}. Source:{' '}
+        Based on average CO2e per kWh: {co2ForCountry.CO2perkWh}. Source:{' '}
         {co2ForCountry.source} ({co2ForCountry.year})
       </div>
       {loading ? (
@@ -79,7 +79,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
             Your total usage in {countryName} is:
             <ul className="list-inside list-disc">
               <li>CO2: {co2Formatter(country.CO2)}</li>
-              <li>KWH: {country.KWH.toFixed(2)}</li>
+              <li>kWh: {country.kWh?.toFixed(2)}</li>
               <li>Bytes: {byteFormatter(country.size)}</li>
             </ul>
           </div>

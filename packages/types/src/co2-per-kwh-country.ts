@@ -1,6 +1,6 @@
-export interface CO2PerKWHCountry {
+export interface CO2PerkWhCountry {
   country: string
-  CO2perKWH: number
+  CO2perkWh: number
   source: string
   year: number
 }

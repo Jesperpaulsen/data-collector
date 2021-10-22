@@ -57,7 +57,7 @@ export class UserHandler extends GenericHandler<UserState> {
               numberOfCalls: 0,
               role: 'user',
               totalCO2: 0,
-              totalKWH: 0,
+              totalkWh: 0,
               totalSize: 0
             }
           })

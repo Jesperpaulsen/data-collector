@@ -41,7 +41,7 @@ export class UsageApi {
         if (exististingCountry) {
           const usage: UsageDetails = {
             CO2: data.CO2,
-            KWH: data.KWH,
+            kWh: data.kWh,
             size: data.size,
             numberOfCalls: data.numberOfCalls,
             numberOfCallsWithoutSize: data.numberOfCallsWithoutSize
@@ -72,7 +72,7 @@ export class UsageApi {
         if (exististingCountry) {
           const usage: UsageDetails = {
             CO2: data.CO2,
-            KWH: data.KWH,
+            kWh: data.kWh,
             size: data.size,
             numberOfCalls: data.numberOfCalls,
             numberOfCallsWithoutSize: data.numberOfCallsWithoutSize

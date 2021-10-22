@@ -6,6 +6,6 @@ export interface User {
   role: 'user' | 'admin'
   totalSize: FieldValue
   totalCO2: FieldValue
-  totalKWH: FieldValue
+  totalkWh: FieldValue
   numberOfCalls: FieldValue
 }

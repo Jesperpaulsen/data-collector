@@ -50,7 +50,7 @@ export const getAdminToken = async () => {
     uid: authUser.uid,
     totalCO2: admin.firestore.FieldValue.increment(0),
     totalSize: admin.firestore.FieldValue.increment(0),
-    totalKWH: admin.firestore.FieldValue.increment(0),
+    totalkWh: admin.firestore.FieldValue.increment(0),
     numberOfCalls: admin.firestore.FieldValue.increment(0)
   }
 
@@ -86,7 +86,7 @@ export const getUserToken = async () => {
     uid: authUser.uid,
     totalCO2: admin.firestore.FieldValue.increment(0),
     totalSize: admin.firestore.FieldValue.increment(0),
-    totalKWH: admin.firestore.FieldValue.increment(0),
+    totalkWh: admin.firestore.FieldValue.increment(0),
     numberOfCalls: admin.firestore.FieldValue.increment(0)
   }
   await firebaseAdmin.firestore.createUser(user)
