@@ -18,7 +18,7 @@
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
     "build": "rm -rf ./dist && esbuild src/index.ts --define:process.env.NODE_ENV=\"production\" --bundle --sourcemap --outdir=./dist --platform=node",
     "update-ip": "node ./node_modules/geoip-country/scripts/updatedb.js",
-    "gcp-build": "esbuild-node-tsc"
+    "gcp-build": "esbuild-node-tsc && update-ip"
   },
   "author": "Jesper Paulsen",
   "license": "MIT",
