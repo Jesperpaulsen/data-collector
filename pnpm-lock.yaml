@@ -78,6 +78,7 @@ importers:
       body-parser: ^1.19.0
       cors: ^2.8.5
       dayjs: ^1.10.7
+      esbuild: ^0.12.29
       esbuild-jest: ^0.5.0
       esbuild-node-tsc: ^1.6.1
       express: ^4.17.1
@@ -106,6 +107,7 @@ importers:
       '@types/jest': 27.0.2
       '@types/node': 16.11.6
       '@types/supertest': 2.0.11
+      esbuild: 0.12.29
       esbuild-jest: 0.5.0_esbuild@0.12.29
       esbuild-node-tsc: 1.7.0_typescript@4.4.4
       firebase: 9.1.3
