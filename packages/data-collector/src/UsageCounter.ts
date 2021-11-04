@@ -16,7 +16,6 @@ export class UsageCounter {
   private lastUsage: UsageDetails = initialUsage
   private ownUsageLastWeek: { [date: number]: UsageDetails } = {}
   private store: typeof Store
-  private currentDate = getStartOfDateInUnix(new Date())
   private dateChangeInProgess = false
 
   constructor(store: typeof Store) {
@@ -69,7 +68,7 @@ export class UsageCounter {
 
   private updateBadge = (usage: number) => {
     const color: chrome.browserAction.ColorArray =
-      usage < 1000 ? [107, 149, 92, 255] : [255, 127, 127, 255]
+      usage < 1024 ? [107, 149, 92, 255] : [255, 127, 127, 255]
     chrome.browserAction.setBadgeBackgroundColor({ color })
     chrome.browserAction.setBadgeText({ text: co2Formatter(usage) })
   }

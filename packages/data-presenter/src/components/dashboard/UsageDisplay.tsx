@@ -1,8 +1,8 @@
 import { FunctionalComponent } from 'preact'
 import { useContext, useMemo, useState } from 'preact/hooks'
+
 import { UsageContext } from '../../contexts/UsageContext'
 import { UsageDetails } from '../../types/UsageDetails'
-
 import { byteFormatter } from '../../utils/byteFormatter'
 import { co2Formatter } from '../../utils/co2Formatter'
 import Hover from '../common/Hover'

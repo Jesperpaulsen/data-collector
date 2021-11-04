@@ -14,7 +14,7 @@ const length = valuesArray.length
 
 const average = total / length
 
-const kwhPerGB = 1.8
+const kwhPerGB = 0.09
 const kwhPerByte = kwhPerGB / (1024 * 1024 * 1024)
 
 class Country {
