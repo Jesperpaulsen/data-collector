@@ -35,7 +35,7 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
     const details = co2PerCountry[country.countryCode]
     if (!details) return res
     return {
-      CO2perGB: (details.CO2perkWh * 1.8).toFixed(4),
+      CO2perGB: (details.CO2perkWh * 0.09).toFixed(4),
       CO2perkWh: details.CO2perkWh,
       source: details.source,
       year: details.year
