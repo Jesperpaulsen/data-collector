@@ -9,6 +9,9 @@ import { currentUser } from './middlewares/current-user'
 import { errorHandler } from './middlewares/error-handler'
 import { networkCallRouter } from './routes/network-call'
 import { userRouter } from './routes/users'
+import envLoader from './services/env-loader'
+
+envLoader.loadEnvs()
 
 const app = express()
 

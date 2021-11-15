@@ -176,7 +176,7 @@ router.post(
 
     try {
       await firebaseAdmin.firestore.addSignUp(email)
-      // await Email.sendSignUpEmail(email)
+      if (process.env.NODE_ENV !== 'test') await Email.sendSignUpEmail(email)
       res.status(201).send()
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))

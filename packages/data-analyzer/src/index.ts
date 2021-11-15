@@ -1,4 +1,5 @@
 import { app } from './app'
+require('dotenv').config()
 
 const start = () => {
   const port = process.env.PORT || 3333

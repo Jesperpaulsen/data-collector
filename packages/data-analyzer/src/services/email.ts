@@ -1,23 +1,47 @@
-import { EmailParams, MailerSend, Recipient } from 'mailersend'
+import axios from 'axios'
 
-class Email {
-  client: MailerSend
+import { EnvInjecter } from '../types/env-injecter'
+const tokenName = 'MAILER_SEND_KEY'
+
+class Email extends EnvInjecter {
+  protected token?: string
 
   constructor() {
-    this.client = new MailerSend({ api_key: process.env.MAILER_SEND_KEY })
+    super(tokenName)
   }
 
-  sendSignUpEmail = async (receipentEmail: string) => {
-    const text =
-      'Thanks for signing up for the project. You will recieve information about the project when there are enough people that have signed up. \n Best regards, Jesper Paulsen'
-    const email = new EmailParams({
-      from: 'jespergp@stud.ntnu.no',
-      fromName: 'Jesper Paulsen',
-      receipents: [new Recipient(receipentEmail, '')],
-      subject: 'DataCollector: Thanks for signing up to make the web cleaner',
-      text
+  private doRequest = async (method: 'POST', url: string, body?: any) => {
+    if (!this.token) throw new Error('No MailerSend key provided')
+    const res = await axios.post(url, JSON.stringify(body), {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
+      }
     })
-    return this.client.send(email)
+    return res.data
+  }
+
+  sendSignUpEmail = async (recipientEmail: string) => {
+    const text = `
+      Hi,\n
+Thanks for signing up for the project. You will recieve more information about the project soon. 
+      \n Best regards,\n Jesper Paulsen`
+
+    const email = {
+      from: {
+        email: 'jesper@jesper.no',
+        name: 'Jesper Paulsen'
+      },
+      to: [
+        {
+          email: recipientEmail
+        }
+      ],
+      subject: 'Tanks for signing up to DataCollector',
+      text
+    }
+
+    return this.doRequest('POST', 'https://api.mailersend.com/v1/email', email)
   }
 }
 
