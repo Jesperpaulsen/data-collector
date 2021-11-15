@@ -87,6 +87,7 @@ importers:
       firebase: ^9.0.2
       firebase-admin: ^9.11.1
       geoip-country: ^4.0.87
+      mailersend: ^1.1.1
       nodemon: ^2.0.12
       supertest: ^6.1.6
       typescript: ^4.4.3
@@ -100,6 +101,7 @@ importers:
       express-validator: 6.13.0
       firebase-admin: 9.12.0
       geoip-country: 4.0.91
+      mailersend: 1.1.1
     devDependencies:
       '@types/chrome': 0.0.154
       '@types/cors': 2.8.12
@@ -6293,6 +6295,13 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /isomorphic-unfetch/3.1.0:
+    resolution: {integrity: sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==}
+    dependencies:
+      node-fetch: 2.6.5
+      unfetch: 4.2.0
+    dev: false
+
   /istanbul-lib-coverage/3.2.0:
     resolution: {integrity: sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==}
     engines: {node: '>=8'}
@@ -7445,6 +7454,12 @@ packages:
     dependencies:
       sourcemap-codec: 1.4.8
     dev: true
+
+  /mailersend/1.1.1:
+    resolution: {integrity: sha512-CaCGadqAXRe6p/hDuGBqS96AnY/e0u7enKiEobyhKE5lPMh9glgSbpJTUQ0fkhxB/3ATDNsXej3+csFIqUaqTg==}
+    dependencies:
+      isomorphic-unfetch: 3.1.0
+    dev: false
 
   /make-dir/3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
@@ -9686,6 +9701,10 @@ packages:
   /undefsafe/2.0.5:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
     dev: true
+
+  /unfetch/4.2.0:
+    resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
+    dev: false
 
   /unicode-canonical-property-names-ecmascript/2.0.0:
     resolution: {integrity: sha512-yY5PpDlfVIU5+y/BSCxAJRBIS1Zc2dDG3Ujq+sR0U+JjUevW2JhocOF+soROYDSaAezOzOKuyyixhD6mBknSmQ==}

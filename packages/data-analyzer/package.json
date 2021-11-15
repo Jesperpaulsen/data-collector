@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Responsible for serving data-collector and data-presenter",
   "main": "src/index",
+  "types": "src/types",
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon",
@@ -51,6 +52,7 @@
     "express-async-errors": "^3.1.1",
     "express-validator": "^6.12.1",
     "firebase-admin": "^9.11.1",
-    "geoip-country": "^4.0.87"
+    "geoip-country": "^4.0.87",
+    "mailersend": "^1.1.1"
   }
 }

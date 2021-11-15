@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 
 import { User } from '@data-collector/types'
+import Email from '../services/email'
 
 import { DatabaseConnectionError } from '../errors/database-connection-error'
 import { NotAuthorizedError } from '../errors/not-authorized-error'
@@ -175,6 +176,7 @@ router.post(
 
     try {
       await firebaseAdmin.firestore.addSignUp(email)
+      // await Email.sendSignUpEmail(email)
       res.status(201).send()
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
