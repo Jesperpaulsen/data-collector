@@ -60,7 +60,13 @@ export class Firestore {
     return this.userCollection.doc(uid).delete()
   }
 
-  addSignUp = (email: string) => {
+  addSignUp = async (email: string) => {
+    const snapshot = await this.signUpCollection
+      .where('email', '==', email)
+      .get()
+    if (snapshot.docs.length > 0) {
+      throw new Error('Email already signed up')
+    }
     return this.signUpCollection.add({ email })
   }
 

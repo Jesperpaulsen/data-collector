@@ -23,9 +23,9 @@ class Email extends EnvInjecter {
 
   sendSignUpEmail = async (recipientEmail: string) => {
     const text = `
-      Hi,\n
-Thanks for signing up for the project. You will recieve more information about the project soon. 
-      \n Best regards,\n Jesper Paulsen`
+      Hi,
+      \nThanks for signing up for the project. You will recieve more information about the project soon. 
+      \nBest regards,\nJesper Paulsen`
 
     const email = {
       from: {
