@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "cross-env NODE_ENV=production INLINE_RUNTIME_CHUNK=false vite build",
-    "cp:worker": "tsc worker/**.ts --outDir public --module es2020 --skipLibCheck",
-    "cp:injected-fetch": "cp worker/injected-fetch.js ./public"
+    "build": "cross-env NODE_ENV=production INLINE_RUNTIME_CHUNK=false vite build"
   },
   "dependencies": {
     "chart.js": "^3.5.1",

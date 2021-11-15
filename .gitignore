@@ -18,3 +18,5 @@ dist.pem
 
 dist.zip
 env_variables.yaml
+
+packages/data-analyzer/.env
