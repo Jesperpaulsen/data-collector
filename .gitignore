@@ -20,3 +20,5 @@ dist.zip
 env_variables.yaml
 
 packages/data-analyzer/.env
+
+.firebase/
