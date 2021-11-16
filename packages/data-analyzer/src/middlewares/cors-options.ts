@@ -4,7 +4,8 @@ import { NextFunction, Request, Response } from 'express'
 const whiteList = [
   'https://climate.jesper.no',
   'https://klima.jesper.no',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'chrome-extension://jkoeemadehedckholhdkcjnadckenjgd'
 ]
 
 export const corsOptions: CorsOptions = {
