@@ -6,7 +6,7 @@ import Store from './store'
 export class DataReporter {
   private currentRequests: StrippedNetworkCall[] = []
   private store: typeof Store
-  private scheduler = new Scheduler(5000)
+  private scheduler = new Scheduler(10000)
 
   constructor(store: typeof Store) {
     this.store = store
