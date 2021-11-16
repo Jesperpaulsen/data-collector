@@ -56,7 +56,7 @@ jobs:
           GEOLITE2_LICENSE_KEY: ${{ secrets.GEOLITE2_LICENSE_KEY }}
           MAILER_SEND_KEY: ${{ secrets.MAILER_SEND_KEY }}
         working-directory: ./packages/data-analyzer
-        run: echo $GEOLITE2_LICENSE_KEY"\n"$MAILER_SEND_KEY > .env-for-app-yaml
+        run: echo "$MAILER_SEND_KEY" > .env-for-app-yaml
       - id: prepare-app-yaml
         uses: mshick/fast-envsubst@v1
         with:
@@ -64,7 +64,13 @@ jobs:
           in-file: packages/data-analyzer/app.yaml.template
           out-file: packages/data-analyzer/app.yaml
       - name: 'check env file'
-        run: cat .env-for-app-yaml
+        run: |
+          echo .env-for-app-yaml
+          cat .env-for-app-yaml
+          echo app.yaml.template
+          cat app.yaml.template
+          echo app.yaml
+          cat app.yaml
         working-directory: ./packages/data-analyzer
       - name: pnpm install
         run: pnpm install
@@ -77,6 +83,7 @@ jobs:
         uses: google-github-actions/deploy-appengine@main
         env:
           GEOLITE2_LICENSE_KEY: ${{ secrets.GEOLITE2_LICENSE_KEY }}
+          MAILER_SEND_KEY: ${{ secrets.MAILER_SEND_KEY }}
         with:
           working_directory: ./packages/data-analyzer
           credentials: ${{ secrets.GCP_SA_KEY }}
