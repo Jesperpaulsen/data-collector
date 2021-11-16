@@ -54,8 +54,9 @@ jobs:
       - id: generate_dotenv_file
         env:
           GEOLITE2_LICENSE_KEY: ${{ secrets.GEOLITE2_LICENSE_KEY }}
+          MAILER_SEND_KEY: ${{ secrets.MAILER_SEND_KEY }}
         working-directory: ./packages/data-analyzer
-        run: echo "$GEOLITE2_LICENSE_KEY" > .env-for-app-yaml
+        run: echo $GEOLITE2_LICENSE_KEY"\n"$MAILER_SEND_KEY > .env-for-app-yaml
       - id: prepare-app-yaml
         uses: mshick/fast-envsubst@v1
         with:
