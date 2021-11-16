@@ -51,7 +51,7 @@ export class API {
       networkCalls
     })
     if (!res.ok) {
-      res.json().then((body) => console.log(body))
+      throw new Error('Something strange happened')
     }
   }
 
