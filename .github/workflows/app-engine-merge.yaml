@@ -51,26 +51,19 @@ jobs:
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - id: generate_dotenv_file
+      - name: 'create app.yaml file'
         env:
           GEOLITE2_LICENSE_KEY: ${{ secrets.GEOLITE2_LICENSE_KEY }}
           MAILER_SEND_KEY: ${{ secrets.MAILER_SEND_KEY }}
-        working-directory: ./packages/data-analyzer
-        run: echo "$MAILER_SEND_KEY" > .env-for-app-yaml
-      - id: prepare-app-yaml
-        uses: mshick/fast-envsubst@v1
-        with:
-          env-file: packages/data-analyzer/.env-for-app-yaml
-          in-file: packages/data-analyzer/app.yaml.template
-          out-file: packages/data-analyzer/app.yaml
-      - name: 'check env file'
         run: |
-          echo .env-for-app-yaml
-          cat .env-for-app-yaml
-          echo app.yaml.template
-          cat app.yaml.template
-          echo app.yaml
-          cat app.yaml
+          touch app.yaml
+          echo runtime: nodejs14 >> app.yaml
+          echo env_variables: >> app.yaml
+          echo "  MAILER_SEND_KEY: $MAILER_SEND_KEY" >> app.yaml
+          echo "  GEOLITE2_LICENSE_KEY: $GEOLITE2_LICENSE_KEY" >> app.yaml
+        working-directory: ./packages/data-analyzer
+      - name: 'check env file'
+        run: cat app.yaml
         working-directory: ./packages/data-analyzer
       - name: pnpm install
         run: pnpm install
