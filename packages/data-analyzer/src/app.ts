@@ -5,6 +5,7 @@ import express from 'express'
 import 'express-async-errors'
 
 import { NotFoundError } from './errors/not-found-error'
+import { corsOptions } from './middlewares/cors-options'
 import { currentUser } from './middlewares/current-user'
 import { errorHandler } from './middlewares/error-handler'
 import { networkCallRouter } from './routes/network-call'
@@ -16,7 +17,7 @@ envLoader.loadEnvs()
 const app = express()
 
 app.use(json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 app.use(currentUser)
 
