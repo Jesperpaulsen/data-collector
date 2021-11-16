@@ -96,6 +96,7 @@ importers:
       body-parser: 1.19.0
       cors: 2.8.5
       dayjs: 1.10.7
+      dotenv: 10.0.0
       express: 4.17.1
       express-async-errors: 3.1.1_express@4.17.1
       express-validator: 6.13.0
@@ -108,7 +109,6 @@ importers:
       '@types/jest': 27.0.2
       '@types/node': 16.11.6
       '@types/supertest': 2.0.11
-      dotenv: 10.0.0
       esbuild: 0.12.29
       esbuild-jest: 0.5.0_esbuild@0.12.29
       esbuild-node-tsc: 1.7.0_typescript@4.4.4
@@ -4152,7 +4152,7 @@ packages:
   /dotenv/10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
-    dev: true
+    dev: false
 
   /duplexer3/0.1.4:
     resolution: {integrity: sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=}
