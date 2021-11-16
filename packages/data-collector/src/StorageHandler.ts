@@ -72,35 +72,16 @@ export class StorageHandler {
     return this.networkCalls[hash]
   }
 
-  getFilteredNetworkCalls = async () => {
-    await this.fetchAndUpdateNetworkCalls()
-    const res: StrippedNetworkCall[] = []
-    for (const networkCall of Object.values(this.networkCalls)) {
-      if (
-        networkCall.fromCache ||
-        this.store.blackLister.checkIfUrlIsBlackListed(networkCall.hostOrigin)
-      )
-        continue
-      const usageDoc: StrippedNetworkCall = {
-        hostOrigin: networkCall.hostOrigin,
-        size: (networkCall.size || 0) + (networkCall.outgoingSize || 0),
-        targetIP: networkCall.targetIP,
-        userId: networkCall.userId
-      }
-      res.push(usageDoc)
-    }
-    return res
-  }
-
-  getNetworkCallsToSync = async (): Promise<StrippedNetworkCall[]> => {
+  getNetworkCallsToSync = async (): Promise<NetworkCalls> => {
     if (this.syncInProgress) {
       await this.sleep()
       return this.getNetworkCallsToSync()
     }
-    let requestsToSync: StrippedNetworkCall[] = []
+    let requestsToSync: NetworkCalls = {}
     this.syncInProgress = true
     try {
-      requestsToSync = await this.getFilteredNetworkCalls()
+      await this.fetchAndUpdateNetworkCalls()
+      requestsToSync = { ...this.networkCalls }
       this.networkCalls = {}
       await this.writeToLocalStorage({})
     } catch (e) {
