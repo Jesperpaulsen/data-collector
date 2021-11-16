@@ -15,7 +15,7 @@ class Hasher {
   createNetworkCallAndTimestampString = (url: string, timestamp: number) =>
     `${url}${timestamp}`
 
-  createNetworkCallHash = (
+  private getUrl = (
     networkCall: NetworkCall,
     { fakeHash } = { fakeHash: false }
   ) => {
@@ -23,6 +23,14 @@ class Hasher {
     if (fakeHash) {
       url += Math.random().toString(36).substr(7)
     }
+    return url
+  }
+
+  createNetworkCallHash = (
+    networkCall: NetworkCall,
+    { fakeHash } = { fakeHash: false }
+  ) => {
+    const url = this.getUrl(networkCall, { fakeHash })
 
     const urlAndTimestampString = this.createNetworkCallAndTimestampString(
       url,
