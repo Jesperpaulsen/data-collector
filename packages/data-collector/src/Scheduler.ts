@@ -8,9 +8,13 @@ export class Scheduler {
     this.interval = interval
   }
 
-  setCallback = (callback: () => void | Promise<void>) => {
+  readonly setCallback = (callback: () => void | Promise<void>) => {
     this.callback = callback
     this.setNextCallbackTime(this.interval)
+  }
+
+  readonly delayNextCallback = (delayInMillis: number) => {
+    this.setNextCallbackTime(delayInMillis)
   }
 
   private setNextCallbackTime = (interval: number) => {

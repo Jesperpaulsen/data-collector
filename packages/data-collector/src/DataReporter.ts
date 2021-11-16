@@ -22,6 +22,7 @@ export class DataReporter {
       await this.store.api.createNetworkCalls(requests)
       this.currentRequests = []
     } catch (e) {
+      this.scheduler.delayNextCallback(30000)
       this.currentRequests = requests
     }
   }
