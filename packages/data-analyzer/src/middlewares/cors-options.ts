@@ -5,7 +5,8 @@ const whiteList = [
   'https://climate.jesper.no',
   'https://klima.jesper.no',
   'http://localhost:3000',
-  'chrome-extension://jkoeemadehedckholhdkcjnadckenjgd'
+  'chrome-extension://jkoeemadehedckholhdkcjnadckenjgd',
+  'chrome-extension://iaaegfjhmidolfpcmheigebmpkmlpoki'
 ]
 
 export const corsOptions: CorsOptions = {
