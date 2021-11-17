@@ -29,10 +29,10 @@ const Input: FunctionComponent<InputProps> = ({
       <div className="text-xs text-gray-700 pl-1">{label}</div>
       <input
         type={type || 'text'}
-        className="border p-4 w-full border-gray-200 text-gray-900 rounded-xl bg-gray-500 bg-opacity-40 appearance-none leading-tight focus:outline-none focus:shadow-outline text-sm"
+        className="border p-4 w-full border-gray-200 text-gray-900 rounded-xl bg-gwhite bg-opacity-40 appearance-none leading-tight focus:outline-none focus:shadow-outline text-sm"
         placeholder={placeholder}
         value={value}
-        onChange={handleChange}
+        onInput={handleChange}
       />
     </Fragment>
   )

@@ -77,7 +77,6 @@ export class UsageApi {
             numberOfCalls: data.numberOfCalls,
             numberOfCallsWithoutSize: data.numberOfCallsWithoutSize
           }
-          console.log(usage.CO2)
           const updatedCountryDoc = accUsageDetails<HostDoc>(
             usage,
             exististingCountry
