@@ -1,23 +1,25 @@
 import { FunctionComponent } from 'preact'
 import { useContext, useState } from 'preact/hooks'
+
 import Dashboard from './components/dashboard/Dashboard'
 import Layout from './components/Layout'
 import Login from './components/login/Login'
 import Settings from './components/settings/Settings'
 import Statistics from './components/statistics/Statistics'
 import { UserContext } from './contexts/UserContext'
+import { SHOW_USAGE } from './config'
 
 export const Routes = {
   dashboard: {
     label: 'Dashboard',
     component: Dashboard
   },
-  statistics: {
+  /* statistics: {
     label: 'Statistics',
     component: Statistics
-  },
+  }, */
   settings: {
-    label: 'Settings',
+    label: SHOW_USAGE ? 'Settings' : 'Blacklisted Domains',
     component: Settings
   }
 }

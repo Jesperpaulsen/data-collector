@@ -8,9 +8,8 @@ body {
   width: 750px;
   padding: 0;
   margin: 0;
-  background: #6B955C;
-  font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
-  color: #E5E2E2;
+  background: #ebf1de;
+  font-family: "Verdana", "Lucida Grande", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

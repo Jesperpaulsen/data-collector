@@ -19,7 +19,7 @@ const Hover: FunctionalComponent<Props> = ({ infoText, left, children }) => {
       </div>
       {showInfo && (
         <div
-          className={`absolute w-96 text-sm bg-gray-700 z-50 rounded pl-4 py-2 cursor-default ${
+          className={`absolute w-96 text-sm text-white bg-gray-700 z-50 rounded pl-4 py-2 cursor-default ${
             left ? 'right-0' : ''
           }`}>
           {infoText}

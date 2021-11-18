@@ -29,7 +29,7 @@ const Input: FunctionComponent<InputProps> = ({
       <div className="text-xs text-gray-700 pl-1">{label}</div>
       <input
         type={type || 'text'}
-        className="border-b p-1 w-full border-gray-400 text-white bg-gray-900 bg-opacity-0 appearance-none leading-tight focus:outline-none focus:shadow-outline text-sm placeholder-gray-200"
+        className="border p-4 w-full border-grey-200 text-grey-900 rounded-xl bg-grey-500 bg-opacity-40 appearance-none leading-tight focus:outline-none focus:shadow-outline text-sm"
         placeholder={placeholder}
         value={value}
         onChange={handleChange}

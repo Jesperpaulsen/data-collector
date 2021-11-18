@@ -1,5 +1,5 @@
 .btn {
-  @apply w-min whitespace-nowrap py-4 px-12 rounded-md transition ease-in-out duration-300 text-white inline-block text-sm bg-black font-medium hover:bg-gray-700 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white text-center;
+  @apply w-min whitespace-nowrap py-4 px-12 rounded-md transition ease-in-out duration-300 text-white inline-block text-sm bg-green-800 font-medium hover:bg-green-700 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white text-center;
 }
 
 .btn--small {

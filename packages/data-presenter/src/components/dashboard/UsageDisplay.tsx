@@ -16,22 +16,22 @@ const model3kWhPerKm = 0.149
 const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
   ({ usage, label }) => {
     return (
-      <div className="pb-4">
+      <div className="py-4 my-2 bg-white shadow-xl rounded-xl">
         <div className="text-center">{label}</div>
         <div className="flex justify-center">
           <div className="text-center px-6">
-            <div className="text-4xl font-medium">
+            <div className="text-2xl font-medium text-green-800">
               {byteFormatter(usage.size)}
             </div>
           </div>
           <div className="text-center px-6">
-            <div className="text-4xl font-medium">
+            <div className="text-2xl font-medium text-green-800">
               {usage.kWh?.toFixed(2)} kWh
             </div>
           </div>
           <div className="text-center px-6">
-            <div className="text-4xl font-medium">
-              {co2Formatter(usage.CO2)} CO2
+            <div className="text-2xl font-medium text-green-800">
+              {co2Formatter(usage.CO2)} CO<sub>2</sub>
             </div>
           </div>
         </div>
