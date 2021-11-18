@@ -37,7 +37,7 @@ class Email extends EnvInjecter {
           email: recipientEmail
         }
       ],
-      subject: 'Tanks for signing up to DataCollector',
+      subject: 'Thanks for signing up to DataCollector',
       text
     }
 
