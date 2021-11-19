@@ -107,4 +107,18 @@ export class Firestore {
     }
     return snapshot.docs[0].id
   }
+
+  getAllSignUps = async () => {
+    const snapshot = await this.signUpCollection.get()
+    const res: SignUp[] = []
+    for (const doc of snapshot.docs) {
+      const signUp = doc.data() as SignUp
+      res.push({ ...signUp, signUpId: doc.id })
+    }
+    return res
+  }
+
+  updateSignUp = (signUpUid: string, signUp: SignUp) => {
+    return this.signUpCollection.doc(signUpUid).set(signUp, { merge: true })
+  }
 }

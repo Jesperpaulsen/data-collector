@@ -1,4 +1,5 @@
 export interface SignUp {
+  signUpId?: string
   email: string
   firstSurveySent: number
   firstSurveyAnswered: number

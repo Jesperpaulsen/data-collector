@@ -199,11 +199,31 @@ router.post(
   }
 )
 
-router.post(
-  generateRoute('/admin/sign-up'),
+router.put(
+  generateRoute('/admin/initalize-sign-up'),
   requireAdmin,
   async (req: Request, res: Response, next: NextFunction) => {
-    // const allSignUps = await firebaseAdmin.firestore.
+    const allSignUps = await firebaseAdmin.firestore.getAllSignUps()
+    const promises: Promise<string>[] = []
+    for (const signUp of allSignUps) {
+      if (!signUp.signUpId || !signUp.email) continue
+      const newSignUp: SignUp = {
+        signUpId: signUp.signUpId,
+        email: signUp.email,
+        firstSurveyAnswered: 0,
+        firstSurveySent: 0,
+        secondSurveyAnswered: 0,
+        secondSurveySent: 0,
+        showUsage: false
+      }
+      promises.push(
+        firebaseAdmin.firestore
+          .updateSignUp(newSignUp.signUpId!, newSignUp)
+          .then((_) => signUp.signUpId!)
+      )
+    }
+    const result = await Promise.all(promises)
+    res.status(200).send(result)
   }
 )
 
