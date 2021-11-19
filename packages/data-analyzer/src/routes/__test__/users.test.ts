@@ -12,6 +12,17 @@ const createUser = async (expectedCode = 201) => {
     name: 'Test Testesen'
   }
 
+  try {
+    await firebaseAdmin.firestore.addSignUp({
+      email: testUser.email,
+      firstSurveyAnswered: 0,
+      firstSurveySent: 0,
+      secondSurveyAnswered: 0,
+      secondSurveySent: 0,
+      showUsage: false
+    })
+  } catch (e) {}
+
   const res = await request(app)
     .post('/users')
     .send({ ...testUser, password: 'test123' })

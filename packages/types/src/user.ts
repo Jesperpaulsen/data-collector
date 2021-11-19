@@ -8,4 +8,5 @@ export interface User {
   totalCO2: FieldValue
   totalkWh: FieldValue
   numberOfCalls: FieldValue
+  signUpUid: string
 }

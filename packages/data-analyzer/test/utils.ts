@@ -6,7 +6,7 @@ import {
 } from 'firebase/auth'
 import admin from 'firebase-admin'
 
-import { User } from '@data-collector/types'
+import { SignUp, User } from '@data-collector/types'
 
 import firebaseAdmin from '../src/services/firebase-admin'
 
@@ -44,6 +44,17 @@ export const getAdminToken = async () => {
     password
   })
 
+  const signUp: SignUp = {
+    email: testUser.email,
+    firstSurveyAnswered: 0,
+    firstSurveySent: 0,
+    secondSurveyAnswered: 0,
+    secondSurveySent: 0,
+    showUsage: false
+  }
+
+  const signUpDoc = await firebaseAdmin.firestore.addSignUp(signUp)
+
   const user: User = {
     name: testUser.name!,
     role: 'admin',
@@ -51,7 +62,8 @@ export const getAdminToken = async () => {
     totalCO2: admin.firestore.FieldValue.increment(0),
     totalSize: admin.firestore.FieldValue.increment(0),
     totalkWh: admin.firestore.FieldValue.increment(0),
-    numberOfCalls: admin.firestore.FieldValue.increment(0)
+    numberOfCalls: admin.firestore.FieldValue.increment(0),
+    signUpUid: signUpDoc.id
   }
 
   await firebaseAdmin.firestore.createUser(user)
@@ -80,6 +92,17 @@ export const getUserToken = async () => {
     password
   })
 
+  const signUp: SignUp = {
+    email: testUser.email,
+    firstSurveyAnswered: 0,
+    firstSurveySent: 0,
+    secondSurveyAnswered: 0,
+    secondSurveySent: 0,
+    showUsage: false
+  }
+
+  const signUpDoc = await firebaseAdmin.firestore.addSignUp(signUp)
+
   const user: User = {
     name: testUser.name!,
     role: 'user',
@@ -87,7 +110,8 @@ export const getUserToken = async () => {
     totalCO2: admin.firestore.FieldValue.increment(0),
     totalSize: admin.firestore.FieldValue.increment(0),
     totalkWh: admin.firestore.FieldValue.increment(0),
-    numberOfCalls: admin.firestore.FieldValue.increment(0)
+    numberOfCalls: admin.firestore.FieldValue.increment(0),
+    signUpUid: signUpDoc.id
   }
   await firebaseAdmin.firestore.createUser(user)
 

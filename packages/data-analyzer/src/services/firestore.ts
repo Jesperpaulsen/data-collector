@@ -1,6 +1,6 @@
 import admin from 'firebase-admin'
 
-import { ActiveUserDoc, User } from '@data-collector/types'
+import { ActiveUserDoc, SignUp, User } from '@data-collector/types'
 
 import { getStartOfDateInUnix } from '../utils/date'
 
@@ -60,14 +60,14 @@ export class Firestore {
     return this.userCollection.doc(uid).delete()
   }
 
-  addSignUp = async (email: string) => {
+  addSignUp = async (signUp: SignUp) => {
     const snapshot = await this.signUpCollection
-      .where('email', '==', email)
+      .where('email', '==', signUp.email)
       .get()
     if (snapshot.docs.length > 0) {
       throw new Error('Email already signed up')
     }
-    return this.signUpCollection.add({ email })
+    return this.signUpCollection.add(signUp)
   }
 
   getActiveUsersAfterLimit = async (limit: number) => {
@@ -96,5 +96,15 @@ export class Firestore {
       },
       { merge: true }
     )
+  }
+
+  findSignUp = async (email: string) => {
+    const snapshot = await this.signUpCollection
+      .where('email', '==', email)
+      .get()
+    if (!snapshot.docs.length) {
+      throw new Error('Email not valid. User registered with a different email')
+    }
+    return snapshot.docs[0].id
   }
 }

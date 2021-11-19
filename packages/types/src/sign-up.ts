@@ -1,4 +1,8 @@
 export interface SignUp {
   email: string
-  name: string
+  firstSurveySent: number
+  firstSurveyAnswered: number
+  secondSurveySent: number
+  secondSurveyAnswered: number
+  showUsage: boolean
 }

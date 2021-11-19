@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 
-import { User } from '@data-collector/types'
+import { SignUp, User } from '@data-collector/types'
 import Email from '../services/email'
 
 import { DatabaseConnectionError } from '../errors/database-connection-error'
@@ -37,6 +37,8 @@ router.post(
         password
       })
 
+      const signUpUid = await firebaseAdmin.firestore.findSignUp(email)
+
       const user: User = {
         name,
         uid: userAuth.uid,
@@ -44,7 +46,8 @@ router.post(
         totalCO2: firebase.firestore.FieldValue.increment(0),
         totalSize: firebase.firestore.FieldValue.increment(0),
         totalkWh: firebase.firestore.FieldValue.increment(0),
-        numberOfCalls: firebase.firestore.FieldValue.increment(0)
+        numberOfCalls: firebase.firestore.FieldValue.increment(0),
+        signUpUid
       }
 
       await firebaseAdmin.firestore.createUser(user)
@@ -100,8 +103,10 @@ router.post(
         uid
       )
 
+      const signUpUid = await firebaseAdmin.firestore.findSignUp(email)
+
       if (checkIfUserExists) {
-        res.status(201).send({ email, name, uid, role: 'user' })
+        res.status(201).send({ email, name, uid, role: 'user', signUpUid })
         return
       }
 
@@ -112,7 +117,8 @@ router.post(
         totalCO2: firebase.firestore.FieldValue.increment(0),
         totalSize: firebase.firestore.FieldValue.increment(0),
         totalkWh: firebase.firestore.FieldValue.increment(0),
-        numberOfCalls: firebase.firestore.FieldValue.increment(0)
+        numberOfCalls: firebase.firestore.FieldValue.increment(0),
+        signUpUid
       }
 
       await firebaseAdmin.firestore.createUser(user)
@@ -172,15 +178,32 @@ router.post(
   validateRequest,
   sanitizeData,
   async (req: Request, res: Response, next: NextFunction) => {
-    const { email } = req.body
+    const { email } = req.body as { email: string }
+
+    const signUp: SignUp = {
+      email,
+      firstSurveyAnswered: 0,
+      firstSurveySent: 0,
+      secondSurveyAnswered: 0,
+      secondSurveySent: 0,
+      showUsage: false
+    }
 
     try {
-      await firebaseAdmin.firestore.addSignUp(email)
+      await firebaseAdmin.firestore.addSignUp(signUp)
       if (process.env.NODE_ENV !== 'test') await Email.sendSignUpEmail(email)
       res.status(201).send()
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }
+  }
+)
+
+router.post(
+  generateRoute('/admin/sign-up'),
+  requireAdmin,
+  async (req: Request, res: Response, next: NextFunction) => {
+    // const allSignUps = await firebaseAdmin.firestore.
   }
 )
 
