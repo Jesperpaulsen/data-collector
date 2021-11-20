@@ -34,14 +34,13 @@ export class API {
     )
     if (!res.ok) {
       console.log('Not ok')
-      res.json().then((body) => console.log(body))
     }
   }
 
   createNetworkCall = async (networkCall: NetworkCall) => {
     const res = await this.doRequest('/network-call', 'POST', networkCall)
     if (!res.ok) {
-      res.json().then((body) => console.log(body))
+      console.log('Not ok')
     }
   }
 
@@ -51,7 +50,6 @@ export class API {
       networkCalls
     })
     if (!res.ok) {
-      res.json().then((body) => console.log(body))
       throw new Error('Something strange happened')
     }
   }
