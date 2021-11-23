@@ -320,7 +320,7 @@ export class NetworkCallController {
     const snapshot = await this.usageCollection
       .doc(`${userId}-${yesterday}`)
       .get()
-    if (snapshot.exists) return 0
+    if (!snapshot.exists) return 0
     const data = snapshot.data()
     if (!data) return 0
     const yesterdaysPollution = data.CO2
