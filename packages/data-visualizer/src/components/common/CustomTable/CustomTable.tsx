@@ -11,6 +11,7 @@ interface Props {
     label: string
     value: string
     sortable?: boolean
+    renderMethod?: (argument: any) => string
   }[]
   data: { [id: string]: any }
 }
@@ -88,7 +89,9 @@ const CustomTable: FunctionalComponent<Props> = ({ headers, data }) => {
                     <td
                       key={`table-${i}-${header.value}`}
                       className="px-6 py-4 text-sm text-gray-500 border">
-                      {data[dataKey][header.value]}
+                      {header.renderMethod
+                        ? header.renderMethod(data[dataKey][header.value])
+                        : data[dataKey][header.value]}
                     </td>
                   ))}
                 </tr>
