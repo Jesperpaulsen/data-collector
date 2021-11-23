@@ -24,6 +24,7 @@ export class DateHandler {
     if (dateHasChanged) {
       this.store.api.reportUserActive()
       this.store.usageCounter.resetData()
+      this.store.habitsReporter.resetHabits()
     }
   }
 }

@@ -54,8 +54,8 @@ export class API {
     }
   }
 
-  reportUserActive = async () => {
-    await this.doRequest(`/users/active/${this.store.user?.uid}`, 'PUT')
+  reportUserActive = () => {
+    return this.doRequest(`/users/active/${this.store.user?.uid}`, 'PUT')
   }
 
   getAllNetworkCallsForUser = async () => {
@@ -64,5 +64,24 @@ export class API {
       'GET'
     )
     return res.json()
+  }
+
+  getUsageFromLastWeek = async (
+    userId: string
+  ): Promise<
+    | {
+        ownAverageUsage: number
+        allUsersAverage: number
+        yesterdaysUsage: number
+      }
+    | undefined
+  > => {
+    const res = await this.doRequest(
+      `/network-call/users/last-week/${userId}`,
+      'GET'
+    )
+    if (res.ok) {
+      return res.json()
+    }
   }
 }

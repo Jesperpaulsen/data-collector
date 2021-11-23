@@ -14,20 +14,12 @@ export class UsageCounter {
   private todaysUsage: UsageDetails = initialUsage
   private totalUsage: UsageDetails = initialUsage
   private lastUsage: UsageDetails = initialUsage
-  private ownUsageLastWeek: { [date: number]: UsageDetails } = {}
+  ownUsageLastWeek: { [date: number]: UsageDetails } = {}
   private store: typeof Store
   private dateChangeInProgess = false
 
   constructor(store: typeof Store) {
     this.store = store
-    /* setTimeout(() => {
-      chrome.notifications.create('', {
-        title: 'Update on your usage',
-        message: `You have used ${this.usageToday} bytes today`,
-        type: 'basic',
-        iconUrl: './android-chrome-192x192.png'
-      })
-    }, 5000) */
   }
 
   private getTotalUsage = async () => {
@@ -66,13 +58,6 @@ export class UsageCounter {
     this.ownUsageLastWeek = usage
   }
 
-  private updateBadge = (usage: number) => {
-    const color: chrome.browserAction.ColorArray =
-      usage < 1024 ? [107, 149, 92, 255] : [255, 127, 127, 255]
-    // chrome.browserAction.setBadgeBackgroundColor({ color })
-    // chrome.browserAction.setBadgeText({ text: co2Formatter(usage) })
-  }
-
   private handleUsageUpdate = async (usage: UsageDetails) => {
     if (this.dateChangeInProgess) {
       return
@@ -84,7 +69,6 @@ export class UsageCounter {
       size: Math.max(usage.size - this.lastUsage.size, 0)
     }
 
-    this.updateBadge(usage.CO2)
     const totalUsage = accUsageDetails(totalUsageDifference, this.totalUsage)
     const today = getStartOfDateInUnix(new Date())
     this.ownUsageLastWeek[today] = usage
@@ -92,6 +76,7 @@ export class UsageCounter {
     this.todaysUsage = usage
     this.totalUsage = totalUsage
     this.sendUsageUpdate()
+    this.store.habitsReporter.onUsageChange(this.todaysUsage)
   }
 
   listenToChanges = async () => {

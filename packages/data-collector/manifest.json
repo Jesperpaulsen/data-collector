@@ -1,7 +1,7 @@
 {
   "name": "Data Collector",
   "description": "Collecting your data usage",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "index.html",
@@ -38,7 +38,8 @@
     "webRequest",
     "tabs",
     "identity",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "externally_connectable": {
     "matches": [
@@ -47,7 +48,7 @@
     ]
   },
   "oauth2": {
-    "client_id": "154072078565-c2qtni1qj3atn2ip7cgdeofpph8jjhhk.apps.googleusercontent.com",
+    "client_id": "154072078565-p6sblr51nnlhtrr3uq1t87us6aiagb77.apps.googleusercontent.com", //154072078565-c2qtni1qj3atn2ip7cgdeofpph8jjhhk.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile"

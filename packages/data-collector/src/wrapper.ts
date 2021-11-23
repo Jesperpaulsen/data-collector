@@ -77,6 +77,9 @@ try {
       case MESSAGE_TYPES.DELETE_BLACKLISTED_PAGE:
         store.blackLister.removeBlackListedPage(payload)
         return
+      case MESSAGE_TYPES.REQUEST_REPORTS:
+        store.habitsReporter.sendReports()
+        return
       default:
         console.log(type)
     }

@@ -10,6 +10,7 @@ import { Firestore } from './Firestore'
 import { BlackLister } from './BlackLister'
 import { SentRequestsHandler } from './SentRequestsHandler'
 import { DateHandler } from './DateHandler'
+import { HabitsReporter } from './HabitsReporter'
 
 class Store {
   api: API
@@ -23,6 +24,7 @@ class Store {
   blackLister: BlackLister
   sentRequestsHandler: SentRequestsHandler
   dateHandler: DateHandler
+  habitsReporter: HabitsReporter
 
   constructor() {
     this.api = new API(this)
@@ -35,11 +37,13 @@ class Store {
     this.blackLister = new BlackLister(this)
     this.sentRequestsHandler = new SentRequestsHandler(this)
     this.dateHandler = new DateHandler(this)
+    this.habitsReporter = new HabitsReporter(this)
   }
 
   setUser = (user: UserCredential['user']) => {
     const initialUser = this.user
     this.user = user
+    this.habitsReporter.getAverageUsage()
     if (!initialUser) this.sendUser()
   }
 
