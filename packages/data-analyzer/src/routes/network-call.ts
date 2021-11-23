@@ -216,4 +216,40 @@ router.get(
   }
 )
 
+router.get(
+  generateRoute('/users/last-week/:uid'),
+  requireAuth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { uid } = req.params
+
+    if (req.currentUser?.uid !== uid) {
+      throw new NotAuthorizedError()
+    }
+
+    const limit = getDateLimit(7)
+
+    try {
+      const [ownToalUsageLast7Days, allUsageLast7Days, yesterdaysUsage] =
+        await Promise.all([
+          firebaseAdmin.firestore.networkCallController.getTotalUsageForUser(
+            uid,
+            limit
+          ),
+          firebaseAdmin.firestore.networkCallController.getAllUsersUsage(limit),
+          firebaseAdmin.firestore.networkCallController.getYesterdaysUsageForUser(
+            uid
+          )
+        ])
+
+      const ownAverageUsage = (ownToalUsageLast7Days || 0) / 7
+      const allUsersAverageUsage = (allUsageLast7Days || 0) / 7
+      return res
+        .status(200)
+        .send({ ownAverageUsage, allUsersAverageUsage, yesterdaysUsage })
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
 export { router as networkCallRouter }

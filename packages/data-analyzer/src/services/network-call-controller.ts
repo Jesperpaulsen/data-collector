@@ -9,7 +9,7 @@ import {
 } from '@data-collector/types'
 import admin from 'firebase-admin'
 import Country from './country'
-import { getStartOfDateInUnix } from '../utils/date'
+import { getDateLimit, getStartOfDateInUnix } from '../utils/date'
 import { USAGE_TYPES } from '../types/USAGE_TYPES'
 import { Firestore } from './firestore'
 
@@ -290,5 +290,40 @@ export class NetworkCallController {
     } catch (e) {
       console.log(e)
     }
+  }
+
+  getTotalUsageForUser = async (userId: string, limit: number) => {
+    let totalCO2 = 0
+    const snapshot = await this.usageCollection
+      .where('userId', '==', userId)
+      .where('date', '>', limit)
+      .get()
+    for (const doc of snapshot.docs) {
+      const data = doc.data()
+      totalCO2 += data.CO2 as number
+    }
+    return totalCO2
+  }
+
+  getAllUsersUsage = async (limit: number) => {
+    let totalCO2 = 0
+    const snapshot = await this.usageCollection.where('date', '>', limit).get()
+    for (const doc of snapshot.docs) {
+      const data = doc.data()
+      totalCO2 += data.CO2 as number
+    }
+    return totalCO2
+  }
+
+  getYesterdaysUsageForUser = async (userId: string) => {
+    const yesterday = getDateLimit(1)
+    const snapshot = await this.usageCollection
+      .doc(`${userId}-${yesterday}`)
+      .get()
+    if (snapshot.exists) return 0
+    const data = snapshot.data()
+    if (!data) return 0
+    const yesterdaysPollution = data.CO2
+    return yesterdaysPollution
   }
 }

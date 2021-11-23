@@ -48,9 +48,11 @@ class Email extends EnvInjecter {
   sendFirstSurveyEmail = async (emailAdress: string) => {
     const text = `
       Hi,
-      \nThanks for contributing to this important topic. You will shortly recieve the first of two surveys. The survey will be sent through Nettskjema, and is expected to arrive in your mailbox within some hours. The survey should take 5-10 minutes, and the goal of it is to understand more of your internet habits.
-      \nIf you don't recieve the survey, check your spam folder or send me an email at jespergp@stud.ntnu.no.
-      \n\nSome days after you have completed the survey, you will recieve information on how to install the chrome plugin that will collect the size and location of your data. 
+      \nThanks for contributing to this research project. 
+      \nHere is the link to the survey: https://nettskjema.no/a/233362. The survey should take 5-10 minutes, and the goal of it is to understand your internet habits and interest in the environment.
+      \nIf you have problems with the survery send me an email at jespergp@stud.ntnu.no.
+      \nSome days after you have completed the survey, you will recieve information on how to install the chrome plugin that will collect the size and location of your data. You will use Chrome as you normally would, and the plugin will report the amount and location of the data you are using.
+      
       \nBest regards,\nJesper Paulsen`
 
     const email = {
@@ -63,7 +65,7 @@ class Email extends EnvInjecter {
           email: emailAdress
         }
       ],
-      subject: 'DataCollector - survey',
+      subject: "Master's thesis - Your Internet Habits and Carbon Footprint",
       text
     }
     return this.doRequest(email)
