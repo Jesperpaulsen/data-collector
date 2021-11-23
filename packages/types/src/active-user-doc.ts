@@ -1,4 +1,4 @@
 export interface ActiveUserDoc {
-  activeUsers: string[]
+  users: string[]
   date: number
 }

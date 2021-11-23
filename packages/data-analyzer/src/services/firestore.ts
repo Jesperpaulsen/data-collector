@@ -79,7 +79,7 @@ export class Firestore {
 
     for (const doc of snapshot.docs) {
       const data = doc.data() as ActiveUserDoc
-      res[data.date] = data.activeUsers.length
+      res[data.date] = data.users.length
     }
     return res
   }

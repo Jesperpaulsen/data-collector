@@ -178,41 +178,43 @@ router.get(
 router.get(
   generateRoute('/total-usage/:numberOfDays'),
   requireAuth,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { numberOfDays } = req.params
 
     const limit = getDateLimit(Number(numberOfDays) || 7)
+    try {
+      const activeUsers =
+        await firebaseAdmin.firestore.getActiveUsersAfterLimit(limit)
 
-    const activeUsers = await firebaseAdmin.firestore.getActiveUsersAfterLimit(
-      limit
-    )
+      const usageDocs =
+        await firebaseAdmin.firestore.networkCallController.getTotalUsageAfterDate(
+          limit
+        )
 
-    const usageDocs =
-      await firebaseAdmin.firestore.networkCallController.getTotalUsageAfterDate(
-        limit
-      )
+      const usage: {
+        [date: number]: {
+          CO2: number
+          kWh: number
+          size: number
+          numberOfCalls: number
+        }
+      } = {}
 
-    const usage: {
-      [date: number]: {
-        CO2: number
-        kWh: number
-        size: number
-        numberOfCalls: number
+      for (const doc of usageDocs) {
+        const numberOfActiveUsers = activeUsers[doc.date] || 1
+
+        const usageDetails = {
+          CO2: doc.CO2 / numberOfActiveUsers,
+          kWh: doc.kWh / numberOfActiveUsers,
+          size: doc.size / numberOfActiveUsers,
+          numberOfCalls: doc.numberOfCalls / numberOfActiveUsers
+        }
+        usage[doc.date] = usageDetails
       }
-    } = {}
-
-    for (const doc of usageDocs) {
-      const numberOfActiveUsers = activeUsers[doc.date] || 1
-
-      const usageDetails = {
-        CO2: doc.CO2 / numberOfActiveUsers,
-        kWh: doc.kWh / numberOfActiveUsers,
-        size: doc.size / numberOfActiveUsers,
-        numberOfCalls: doc.numberOfCalls / numberOfActiveUsers
-      }
-      usage[doc.date] = usageDetails
+      return res.status(200).send({ usage })
+    } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
     }
-    return res.status(200).send({ usage })
   }
 )
 
