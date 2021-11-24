@@ -128,6 +128,15 @@ export class Firestore {
     )
     return getDocs(q)
   }
+
+  getCountryForHost = async (userId: string, host: string) => {
+    const q = query(
+      this.hostToCountryCollection,
+      where('userId', '==', userId),
+      where('hostOrigin', '==', host)
+    )
+    return getDocs(q)
+  }
 }
 
 export default new Firestore()

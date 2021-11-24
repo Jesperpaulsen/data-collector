@@ -2,12 +2,13 @@ import { FunctionComponent } from 'preact'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 
 import { CountryDoc } from '../../types/country-doc'
+import { HostToCountry } from '../../types/host-to-country'
 
 import CountryLabel from './CountryLabel'
 import MapRenderer from './MapRenderer'
 
 interface Props {
-  usageByCountry?: { [countryCode: string]: CountryDoc }
+  usageByCountry?: { [countryCode: string]: CountryDoc | HostToCountry }
   setSelectedCountry: (country?: string) => void
 }
 
@@ -17,7 +18,7 @@ const WorldMap: FunctionComponent<Props> = ({
   usageByCountry,
   setSelectedCountry
 }) => {
-  const [usageDetails, setUsageDetails] = useState<CountryDoc>()
+  const [usageDetails, setUsageDetails] = useState<CountryDoc | HostToCountry>()
   const [labelPosition, setLabelPosition] = useState<{
     left: number
     top: number

@@ -16,10 +16,14 @@ import { co2Formatter } from '../../utils/co2Formatter'
 import LoadingSpinner from '../common/LoadingSpinner'
 
 interface Props {
-  country?: CountryDoc
+  country?: CountryDoc | HostToCountry
+  specificHost: string
 }
 
-const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
+const CountryDetails: FunctionalComponent<Props> = ({
+  country,
+  specificHost
+}) => {
   const [hostsForCountry, setHostsForCountry] = useState<HostToCountry[]>([])
   const { usageHandler } = useContext(UsageContext)
   const [loading, setLoading] = useState(false)
@@ -43,14 +47,14 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
   }, [country])
 
   const loadDataForCountry = useCallback(async () => {
-    if (!country || !usageHandler) return
+    if (!country || !usageHandler || specificHost) return
     setLoading(true)
     const result = await usageHandler?.getCountryUsagePerHost(
       country.countryCode
     )
     setHostsForCountry(result)
     setLoading(false)
-  }, [country, usageHandler])
+  }, [country, usageHandler, specificHost])
 
   useEffect(() => {
     loadDataForCountry()
@@ -76,14 +80,16 @@ const CountryDetails: FunctionalComponent<Props> = ({ country }) => {
       ) : country ? (
         <div className="pt-4">
           <div className="text-sm font-medium">
-            Your total usage in {countryName} is:
+            {specificHost.length > 0 ? specificHost : 'Your total'} usage in{' '}
+            {countryName} is:
             <ul className="list-inside list-disc">
               <li>CO2: {co2Formatter(country.CO2)}</li>
-              <li>kWh: {country.kWh?.toFixed(2)}</li>
               <li>Bytes: {byteFormatter(country.size)}</li>
+              <li>kWh: {country.kWh?.toFixed(2)}</li>
+              <li>Requests: {country.numberOfCalls}</li>
             </ul>
           </div>
-          {country.numberOfCallsWithoutSize > 0 && (
+          {!specificHost.length && country.numberOfCallsWithoutSize > 0 && (
             <div className="pt-2 font-semibold">
               Unfortunately we have been unable to calculate the size of{' '}
               {country.numberOfCallsWithoutSize}/{country.numberOfCalls} calls

@@ -38,7 +38,6 @@ export class UsageHandler extends GenericHandler<UsageState> {
       CO2: currentUser.totalCO2,
       kWh: currentUser.totalkWh
     }
-    console.log(totalUsage)
     this.setState({ totalUsage })
     this.lastUsage = totalUsage
   }
@@ -88,6 +87,16 @@ export class UsageHandler extends GenericHandler<UsageState> {
       countryCode
     )
     return countryUsagePerHost
+  }
+
+  getCountryForHost = async (hostOrigin: string) => {
+    const currentUser = this.state.userState?.currentUser
+    if (!currentUser) return {}
+    const countryForHost = await this.api.getCountryForHost(
+      currentUser.uid,
+      hostOrigin
+    )
+    return countryForHost
   }
 
   getOwnUsageFromLastWeek = async (userId: string) => {

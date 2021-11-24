@@ -15,7 +15,6 @@ import { Statistics } from '../pages/Statistics'
 export enum ROUTES {
   DASHBOARD = '/',
   LOGIN = '/login',
-  USAGE_BY_COUNTRY = '/usage-by-country',
   USAGE_BY_HOST = '/usage-by-host',
   STATISTICS = '/statistics',
   ABOUT = '/about',
@@ -31,18 +30,13 @@ export const routeComponents: {
 } = {
   [ROUTES.DASHBOARD]: {
     requireAuth: true,
-    component: Dashboard,
-    label: 'Dashboard'
+    component: UsageByCountry,
+    label: 'Overview'
   },
   [ROUTES.LOGIN]: { component: Login },
-  [ROUTES.USAGE_BY_COUNTRY]: {
-    requireAuth: true,
-    label: 'Usage By Country',
-    component: UsageByCountry
-  },
   [ROUTES.USAGE_BY_HOST]: {
     requireAuth: true,
-    label: 'Usage By Host',
+    label: 'Details',
     component: UsageByHost
   },
   [ROUTES.STATISTICS]: {

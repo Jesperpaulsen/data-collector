@@ -2,12 +2,13 @@ export class HTTPClient {
   // @TODO change base url
   private baseUrl =
     window.location.host === 'localhost:3000'
-      ? 'https://data-collector-ff33b.ew.r.appspot.com'
-      : 'http://localhost:3333'
+      ? 'http://localhost:3333'
+      : 'https://data-collector-ff33b.ew.r.appspot.com'
 
   private getUserToken?: () => Promise<string>
 
   constructor(getUserTokenMethod: () => Promise<string>) {
+    console.log(window.location.host)
     this.getUserToken = getUserTokenMethod
   }
 

@@ -111,6 +111,21 @@ export class UsageApi {
     }
   }
 
+  getCountryForHost = async (userId: string, hostOrigin: string) => {
+    try {
+      const snapshot = await Firestore.getCountryForHost(userId, hostOrigin)
+      const res: { [country: string]: HostToCountry } = {}
+      for (const doc of snapshot.docs) {
+        const data = doc.data() as HostToCountry
+        res[data.countryCode] = data
+      }
+      return res
+    } catch (e) {
+      console.log(e)
+      return {}
+    }
+  }
+
   getTotalUsageForLastWeek = async () => {
     try {
       const res = await this.HTTPClient?.doRequest(

@@ -23,7 +23,7 @@ const MapRenderer: FunctionalComponent<Props> = ({
       try {
         // @ts-ignore
         // eslint-disable-next-line
-          const map = new jsVectorMap({
+        const map = new jsVectorMap({
           selector: `#${mapDivId}`,
           map: 'world',
           showTooltip: true,
@@ -31,8 +31,16 @@ const MapRenderer: FunctionalComponent<Props> = ({
           regionsSelectable: true,
           regionsSelectableOne: true,
           visualizeData: {
-            scale: ['#FF7F7F', '#ff0000'],
+            scale: ['#D97F7F', '#ff0000'],
             values: values || {}
+          },
+          regionStyle: {
+            initial: {
+              stroke: '#676767',
+              strokeWidth: 0.3,
+              fill: '#696969',
+              fillOpacity: 1
+            }
           },
           onLoaded(map) {
             window.addEventListener('resize', () => {
