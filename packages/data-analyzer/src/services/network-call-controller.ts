@@ -266,17 +266,12 @@ export class NetworkCallController {
       type: USAGE_TYPES.USAGE
     }
 
-    const usageDocWithDeviceCO2: BaseUsageDoc = {
-      ...baseUsageDoc,
-      CO2: this.getFieldValue(CO2 + DEVICE_CO2_PER_10_SEC)
-    }
-
     const promises = [
-      this.updateUserStats(usageDocWithDeviceCO2),
+      this.updateUserStats(baseUsageDoc),
       this.setHostDoc(baseUsageDoc, strippedHostOrigin, usageId),
       this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
-      this.setUsageDoc(usageDocWithDeviceCO2),
-      this.updateTotalUsage(usageDocWithDeviceCO2)
+      this.setUsageDoc(baseUsageDoc),
+      this.updateTotalUsage(baseUsageDoc)
     ]
 
     if (strippedHostOrigin.length && countryCode) {
