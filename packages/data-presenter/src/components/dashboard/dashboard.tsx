@@ -27,8 +27,8 @@ const Dashboard: FunctionComponent = () => {
             In the next round you will be able to see your usage in real time.
           </div>
           <div className="text-sm pt-10">
-            The reason you can't see your usage now, is that we want to see if
-            your habits changes when you get access to your usage. Thanks for
+            You can't see your usage now because we want to see if your habits
+            change when you get access to see your pollution. Thanks for
             participating.
           </div>
         </div>

@@ -10,6 +10,7 @@ export interface BaseUsageDoc {
   kWh: FieldValue
   numberOfCalls: FieldValue
   numberOfCallsWithoutSize: FieldValue
+  secondsActive?: FieldValue
 }
 
 export interface BaseUsageDocResponse {
@@ -21,4 +22,5 @@ export interface BaseUsageDocResponse {
   CO2: number
   kWh: number
   numberOfCalls: number
+  secondsActive?: number
 }

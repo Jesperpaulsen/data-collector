@@ -1,1 +1,1 @@
-export const SHOW_USAGE = false
+export const SHOW_USAGE = true

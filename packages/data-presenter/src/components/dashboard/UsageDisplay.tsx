@@ -5,6 +5,7 @@ import { UsageContext } from '../../contexts/UsageContext'
 import { UsageDetails } from '../../types/UsageDetails'
 import { byteFormatter } from '../../utils/byteFormatter'
 import { co2Formatter } from '../../utils/co2Formatter'
+import { convertActiveSecondsToPollution } from '../../utils/convertActiveSecondsToPollution'
 import Hover from '../common/Hover'
 
 import car from './car.svg'
@@ -15,6 +16,12 @@ const model3kWhPerKm = 0.149
 
 const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
   ({ usage, label }) => {
+    const { kWh, CO2 } = convertActiveSecondsToPollution(
+      usage.secondsActive || 1
+    )
+
+    console.log(CO2)
+
     return (
       <div className="py-4 my-2 bg-white shadow-xl rounded-xl">
         <div className="text-center">{label}</div>
@@ -26,18 +33,18 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
           </div>
           <div className="text-center px-6">
             <div className="text-2xl font-medium text-green-800">
-              {usage.kWh?.toFixed(2)} kWh
+              {(usage.kWh + kWh).toFixed(2)} kWh
             </div>
           </div>
           <div className="text-center px-6">
             <div className="text-2xl font-medium text-green-800">
-              {co2Formatter(usage.CO2)} CO<sub>2</sub>
+              {co2Formatter(usage.CO2 + CO2)} CO<sub>2</sub>
             </div>
           </div>
         </div>
         <div className="flex justify-center text-lg pt-2">
           <div className="pr-2">
-            {(usage.kWh / model3kWhPerKm).toFixed(2)} km
+            {((usage.kWh + kWh) / model3kWhPerKm).toFixed(2)} km
           </div>
           <div className="pr-2">
             <Hover
@@ -47,7 +54,7 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
             </Hover>
           </div>
           <div className="pl-1">
-            {(usage.CO2 / averageCO2PerPetrolCarPerKm).toFixed(2)} km
+            {((usage.CO2 + CO2) / averageCO2PerPetrolCarPerKm).toFixed(2)} km
           </div>
           <div className="pl-1">
             <Hover

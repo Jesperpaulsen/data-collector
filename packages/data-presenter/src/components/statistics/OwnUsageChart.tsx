@@ -1,7 +1,7 @@
 import { createRef, FunctionalComponent } from 'preact'
 import { useContext, useEffect, useMemo } from 'preact/hooks'
-import { UsageContext } from '../../contexts/UsageContext'
 
+import { UsageContext } from '../../contexts/UsageContext'
 import { Dataset, Labels } from '../../types/chart-types'
 import { getStartOfDateInUnix } from '../../utils/date'
 import Button from '../common/Button'
@@ -37,15 +37,20 @@ const OwnUsageChart: FunctionalComponent = () => {
   }, [])
 
   const ownUsage = useMemo(() => {
-    const res: Dataset = { label: '', data: { 0: 0 } }
+    const res: Dataset[] = []
+    const co2: { [date: number]: number } = {}
+    const kWh: { [date: number]: number } = {}
     const data: { [date: number]: number } = {}
     if (!usageLastWeek) return res
 
     for (const [date, usage] of Object.entries(usageLastWeek)) {
-      data[date] = usage.CO2
+      co2[date] = usage.CO2
+      kWh[date] = usage.kWh
+      // data[date] = usage.size
     }
-    res.label = 'Your usage'
-    res.data = data
+    res.push({ label: 'CO2 (g)', data: co2 })
+    res.push({ label: 'kWh', data: kWh })
+    // res.push({ label: 'Data', data: data })
     return res
   }, [usageLastWeek])
 
@@ -53,7 +58,7 @@ const OwnUsageChart: FunctionalComponent = () => {
     return (
       <div className="flex justify-center">
         <div className="w-full">
-          <CustomChart type={'line'} labels={labels} datasets={[ownUsage]} />
+          <CustomChart type={'line'} labels={labels} datasets={ownUsage} />
         </div>
       </div>
     )

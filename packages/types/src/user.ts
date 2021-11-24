@@ -9,4 +9,5 @@ export interface User {
   totalkWh: FieldValue
   numberOfCalls: FieldValue
   signUpUid: string
+  secondsActive?: FieldValue
 }

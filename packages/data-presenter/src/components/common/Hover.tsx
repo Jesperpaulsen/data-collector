@@ -14,7 +14,7 @@ const Hover: FunctionalComponent<Props> = ({ infoText, left, children }) => {
       onMouseEnter={() => setShowInfo(true)}
       onMouseLeave={() => setShowInfo(false)}
       className="relative cursor-pointer">
-      <div className="rounded-full flex justify-center items-center bg-gray-500 w-6 h-6 p-1">
+      <div className="rounded-full flex justify-center items-end w-6 h-6">
         {children}
       </div>
       {showInfo && (

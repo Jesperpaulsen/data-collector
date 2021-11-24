@@ -4,4 +4,5 @@ export interface UsageDetails {
   CO2: number
   numberOfCalls?: number
   numberOfCallsWithoutSize?: number
+  secondsActive?: number
 }

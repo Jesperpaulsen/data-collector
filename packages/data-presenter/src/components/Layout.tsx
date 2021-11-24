@@ -6,10 +6,16 @@ import Greeting from './layout/Greeting'
 
 interface Props {
   routes: { key: string; label: string }[]
+  activeRoute: string
   onClick: (route: string) => void
 }
 
-const Layout: FunctionalComponent<Props> = ({ routes, onClick, children }) => {
+const Layout: FunctionalComponent<Props> = ({
+  routes,
+  onClick,
+  activeRoute,
+  children
+}) => {
   const { currentUser } = useContext(UserContext)
 
   return (
@@ -24,7 +30,11 @@ const Layout: FunctionalComponent<Props> = ({ routes, onClick, children }) => {
               <div
                 key={route.key}
                 onClick={() => onClick(route.key)}
-                className="px-1 text-black cursor-pointer hover:underline">
+                className={`px-1 text-black ${
+                  activeRoute === route.label
+                    ? 'underline'
+                    : 'cursor-pointer hover:underline'
+                }`}>
                 {route.label}
               </div>
             )
