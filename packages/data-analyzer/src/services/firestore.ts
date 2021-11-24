@@ -103,7 +103,7 @@ export class Firestore {
       .where('email', '==', email)
       .get()
     if (!snapshot.docs.length) {
-      throw new Error('Email not valid. User registered with a different email')
+      return ''
     }
     return snapshot.docs[0].id
   }
