@@ -13,6 +13,8 @@ import { getDateLimit, getStartOfDateInUnix } from '../utils/date'
 import { USAGE_TYPES } from '../types/USAGE_TYPES'
 import { Firestore } from './firestore'
 
+const DEVICE_CO2_PER_10_SEC = 0.3
+
 type CollectionType =
   admin.firestore.CollectionReference<admin.firestore.DocumentData>
 export class NetworkCallController {
@@ -227,7 +229,7 @@ export class NetworkCallController {
 
   updateTotalUsage = (networkCall: BaseUsageDoc) => {
     const uid = this.getDocId({ date: networkCall.date })
-    const tmpNetworkCall = { ...networkCall }
+    const tmpNetworkCall = { ...networkCall, uid }
     // @ts-ignore
     delete tmpNetworkCall.userId
     return this.totalUsageCollection
@@ -264,12 +266,17 @@ export class NetworkCallController {
       type: USAGE_TYPES.USAGE
     }
 
+    const usageDocWithDeviceCO2: BaseUsageDoc = {
+      ...baseUsageDoc,
+      CO2: this.getFieldValue(CO2 + DEVICE_CO2_PER_10_SEC)
+    }
+
     const promises = [
-      this.updateUserStats(baseUsageDoc),
+      this.updateUserStats(usageDocWithDeviceCO2),
       this.setHostDoc(baseUsageDoc, strippedHostOrigin, usageId),
       this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
-      this.setUsageDoc(baseUsageDoc),
-      this.updateTotalUsage(baseUsageDoc)
+      this.setUsageDoc(usageDocWithDeviceCO2),
+      this.updateTotalUsage(usageDocWithDeviceCO2)
     ]
 
     if (strippedHostOrigin.length && countryCode) {
