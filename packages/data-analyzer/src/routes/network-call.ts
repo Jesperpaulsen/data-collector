@@ -86,7 +86,9 @@ router.post(
     }
 
     try {
-      await firebaseAdmin.firestore.updateUserHaveBeenActive(userId, 10)
+      if (batchRequest.networkCalls?.length) {
+        await firebaseAdmin.firestore.updateUserHaveBeenActive(userId, 10)
+      }
     } catch (e) {
       // pass
       console.log(e)
