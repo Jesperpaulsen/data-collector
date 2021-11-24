@@ -57,7 +57,7 @@ const CustomChart: FunctionalComponent<Props> = ({
     <div className="h-full w-full px-10 pt-4 relative">
       <canvas
         ref={chartRef}
-        className={`z-50 bg-secondary rounded-lg p-2 shadow-lg ${
+        className={`z-50 bg-white rounded-lg p-2 shadow-lg ${
           small ? 'max-h-96' : 'max-h-164'
         }'`}>
         <ChartRenderer

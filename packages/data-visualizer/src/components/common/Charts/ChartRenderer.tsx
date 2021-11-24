@@ -59,7 +59,7 @@ const LineChart: FunctionalComponent<Props> = ({
         },
         type: type,
         options: {
-          backgroundColor: 'white',
+          backgroundColor: '#fff',
           scales: {
             y: {
               beginAtZero: true
