@@ -134,10 +134,19 @@ export class Firestore {
     return this.signUpCollection.doc(signUpUid).set(signUp, { merge: true })
   }
 
-  updateUserHaveBeenActive = (userId: string, secondsActive: number) => {
-    if (!userId || !secondsActive) return
-    return this.userCollection.doc(userId).update({
-      secondsActive: admin.firestore.FieldValue.increment(secondsActive)
+  updateUserHaveBeenActive = (userId: string, seconds: number) => {
+    if (!userId || !seconds) return
+    const secondsActive = admin.firestore.FieldValue.increment(seconds)
+    const date = getStartOfDateInUnix(new Date())
+    const usageId = this.networkCallController.getDocId({
+      userId: userId,
+      date: date
     })
+    return Promise.all([
+      this.userCollection.doc(userId).set({ secondsActive }, { merge: true }),
+      this.networkCallController.usageCollection
+        .doc(usageId)
+        .set({ secondsActive }, { merge: true })
+    ])
   }
 }

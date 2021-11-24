@@ -20,7 +20,7 @@ type CollectionType =
 export class NetworkCallController {
   private hostCollection: CollectionType
   private countryCollection: CollectionType
-  private usageCollection: CollectionType
+  usageCollection: CollectionType
   private hostToCountryCollection: CollectionType
   private totalUsageCollection: CollectionType
   private firestore: Firestore
