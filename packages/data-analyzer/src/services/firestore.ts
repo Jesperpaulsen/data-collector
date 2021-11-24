@@ -133,4 +133,11 @@ export class Firestore {
   updateSignUp = (signUpUid: string, signUp: SignUp) => {
     return this.signUpCollection.doc(signUpUid).set(signUp, { merge: true })
   }
+
+  updateUserHaveBeenActive = (userId: string, secondsActive: number) => {
+    if (!userId || !secondsActive) return
+    return this.userCollection.doc(userId).update({
+      secondsActive: admin.firestore.FieldValue.increment(secondsActive)
+    })
+  }
 }

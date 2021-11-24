@@ -86,6 +86,13 @@ router.post(
     }
 
     try {
+      await firebaseAdmin.firestore.updateUserHaveBeenActive(userId, 10)
+    } catch (e) {
+      // pass
+      console.log(e)
+    }
+
+    try {
       const ids = await Promise.all(promises)
       return res.status(201).send({ ids })
     } catch (e: any) {
