@@ -1,14 +1,16 @@
 import { MESSAGE_TYPES, UsageDetails, UsageReport } from '@data-collector/types'
 
-import { getStartOfDateInUnix } from './date'
+import { getDateLimit, getStartOfDateInUnix } from './date'
 import Store from './store'
 
 const storageKey = 'reports'
 
+type Reports = { [date: number]: UsageReport }
+
 export class HabitsReporter {
   private limits = [10, 100, 500]
   private limitIndex = 0
-  private reports: UsageReport[] = []
+  private reports: Reports = {}
   private store: typeof Store
   private ownAveragePollution = 0
   private haveShownOwnUsageNotification = false
@@ -16,14 +18,19 @@ export class HabitsReporter {
   private haveShownTotalUsageNotification = false
   private ownPollutionYesterday = 0
   private timeout?: ReturnType<typeof setTimeout>
+  private lastNotification = 0
 
   constructor(store: typeof Store) {
     this.store = store
-    this.readLocalStorage().then((reports) => (this.reports = reports))
+    this.readLocalStorage().then((reports) => {
+      if (!this.reports) return
+      this.reports = reports
+      this.sendReports()
+    })
     this.getDailyReport()
   }
 
-  private readLocalStorage = async (): Promise<UsageReport[]> => {
+  private readLocalStorage = async (): Promise<Reports> => {
     return new Promise((resolve) => {
       chrome.storage.local.get(storageKey, (result) => {
         resolve(result[storageKey])
@@ -31,9 +38,7 @@ export class HabitsReporter {
     })
   }
 
-  private writeToLocalStorage = async (
-    reports: UsageReport[]
-  ): Promise<void> => {
+  private writeToLocalStorage = async (reports: Reports): Promise<void> => {
     return new Promise((resolve) => {
       chrome.storage.local.set({ [storageKey]: reports }, resolve)
     })
@@ -63,30 +68,38 @@ export class HabitsReporter {
     if (!averageUsageLastWeek) return
 
     this.ownAveragePollution = averageUsageLastWeek.ownAverageUsage
-    this.totalAveragePollution = averageUsageLastWeek.allUsersAverage
+    this.totalAveragePollution = averageUsageLastWeek.allUsersAverageUsage
     this.ownPollutionYesterday = averageUsageLastWeek.yesterdaysUsage
+    this.getDailyReport()
   }
 
   getReports = async () => {
-    if (!this.reports.length) {
-      this.reports = await this.readLocalStorage()
+    if (!this.reports || !Object.keys(this.reports).length) {
+      const reports = await this.readLocalStorage()
+      this.reports = reports || {}
     }
     return this.reports
   }
 
-  getDailyReport = async () => {
+  getDailyReport = () => {
     const todaysReport: UsageReport = {
-      date: getStartOfDateInUnix(new Date()),
+      date: getDateLimit(1),
       ownAveragePollutionLastWeek: this.ownAveragePollution,
       allAveragePollutionLastWeek: this.totalAveragePollution,
       ownPollutionYesterday: this.ownPollutionYesterday
     }
-    this.reports.unshift(todaysReport)
+    this.reports[todaysReport.date] = todaysReport
     this.writeToLocalStorage(this.reports)
     this.sendReports()
   }
 
   showUsageNotification = (message: string) => {
+    const now = Date.now()
+    if (now - this.lastNotification < 4000) {
+      this.lastNotification = now
+      return
+    }
+    this.lastNotification = now
     chrome.notifications.create({
       title: 'Update on your pollution',
       message: message,
@@ -108,7 +121,11 @@ export class HabitsReporter {
     this.getReports().then((reports) => {
       chrome.runtime.sendMessage({
         type: MESSAGE_TYPES.SEND_REPORTS,
-        reports: reports
+        payload: {
+          reports: Object.values(reports).sort(
+            (reportA, reportB) => reportB.date - reportA.date
+          )
+        }
       })
     })
   }
