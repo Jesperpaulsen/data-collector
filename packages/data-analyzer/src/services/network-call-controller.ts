@@ -5,7 +5,8 @@ import {
   HostDoc,
   HostToCountry,
   User,
-  StrippedNetworkCall
+  StrippedNetworkCall,
+  ActiveUserDoc
 } from '@data-collector/types'
 import admin from 'firebase-admin'
 import Country from './country'
@@ -309,10 +310,21 @@ export class NetworkCallController {
 
   getAllUsersUsage = async (limit: number) => {
     let totalCO2 = 0
-    const snapshot = await this.usageCollection.where('date', '>', limit).get()
-    for (const doc of snapshot.docs) {
+    const usersPerDay: { [date: number]: number } = {}
+    const [usageSnapshot, usersActivePerDateSnapshot] = await Promise.all([
+      this.totalUsageCollection.where('date', '>', limit).get(),
+      this.usageCollection.where('date', '>', limit).get()
+    ])
+    for (const doc of usersActivePerDateSnapshot.docs) {
+      const data = doc.data() as ActiveUserDoc
+      usersPerDay[data.date] = data.users?.length
+    }
+    for (const doc of usageSnapshot.docs) {
       const data = doc.data()
-      totalCO2 += data.CO2 as number
+      const CO2 = data.CO2 as number
+      const activeUsers = usersPerDay[data.date]
+      const average = CO2 / (activeUsers || 1)
+      totalCO2 += average
     }
     return totalCO2
   }
