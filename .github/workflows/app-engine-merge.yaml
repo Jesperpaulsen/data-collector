@@ -58,9 +58,13 @@ jobs:
         run: |
           touch app.yaml
           echo runtime: nodejs14 >> app.yaml
+          echo instance_class: F2 >> app.yaml
           echo env_variables: >> app.yaml
           echo "  MAILER_SEND_KEY: $MAILER_SEND_KEY" >> app.yaml
           echo "  GEOLITE2_LICENSE_KEY: $GEOLITE2_LICENSE_KEY" >> app.yaml
+          echo resources: >> app.yaml
+          echo "  cpu: 2" >> app.yaml
+          echo "  memory_gb: 2.3" >> app.yaml
         working-directory: ./packages/data-analyzer
       - name: 'check env file'
         run: cat app.yaml
