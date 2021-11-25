@@ -75,8 +75,13 @@ export class UsageHandler extends GenericHandler<UsageState> {
   getUsageByHost = async () => {
     const currentUser = this.state.userState?.currentUser
     if (!currentUser) return
-    const usageByHost = await this.api.getUsageByHost(currentUser.uid)
-    this.setState({ usageByHost })
+    const { accumulated, usageByHostUid } = await this.api.getUsageByHost(
+      currentUser.uid
+    )
+    this.setState({
+      accumulatedUsageByHost: accumulated,
+      usageByHost: usageByHostUid
+    })
   }
 
   getCountryUsagePerHost = async (countryCode: string) => {

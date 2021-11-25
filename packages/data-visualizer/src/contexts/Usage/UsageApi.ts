@@ -63,12 +63,14 @@ export class UsageApi {
   }
 
   getUsageByHost = async (userId: string) => {
+    const accumulated: { [uid: string]: HostDoc } = {}
+    const usageByHostUid: { [uid: string]: HostDoc } = {}
     try {
       const snapshot = await Firestore.getUsageByHostForUser(userId)
-      const res: { [uid: string]: HostDoc } = {}
       for (const doc of snapshot.docs) {
         const data = doc.data() as HostDoc
-        const exististingCountry = res[data.hostOrigin]
+        usageByHostUid[data.uid] = data
+        const exististingCountry = accumulated[data.hostOrigin]
         if (exististingCountry) {
           const usage: UsageDetails = {
             CO2: data.CO2,
@@ -81,16 +83,15 @@ export class UsageApi {
             usage,
             exististingCountry
           )
-          res[data.hostOrigin] = updatedCountryDoc
+          accumulated[data.hostOrigin] = updatedCountryDoc
         } else {
-          res[data.hostOrigin] = data
+          accumulated[data.hostOrigin] = data
         }
       }
-      return res
     } catch (e) {
       console.log(e)
-      return {}
     }
+    return { accumulated, usageByHostUid }
   }
 
   getCountryUsagePerHost = async (userId: string, countryName: string) => {

@@ -1,7 +1,7 @@
 import { FunctionalComponent } from 'preact'
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 
-import { HostDoc } from '../../../types/host-doc'
+import Calendar from '../Calender'
 import Input from '../Input'
 
 import TableFooter from './TableFooter'
@@ -14,11 +14,16 @@ interface Props {
     renderMethod?: (argument: any) => string
   }[]
   data: { [id: string]: any }
+  onDateChanged?: (date?: Date) => void
 }
 
 const hostsPerPage = 10
 
-const CustomTable: FunctionalComponent<Props> = ({ headers, data }) => {
+const CustomTable: FunctionalComponent<Props> = ({
+  headers,
+  data,
+  onDateChanged
+}) => {
   const [keyToSort, setKeyToSort] = useState<string>()
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
@@ -57,11 +62,14 @@ const CustomTable: FunctionalComponent<Props> = ({ headers, data }) => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="w-72 py-4">
-        <Input
-          onChange={(query) => setQuery(query.toLowerCase())}
-          placeholder="Search for hosts"
-        />
+      <div className="flex justify-start items-center">
+        <div className="w-72 py-4 mr-4">
+          <Input
+            onChange={(query) => setQuery(query.toLowerCase())}
+            placeholder="Search for hosts"
+          />
+        </div>
+        {onDateChanged && <Calendar onDateChanged={onDateChanged} />}
       </div>
       <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
         <div className="w-full overflow-x-auto">

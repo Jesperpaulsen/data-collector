@@ -19,6 +19,7 @@ export interface UsageState {
   ownUsageLastWeek: { [date: number]: UsageDetails }
   usageByCountry?: { [uid: string]: CountryDoc }
   usageByHost?: { [uid: string]: HostDoc }
+  accumulatedUsageByHost?: { [uid: string]: HostDoc }
   userState?: UserState
   userHandler?: UserHandler
 }

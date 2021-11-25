@@ -13,7 +13,6 @@ import Modal from '../components/common/Modal'
 import CountryDetails from '../components/usageByCountry/CountryDetails'
 import WorldMap from '../components/usageByCountry/WorldMap'
 import { UsageContext } from '../contexts/Usage/UsageContext'
-import { BaseUsageDocResponse } from '../types/base-usage-doc'
 import { CountryDoc } from '../types/country-doc'
 import { HostDoc } from '../types/host-doc'
 import { HostToCountry } from '../types/host-to-country'
@@ -62,12 +61,12 @@ const UsageByCountry: FunctionComponent = () => {
   }, [usageState.usageByCountry])
 
   const possibleHosts = useMemo(() => {
-    const hosts = Object.values(usageState?.usageByHost || {})
+    const hosts = Object.values(usageState?.accumulatedUsageByHost || {})
     return hosts.map((host) => ({
       label: host.hostOrigin,
       value: host.hostOrigin
     }))
-  }, [usageState.usageByHost])
+  }, [usageState.accumulatedUsageByHost])
 
   return (
     <div>
@@ -84,15 +83,15 @@ const UsageByCountry: FunctionComponent = () => {
           <AutoComplete
             possibleValues={possibleHosts}
             onClick={(host) => {
-              if (usageState?.usageByHost) {
-                const hostDoc = usageState.usageByHost[host]
+              if (usageState?.accumulatedUsageByHost) {
+                const hostDoc = usageState.accumulatedUsageByHost[host]
                 setSelectedHost(hostDoc)
                 getCountryForHost(hostDoc.hostOrigin)
               }
             }}
             onChange={(host) => {
-              if (usageState?.usageByHost) {
-                const hostDoc = usageState.usageByHost[host]
+              if (usageState?.accumulatedUsageByHost) {
+                const hostDoc = usageState.accumulatedUsageByHost[host]
                 if (!hostDoc && usageState.usageByCountry) {
                   setSelectedHost(undefined)
                   setUsageByCountry(usageState.usageByCountry)

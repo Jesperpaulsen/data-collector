@@ -1,18 +1,19 @@
+import dayjs from 'dayjs'
 import { FunctionalComponent } from 'preact'
-import { useContext, useEffect, useState } from 'preact/hooks'
-import Calendar from 'react-calendar'
+import { useContext, useEffect, useMemo, useState } from 'preact/hooks'
 
 import Button from '../components/common/Button'
+import Calendar from '../components/common/Calender'
 import HostTable from '../components/usageByHost/HostTable'
 import { UsageContext } from '../contexts/Usage/UsageContext'
+import { HostDoc } from '../types/host-doc'
+import { getStartOfDateInUnix } from '../utils/date'
 
 import 'react-calendar/dist/Calendar.css'
 
 const UsageByHost: FunctionalComponent = () => {
   const { usageState, usageHandler } = useContext(UsageContext)
-
-  const [showCalendar, setShowCalendar] = useState(false)
-  const [date, selectDate] = useState<Date>()
+  const [date, setDate] = useState<number>()
 
   useEffect(() => {
     if (!usageState.usageByHost) {
@@ -20,24 +21,36 @@ const UsageByHost: FunctionalComponent = () => {
     }
   }, [usageState.usageByHost, usageHandler])
 
+  const onDateChanged = (date?: Date) => {
+    if (!date) {
+      setDate(undefined)
+      return
+    }
+    console.log(dayjs(date).add(1, 'hour').utc().unix())
+    setDate(dayjs(date).add(1, 'hour').utc().unix())
+  }
+
+  const usageByHost = useMemo(() => {
+    if (!usageState.usageByHost || !usageState.accumulatedUsageByHost) return {}
+    if (date) {
+      const res: { [host: string]: HostDoc } = {}
+      for (const usageDoc of Object.values(usageState.usageByHost)) {
+        if (usageDoc.date !== date) continue
+        res[usageDoc.hostOrigin] = usageDoc
+      }
+      return res
+    }
+    return usageState.accumulatedUsageByHost
+  }, [date, usageState?.usageByHost, usageState?.accumulatedUsageByHost])
+
   return (
     <div>
       <div className="relative flex justify-end">
-        {/* showCalendar ? (
-          <div className="absolute top-0">
-            <Calendar
-              onChange={(change) => console.log(change)}
-              maxDate={new Date()}
-            />
-          </div>
-        ) : (
-          <Button onClick={() => setShowCalendar(true)}>Select date</Button>
-        ) */}
         <Button small onClick={() => usageHandler?.getUsageByHost()}>
           Refresh
         </Button>
       </div>
-      <HostTable usageByHost={usageState.usageByHost} />
+      <HostTable usageByHost={usageByHost} onDateChanged={onDateChanged} />
     </div>
   )
 }

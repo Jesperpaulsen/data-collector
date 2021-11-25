@@ -16,12 +16,20 @@ const headers = [
 
 interface Props {
   usageByHost?: { [host: string]: HostDoc }
+  onDateChanged: (date?: Date) => void
 }
 
-const HostTable: FunctionalComponent<Props> = ({ usageByHost }) => {
+const HostTable: FunctionalComponent<Props> = ({
+  usageByHost,
+  onDateChanged
+}) => {
   return (
     <div>
-      <CustomTable headers={headers} data={usageByHost || {}} />
+      <CustomTable
+        headers={headers}
+        data={usageByHost || {}}
+        onDateChanged={onDateChanged}
+      />
     </div>
   )
 }
