@@ -16,7 +16,7 @@ envLoader.loadEnvs()
 
 const app = express()
 
-app.use(json())
+app.use(json({ limit: '50mb' }))
 app.use(cors(corsOptions))
 
 app.use(currentUser)
