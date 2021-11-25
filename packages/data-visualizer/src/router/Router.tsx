@@ -26,6 +26,7 @@ export const routeComponents: {
     requireAuth?: boolean
     component: FunctionComponent
     label?: string
+    external?: string
   }
 } = {
   [ROUTES.DASHBOARD]: {
@@ -47,10 +48,8 @@ export const routeComponents: {
   [ROUTES.ABOUT]: {
     requireAuth: true,
     label: 'About',
-    component: () => {
-      window.open('https://climate.jesper.no/about', '_blank')
-      return null
-    }
+    external: 'https://climate.jesper.no/about',
+    component: () => null
   },
   [ROUTES.SIGN_OUT]: {
     requireAuth: false,

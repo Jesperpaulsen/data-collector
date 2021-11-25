@@ -7,7 +7,7 @@ interface Props {
 const Modal: FunctionalComponent<Props> = ({ close, children }) => {
   return (
     <div
-      className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center backdrop-filter backdrop-blur-sm"
+      className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center backdrop-filter backdrop-blur-sm z-50"
       onClick={close}>
       <div className="bg-white p-4 pt-10 rounded-lg text-black relative">
         <button

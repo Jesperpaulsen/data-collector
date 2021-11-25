@@ -9,26 +9,33 @@ import { UserContext } from '../contexts/User/UserContext'
 
 import { routeComponents } from './Router'
 
+const className = (activated: boolean) =>
+  activated ? 'text-primary' : 'text-black hover:text-primary cursor-pointer'
+
 const Layout: FunctionComponent = ({ children }) => {
   const { userState } = useContext(UserContext)
   const { usageState } = useContext(UsageContext)
 
   return (
     <div className="flex justify-start">
-      <div className="hidden md:block w-40 min-w-40 bg-secondary text-center h-screen pt-10">
+      <div className="hidden md:block w-40 min-w-40 bg-white text-center h-screen pt-10">
         {Object.entries(routeComponents).map(([key, value]) => {
           if (!value.label) return null
           return (
             <div className="pt-5 text-sm" key={key}>
-              <Link
-                className={
-                  window.location.pathname === key
-                    ? 'text-primary'
-                    : 'text-black hover:text-primary cursor-pointer'
-                }
-                href={key}>
-                {value.label}
-              </Link>
+              {value.external ? (
+                <div
+                  className={className(false)}
+                  onClick={() => window.open(value.external, '_blank')}>
+                  {value.label}
+                </div>
+              ) : (
+                <Link
+                  className={className(window.location.pathname === key)}
+                  href={key}>
+                  {value.label}
+                </Link>
+              )}
             </div>
           )
         })}
