@@ -26,13 +26,17 @@ const Reports: FunctionalComponent = () => {
         />
       )}
       <div onClick={() => setActiveReport(undefined)}>
-        <div>Reports</div>
-        {reports.length > 0 && (
+        {reports.length > 0 ? (
           <CustomTable
             data={reports}
             headers={headers}
             onClick={setActiveReport}
           />
+        ) : (
+          <div>
+            No reports have been generated for you yet. Check back tomorrow to
+            get your first report.
+          </div>
         )}
       </div>
     </Fragment>

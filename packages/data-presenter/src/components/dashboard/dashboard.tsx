@@ -1,20 +1,36 @@
 import { FunctionComponent } from 'preact'
-import UsageDisplay from './UsageDisplay'
+import UsageDisplay from '../usage/UsageDisplay'
 import Button from '../common/Button'
 import { SHOW_USAGE } from '../../config'
+import { useContext, useMemo } from 'preact/hooks'
+import { UsageContext } from '../../contexts/UsageContext'
+import { calculateDiff } from '../../utils/calculateDiff'
+import UsageLine from '../usage/UsageLine'
+import DashboardStatistics from './DashboardStatistics'
+import Box from '../common/Box'
 
 const Dashboard: FunctionComponent = () => {
+  const { todaysUsage, totalUsage, reports } = useContext(UsageContext)
+
   return (
     <div className="w-full h-screen">
       {SHOW_USAGE ? (
         <div className="w-full">
-          <UsageDisplay />
+          <Box>
+            <UsageLine usage={todaysUsage} label="Todays usage" />
+          </Box>
+          {reports?.length > 0 && (
+            <DashboardStatistics
+              report={reports[0]}
+              todaysUsage={todaysUsage}
+            />
+          )}
           <div className="flex justify-center pt-2">
             <Button
               onClick={() =>
                 window.open('https://dashboard.jesper.no', '_blank')
               }>
-              Explore results
+              Explore usage
             </Button>
           </div>
         </div>

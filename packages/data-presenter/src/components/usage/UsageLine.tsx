@@ -1,7 +1,5 @@
-import { FunctionalComponent } from 'preact'
-import { useContext, useMemo, useState } from 'preact/hooks'
+import { Fragment, FunctionalComponent } from 'preact'
 
-import { UsageContext } from '../../contexts/UsageContext'
 import { UsageDetails } from '../../types/UsageDetails'
 import { byteFormatter } from '../../utils/byteFormatter'
 import { co2Formatter } from '../../utils/co2Formatter'
@@ -20,10 +18,8 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
       usage.secondsActive || 1
     )
 
-    console.log(CO2)
-
     return (
-      <div className="py-4 my-2 bg-white shadow-xl rounded-xl">
+      <Fragment>
         <div className="text-center">{label}</div>
         <div className="flex justify-center">
           <div className="text-center px-6">
@@ -65,19 +61,8 @@ const UsageLine: FunctionalComponent<{ usage: UsageDetails; label: string }> =
             </Hover>
           </div>
         </div>
-      </div>
+      </Fragment>
     )
   }
 
-const UsageDisplay: FunctionalComponent = () => {
-  const { todaysUsage, totalUsage } = useContext(UsageContext)
-
-  return (
-    <div className="pt-2">
-      <UsageLine usage={todaysUsage} label="Todays usage" />
-      <UsageLine usage={totalUsage} label="Total usage" />
-    </div>
-  )
-}
-
-export default UsageDisplay
+export default UsageLine

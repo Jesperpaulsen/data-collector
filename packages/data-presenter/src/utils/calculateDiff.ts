@@ -1,9 +1,9 @@
 export const calculateDiff = (x: number, y: number) => {
-  if (x === 0 || y === 0) return 0
+  if (x === 0 || y === 0) return { diff: 0, higher: true }
   if (x > y) {
-    return ((x - y) / (y || 1)) * 100
-  } else if (y > x) {
-    return ((x - y) / (x || 1)) * 100
+    return { diff: ((x - y) / (y || 1)) * 100, higher: true }
   }
-  return 0
+  if (y > x) {
+    return { diff: ((x - y) / (x || 1)) * 100, higher: false }
+  }
 }

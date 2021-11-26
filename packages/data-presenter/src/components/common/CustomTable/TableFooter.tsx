@@ -40,7 +40,7 @@ const TableFooter: FunctionalComponent<Props> = ({
         Showing page <span className="font-bold">{readableCurrentPage}</span> of{' '}
         <span className="font-bold">{numberOfPages}</span>
       </div>
-      <div className="flex">
+      <div className="flex z-0">
         <div
           onClick={prevPage}
           className={`border bg-white hover:bg-gray-300 text-black flex justify-center items-center w-9 h-9 rounded ${
