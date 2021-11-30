@@ -4,6 +4,7 @@ import { useMemo } from 'preact/hooks'
 import { UsageDetails } from '../../types/UsageDetails'
 import { UsageReport } from '../../types/UsageReport'
 import { calculateDiff } from '../../utils/calculateDiff'
+import { co2Formatter } from '../../utils/co2Formatter'
 import Box from '../common/Box'
 
 interface Props {
@@ -31,14 +32,14 @@ const DashboardStatistics: FunctionalComponent<Props> = ({
           <div className="w-64">
             <div
               className={`${
-                comparedToOthersUsage?.higher
-                  ? 'text-red-800'
-                  : 'text-green-800'
+                comparedToOwnUsage?.higher ? 'text-red-800' : 'text-green-800'
               } text-center text-2xl font-medium`}>
               {comparedToOwnUsage?.diff.toFixed(0)} %
             </div>
             <div className="text-center text-xs pt-2">
-              Todays pollution compared to your own pollution last week.
+              {comparedToOwnUsage?.higher ? 'Higer' : 'Lower'} pollution today
+              compared to your own pollution last week (
+              {co2Formatter(report.ownAveragePollutionLastWeek)}).
             </div>
           </div>
           <div className="w-64">
@@ -51,7 +52,9 @@ const DashboardStatistics: FunctionalComponent<Props> = ({
               {comparedToOthersUsage?.diff.toFixed(0)} %
             </div>
             <div className="text-center text-xs pt-2">
-              Todays pollution compared to everyone else's pollution last week.
+              {comparedToOthersUsage?.higher ? 'Higher' : 'Lower'} pollution
+              today compared to everyone else's average pollution last week (
+              {co2Formatter(report.allAveragePollutionLastWeek)}).
             </div>
           </div>
         </div>

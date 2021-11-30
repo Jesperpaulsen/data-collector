@@ -52,7 +52,8 @@ const Report: FunctionalComponent<Props> = ({ report, closeReport }) => {
               </div>
               <div className="text-center text-xs pt-2">
                 {comparedToOwnUsage?.higher ? 'Higher' : 'Lower'} pollution
-                compared to your own usage in the 7 previous days
+                compared to your own average pollution in the 7 previous days (
+                {co2Formatter(report.ownAveragePollutionLastWeek)})
               </div>
             </div>
             <div className="w-44">
@@ -66,7 +67,8 @@ const Report: FunctionalComponent<Props> = ({ report, closeReport }) => {
               </div>
               <div className="text-center text-xs pt-2">
                 {comparedToOwnUsage?.higher ? 'Higher' : 'Lower'} pollution
-                compared to everyone else's usage in the 7 previous days
+                compared to everyone else's average polution in the 7 previous
+                days ({co2Formatter(report.allAveragePollutionLastWeek)})
               </div>
             </div>
           </div>

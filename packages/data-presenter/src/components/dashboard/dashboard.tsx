@@ -8,9 +8,10 @@ import { calculateDiff } from '../../utils/calculateDiff'
 import UsageLine from '../usage/UsageLine'
 import DashboardStatistics from './DashboardStatistics'
 import Box from '../common/Box'
+import TipsCarousel from '../common/TipsCarousel'
 
 const Dashboard: FunctionComponent = () => {
-  const { todaysUsage, totalUsage, reports } = useContext(UsageContext)
+  const { todaysUsage, totalUsage, reports, tips } = useContext(UsageContext)
 
   return (
     <div className="w-full h-screen">
@@ -25,6 +26,7 @@ const Dashboard: FunctionComponent = () => {
               todaysUsage={todaysUsage}
             />
           )}
+          <TipsCarousel tips={tips} />
           <div className="flex justify-center pt-2">
             <Button
               onClick={() =>
