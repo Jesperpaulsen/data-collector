@@ -11,6 +11,7 @@ import { BlackLister } from './BlackLister'
 import { SentRequestsHandler } from './SentRequestsHandler'
 import { DateHandler } from './DateHandler'
 import { HabitsReporter } from './HabitsReporter'
+import { TipsHandler } from './TipsHandler'
 
 class Store {
   api: API
@@ -25,6 +26,7 @@ class Store {
   sentRequestsHandler: SentRequestsHandler
   dateHandler: DateHandler
   habitsReporter: HabitsReporter
+  tipsHandler: TipsHandler
 
   constructor() {
     this.api = new API(this)
@@ -38,6 +40,7 @@ class Store {
     this.sentRequestsHandler = new SentRequestsHandler(this)
     this.dateHandler = new DateHandler(this)
     this.habitsReporter = new HabitsReporter(this)
+    this.tipsHandler = new TipsHandler(this)
   }
 
   setUser = (user: UserCredential['user']) => {

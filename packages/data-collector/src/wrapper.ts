@@ -80,6 +80,9 @@ try {
       case MESSAGE_TYPES.REQUEST_REPORTS:
         store.habitsReporter.sendReports()
         return
+      case MESSAGE_TYPES.REQUEST_TIPS:
+        store.tipsHandler.sendTips()
+        return
       default:
         console.log(type)
     }

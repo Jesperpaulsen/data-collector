@@ -26,6 +26,7 @@
     "typings": "dist/src/index.d.ts"
   },
   "dependencies": {
+    "@sanity/client": "^2.21.10",
     "dayjs": "^1.10.7",
     "firebase": "^9.0.2"
   }
