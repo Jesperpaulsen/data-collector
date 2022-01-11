@@ -10,4 +10,5 @@ export interface User {
   numberOfCalls: FieldValue
   signUpUid: string
   secondsActive?: FieldValue
+  lateSignUp?: boolean
 }

@@ -12,6 +12,8 @@ import { SentRequestsHandler } from './SentRequestsHandler'
 import { DateHandler } from './DateHandler'
 import { HabitsReporter } from './HabitsReporter'
 import { TipsHandler } from './TipsHandler'
+import { ExtendedPollution } from './ExtendedPollution'
+import { HostAnonymizer } from './HostAnonymizer'
 
 class Store {
   api: API
@@ -21,12 +23,14 @@ class Store {
   dataReporter: DataReporter
   storageHandler: StorageHandler
   usageCounter: UsageCounter
-  user?: UserCredential['user']
   blackLister: BlackLister
   sentRequestsHandler: SentRequestsHandler
   dateHandler: DateHandler
   habitsReporter: HabitsReporter
   tipsHandler: TipsHandler
+  user?: UserCredential['user']
+  extendedPollution: ExtendedPollution
+  hostAnonymizer: HostAnonymizer
 
   constructor() {
     this.api = new API(this)
@@ -41,6 +45,8 @@ class Store {
     this.dateHandler = new DateHandler(this)
     this.habitsReporter = new HabitsReporter(this)
     this.tipsHandler = new TipsHandler(this)
+    this.extendedPollution = new ExtendedPollution(this)
+    this.hostAnonymizer = new HostAnonymizer(this)
   }
 
   setUser = (user: UserCredential['user']) => {

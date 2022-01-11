@@ -1,8 +1,10 @@
-import { Chart, ChartDataset, ChartType } from 'chart.js'
-import { createRef, FunctionalComponent, RefObject } from 'preact'
-import { useEffect, useMemo, useState } from 'preact/hooks'
+import { ChartDataset, ChartType } from 'chart.js'
+import { createRef, Fragment, FunctionalComponent } from 'preact'
+import { useMemo } from 'preact/hooks'
 
 import { Dataset, Labels } from '../../../types/chart-types'
+import { defaultDropdownValues } from '../../../utils/defaultDropdownValue'
+import DropDown from '../Dropdown'
 
 import ChartRenderer from './ChartRenderer'
 
@@ -11,6 +13,7 @@ interface Props {
   labels: Labels
   datasets: Dataset[]
   small?: boolean
+  setFilter: (filter: string) => void
 }
 
 const colors = ['#82AC85', '#E2CFC9', '#BFD8C4', '#D1ACA5']
@@ -19,7 +22,8 @@ const CustomChart: FunctionalComponent<Props> = ({
   type,
   labels,
   datasets,
-  small
+  small,
+  setFilter
 }) => {
   const chartRef = createRef()
   const reducedLabels = useMemo(() => {
@@ -54,19 +58,26 @@ const CustomChart: FunctionalComponent<Props> = ({
   }, [datasets, labels])
 
   return (
-    <div className="h-full w-full px-10 pt-4 relative">
-      <canvas
-        ref={chartRef}
-        className={`z-50 bg-white rounded-lg p-2 shadow-lg ${
-          small ? 'max-h-96' : 'max-h-164'
-        }'`}>
-        <ChartRenderer
-          chartRef={chartRef}
-          type={type}
-          labels={reducedLabels}
-          datasets={reducedDatasets}
+    <div className="bg-white rounded-lg p-2 shadow-lg">
+      <div className="flex justify-center">
+        <DropDown
+          options={defaultDropdownValues}
+          onSelected={setFilter}
+          title={'Show:'}
         />
-      </canvas>
+      </div>
+      <div className="h-full w-full px-10 pt-4 relative">
+        <canvas
+          ref={chartRef}
+          className={`z-50 ${small ? 'max-h-96' : 'max-h-164'}'`}>
+          <ChartRenderer
+            chartRef={chartRef}
+            type={type}
+            labels={reducedLabels}
+            datasets={reducedDatasets}
+          />
+        </canvas>
+      </div>
     </div>
   )
 }

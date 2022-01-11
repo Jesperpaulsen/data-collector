@@ -22,6 +22,7 @@ export interface UsageState {
   accumulatedUsageByHost?: { [uid: string]: HostDoc }
   userState?: UserState
   userHandler?: UserHandler
+  aliasMap: Map<string, string>
 }
 
 const initialUsage: UsageDetails = {
@@ -34,5 +35,6 @@ export const initialState: UsageState = {
   todaysUsage: initialUsage,
   totalUsage: initialUsage,
   allUsersUsageLastWeek: {},
-  ownUsageLastWeek: {}
+  ownUsageLastWeek: {},
+  aliasMap: new Map<string, string>()
 }

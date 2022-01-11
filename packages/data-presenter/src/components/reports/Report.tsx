@@ -66,7 +66,7 @@ const Report: FunctionalComponent<Props> = ({ report, closeReport }) => {
                 {comparedToOthersUsage?.diff.toFixed(0)} %
               </div>
               <div className="text-center text-xs pt-2">
-                {comparedToOwnUsage?.higher ? 'Higher' : 'Lower'} pollution
+                {comparedToOthersUsage?.higher ? 'Higher' : 'Lower'} pollution
                 compared to everyone else's average polution in the 7 previous
                 days ({co2Formatter(report.allAveragePollutionLastWeek)})
               </div>

@@ -58,7 +58,7 @@ jobs:
         run: |
           touch app.yaml
           echo runtime: nodejs14 >> app.yaml
-          echo instance_class: F4_1G >> app.yaml
+          echo instance_class: F4 >> app.yaml
           echo env_variables: >> app.yaml
           echo "  MAILER_SEND_KEY: $MAILER_SEND_KEY" >> app.yaml
           echo "  GEOLITE2_LICENSE_KEY: $GEOLITE2_LICENSE_KEY" >> app.yaml

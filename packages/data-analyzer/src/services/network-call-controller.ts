@@ -6,13 +6,17 @@ import {
   HostToCountry,
   User,
   StrippedNetworkCall,
-  ActiveUserDoc
+  ActiveUserDoc,
+  NetworkCall,
+  UsageDetails
 } from '@data-collector/types'
 import admin from 'firebase-admin'
 import Country from './country'
 import { getDateLimit, getStartOfDateInUnix } from '../utils/date'
 import { USAGE_TYPES } from '../types/USAGE_TYPES'
 import { Firestore } from './firestore'
+
+import Big from 'big.js'
 
 const DEVICE_CO2_PER_10_SEC = 0.3
 
@@ -24,6 +28,7 @@ export class NetworkCallController {
   usageCollection: CollectionType
   private hostToCountryCollection: CollectionType
   private totalUsageCollection: CollectionType
+  private activeUsersCollection: CollectionType
   private firestore: Firestore
 
   constructor(
@@ -32,7 +37,8 @@ export class NetworkCallController {
     countryCollection: CollectionType,
     usageCollection: CollectionType,
     hostToCountryCollection: CollectionType,
-    totalUsageCollection: CollectionType
+    totalUsageCollection: CollectionType,
+    activeUsersCollection: CollectionType
   ) {
     this.firestore = firestore
     this.hostCollection = hostCollection
@@ -40,6 +46,7 @@ export class NetworkCallController {
     this.usageCollection = usageCollection
     this.hostToCountryCollection = hostToCountryCollection
     this.totalUsageCollection = totalUsageCollection
+    this.activeUsersCollection = activeUsersCollection
   }
 
   getAllNetworkCalls = async () => {
@@ -143,12 +150,13 @@ export class NetworkCallController {
   updateUserStats = async (networkCall: BaseUsageDoc) => {
     const fieldsToUpdate: Pick<
       User,
-      'totalCO2' | 'totalSize' | 'totalkWh' | 'numberOfCalls'
+      'totalCO2' | 'totalSize' | 'totalkWh' | 'numberOfCalls' | 'secondsActive'
     > = {
       totalSize: networkCall.size,
       totalCO2: networkCall.CO2,
       totalkWh: networkCall.kWh,
-      numberOfCalls: networkCall.numberOfCalls
+      numberOfCalls: networkCall.numberOfCalls,
+      secondsActive: networkCall.secondsActive
     }
     return this.firestore.updateUser(networkCall.userId, fieldsToUpdate)
   }
@@ -238,61 +246,130 @@ export class NetworkCallController {
       .set(tmpNetworkCall, { merge: true })
   }
 
-  private getHostName = (url: string) => {
-    if (!url) return ''
-    return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0]
-  }
-
   storeNetworkCall = async (
+    baseUsageDoc: BaseUsageDoc,
     networkCall: StrippedNetworkCall,
     userId: string
   ) => {
-    const { hostOrigin, size, targetIP } = networkCall
+    const { targetIP, hostOrigin } = networkCall
 
     const date = getStartOfDateInUnix(new Date())
     const { countryCode, countryName } = Country.getCountry(targetIP)
-    const { CO2, kWh } = Country.calculateEmission({ size, countryCode })
     const usageId = this.getDocId({ userId, date })
-    const strippedHostOrigin = this.getHostName(hostOrigin)
-
-    const baseUsageDoc: BaseUsageDoc = {
-      uid: usageId,
-      CO2: this.getFieldValue(CO2),
-      kWh: this.getFieldValue(kWh),
-      date,
-      numberOfCalls: this.getFieldValue(1),
-      numberOfCallsWithoutSize: this.getFieldValue(size ? 0 : 1),
-      size: this.getFieldValue(size || 0),
-      userId,
-      type: USAGE_TYPES.USAGE
-    }
 
     const promises = [
-      this.updateUserStats(baseUsageDoc),
-      this.setHostDoc(baseUsageDoc, strippedHostOrigin, usageId),
-      this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId),
-      this.setUsageDoc(baseUsageDoc),
-      this.updateTotalUsage(baseUsageDoc)
+      this.setHostDoc(baseUsageDoc, hostOrigin, usageId),
+      this.setCountryDoc(baseUsageDoc, countryCode, countryName, usageId)
     ]
 
-    if (strippedHostOrigin.length && countryCode) {
+    if (hostOrigin.length && countryCode) {
       promises.push(
         this.setHostToCountryDoc(
           baseUsageDoc,
           countryCode,
           countryName,
-          strippedHostOrigin
+          hostOrigin
         )
       )
     }
 
     try {
-      const [host, network, country, usage, totalUsage, hostToCountry] =
-        await Promise.all(promises)
-      return { host, network, country, usage, totalUsage, hostToCountry }
+      await Promise.all(promises)
     } catch (e) {
       console.log(e)
     }
+  }
+
+  updateUserDocs = async (baseUsageDoc: BaseUsageDoc) => {
+    const promises = [
+      this.updateUserStats(baseUsageDoc),
+      this.setUsageDoc(baseUsageDoc),
+      this.updateTotalUsage(baseUsageDoc)
+    ]
+
+    try {
+      await Promise.all(promises)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  getUsageDetailsFromNetworkCall = (
+    networkCall: StrippedNetworkCall
+  ): UsageDetails => {
+    const { size, targetIP } = networkCall
+    const { countryCode } = Country.getCountry(targetIP)
+
+    const { CO2, kWh } = Country.calculateEmission({ size, countryCode })
+
+    return {
+      CO2,
+      kWh,
+      size: size || 0,
+      numberOfCalls: 1,
+      numberOfCallsWithoutSize: size ? 0 : 1
+    }
+  }
+
+  getBaseUsageDoc = (usageDetails: UsageDetails, userId: string) => {
+    const date = getStartOfDateInUnix(new Date())
+    const usageId = this.getDocId({ userId, date })
+
+    const baseUsageDoc: BaseUsageDoc = {
+      uid: usageId,
+      CO2: this.getFieldValue(usageDetails.CO2),
+      kWh: this.getFieldValue(usageDetails.kWh),
+      date,
+      numberOfCalls: this.getFieldValue(usageDetails.numberOfCalls || 1),
+      numberOfCallsWithoutSize: this.getFieldValue(
+        usageDetails.numberOfCallsWithoutSize || usageDetails.size ? 0 : 1
+      ),
+      size: this.getFieldValue(usageDetails.size || 0),
+      userId,
+      secondsActive: this.getFieldValue(usageDetails.secondsActive || 0),
+      type: USAGE_TYPES.USAGE
+    }
+    return baseUsageDoc
+  }
+
+  handleNetworkCalls = async (
+    networkCalls: StrippedNetworkCall[],
+    userId: string
+  ) => {
+    const promises: Promise<void>[] = []
+    let totalUsageDetails: UsageDetails = {
+      CO2: 0,
+      kWh: 0,
+      numberOfCalls: 0,
+      numberOfCallsWithoutSize: 0,
+      size: 0
+    }
+
+    for (const networkCall of networkCalls) {
+      const usageDetails = this.getUsageDetailsFromNetworkCall(networkCall)
+      totalUsageDetails = this.incrementValues(totalUsageDetails, usageDetails)
+      const baseUsageDoc = this.getBaseUsageDoc(usageDetails, userId)
+      promises.push(this.storeNetworkCall(baseUsageDoc, networkCall, userId))
+    }
+
+    await Promise.all(promises)
+
+    totalUsageDetails.secondsActive = 10
+    const baseUsageDoc = this.getBaseUsageDoc(totalUsageDetails, userId)
+    await this.updateUserDocs(baseUsageDoc)
+  }
+
+  private incrementValues = (
+    originalUsage: UsageDetails,
+    newUsage: UsageDetails
+  ) => {
+    const res = { ...originalUsage }
+    for (const key of Object.keys(originalUsage)) {
+      const number1 = new Big(res[key] || 0)
+      const number2 = String(newUsage[key] || 0)
+      res[key] = Number(number1.plus(number2))
+    }
+    return res
   }
 
   getTotalUsageForUser = async (userId: string, limit: number) => {
@@ -313,7 +390,7 @@ export class NetworkCallController {
     const usersPerDay: { [date: number]: number } = {}
     const [usageSnapshot, usersActivePerDateSnapshot] = await Promise.all([
       this.totalUsageCollection.where('date', '>', limit).get(),
-      this.usageCollection.where('date', '>', limit).get()
+      this.activeUsersCollection.where('date', '>', limit).get()
     ])
     for (const doc of usersActivePerDateSnapshot.docs) {
       const data = doc.data() as ActiveUserDoc

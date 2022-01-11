@@ -38,6 +38,9 @@ try {
         case MESSAGE_TYPES.REQUEST_CREDENTIALS:
           store.auth.getToken().then(sendResponse)
           break
+        case MESSAGE_TYPES.REQUEST_HOST_ALIAS_ARRAY:
+          store.hostAnonymizer.getAllAliases().then(sendResponse)
+          break
         default:
           break
       }
@@ -82,6 +85,13 @@ try {
         return
       case MESSAGE_TYPES.REQUEST_TIPS:
         store.tipsHandler.sendTips()
+        return
+      case MESSAGE_TYPES.REQUEST_EXTENDED_POLLUTION:
+        store.extendedPollution.sendExtendedPollution()
+        return
+      case MESSAGE_TYPES.SET_EXTENDED_POLLUTION:
+        const { extendedPollution } = payload
+        store.extendedPollution.setExtendedPollution(extendedPollution)
         return
       default:
         console.log(type)

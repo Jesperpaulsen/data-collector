@@ -14,6 +14,7 @@ interface UsageContextProps {
   }
   reports: UsageReport[]
   tips: Tip[]
+  extendedPollution: boolean
 }
 
 const initialUsage: UsageDetails = {
@@ -28,7 +29,8 @@ export const UsageContext = createContext<UsageContextProps>({
   totalUsage: initialUsage,
   usageLastWeek: {},
   reports: [],
-  tips: []
+  tips: [],
+  extendedPollution: false
 })
 
 const UsageProvider: FunctionComponent = ({ children }) => {
@@ -39,6 +41,7 @@ const UsageProvider: FunctionComponent = ({ children }) => {
   }>({})
   const [reports, setReports] = useState<UsageReport[]>([])
   const [tips, setTips] = useState<Tip[]>([])
+  const [extendedPollution, setExtendedPollution] = useState(false)
 
   const parseMessage = (details: any) => {
     if (!details?.payload) return
@@ -54,6 +57,9 @@ const UsageProvider: FunctionComponent = ({ children }) => {
     } else if (type === MESSAGE_TYPES.SEND_TIPS) {
       const { tips } = details.payload
       setTips(tips)
+    } else if (type === MESSAGE_TYPES.SEND_EXTENDED_POLLUTION) {
+      const { extendedPollution } = details.payload
+      setExtendedPollution(extendedPollution)
     }
   }
 
@@ -65,11 +71,22 @@ const UsageProvider: FunctionComponent = ({ children }) => {
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.REQUEST_REPORTS })
 
     chrome.runtime.sendMessage({ type: MESSAGE_TYPES.REQUEST_TIPS })
+
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPES.REQUEST_EXTENDED_POLLUTION
+    })
   }, [])
 
   return (
     <UsageContext.Provider
-      value={{ todaysUsage, totalUsage, usageLastWeek, reports, tips }}
+      value={{
+        todaysUsage,
+        totalUsage,
+        usageLastWeek,
+        reports,
+        tips,
+        extendedPollution
+      }}
       children={children}>
       {children}
     </UsageContext.Provider>

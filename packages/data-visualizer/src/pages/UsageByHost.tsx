@@ -32,16 +32,20 @@ const UsageByHost: FunctionalComponent = () => {
 
   const usageByHost = useMemo(() => {
     if (!usageState.usageByHost || !usageState.accumulatedUsageByHost) return {}
-    if (date) {
-      const res: { [host: string]: HostDoc } = {}
-      for (const usageDoc of Object.values(usageState.usageByHost)) {
-        if (usageDoc.date !== date) continue
-        res[usageDoc.hostOrigin] = usageDoc
-      }
-      return res
+    const res: { [host: string]: HostDoc } = {}
+    for (const usageDoc of Object.values(usageState.usageByHost)) {
+      if (date && usageDoc.date !== date) continue
+      usageDoc.hostOrigin =
+        usageState?.aliasMap.get(usageDoc.hostOrigin) || usageDoc.hostOrigin
+      res[usageDoc.hostOrigin] = usageDoc
     }
-    return usageState.accumulatedUsageByHost
-  }, [date, usageState?.usageByHost, usageState?.accumulatedUsageByHost])
+    return res
+  }, [
+    date,
+    usageState?.usageByHost,
+    usageState?.accumulatedUsageByHost,
+    usageState?.aliasMap
+  ])
 
   return (
     <div>

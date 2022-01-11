@@ -38,7 +38,7 @@ const DashboardStatistics: FunctionalComponent<Props> = ({
             </div>
             <div className="text-center text-xs pt-2">
               {comparedToOwnUsage?.higher ? 'Higer' : 'Lower'} pollution today
-              compared to your own pollution last week (
+              compared to your average pollution last week (
               {co2Formatter(report.ownAveragePollutionLastWeek)}).
             </div>
           </div>

@@ -42,8 +42,8 @@ router.post(
 
     try {
       const docId =
-        await firebaseAdmin.firestore.networkCallController.storeNetworkCall(
-          networkCall,
+        await firebaseAdmin.firestore.networkCallController.handleNetworkCalls(
+          [networkCall],
           req.currentUser!.uid
         )
       return res.status(201).send({ uid: docId })
@@ -68,35 +68,18 @@ router.post(
     if (req.currentUser?.uid !== batchRequest.userId) {
       throw new NotAuthorizedError()
     }
-    const promises: ReturnType<
-      typeof firebaseAdmin.firestore.networkCallController.storeNetworkCall
-    >[] = []
+
+    // TODO: We don't want to process network calls while the plugin is disabled
+    if (process.env.NODE_ENV !== 'test') return res.status(201).send()
 
     const userId = batchRequest.userId
-    for (const networkCall of batchRequest.networkCalls) {
-      promises.push(
-        firebaseAdmin.firestore.networkCallController.storeNetworkCall(
-          {
-            ...networkCall,
-            userId
-          },
-          userId
-        )
+
+    try {
+      await firebaseAdmin.firestore.networkCallController.handleNetworkCalls(
+        batchRequest.networkCalls,
+        userId
       )
-    }
-
-    try {
-      if (batchRequest.networkCalls?.length) {
-        await firebaseAdmin.firestore.updateUserHaveBeenActive(userId, 10)
-      }
-    } catch (e) {
-      // pass
-      console.log(e)
-    }
-
-    try {
-      const ids = await Promise.all(promises)
-      return res.status(201).send({ ids })
+      return res.status(201).send()
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
     }

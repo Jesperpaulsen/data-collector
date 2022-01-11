@@ -18,11 +18,13 @@ import LoadingSpinner from '../common/LoadingSpinner'
 interface Props {
   country?: CountryDoc | HostToCountry
   specificHost: string
+  aliasMap: Map<string, string>
 }
 
 const CountryDetails: FunctionalComponent<Props> = ({
   country,
-  specificHost
+  specificHost,
+  aliasMap
 }) => {
   const [hostsForCountry, setHostsForCountry] = useState<HostToCountry[]>([])
   const { usageHandler } = useContext(UsageContext)
@@ -104,7 +106,8 @@ const CountryDetails: FunctionalComponent<Props> = ({
               <ul className="list-disc list-inside">
                 {hostsForCountry.slice(0, 5).map((host) => (
                   <li key={host.countryCode}>
-                    {host.hostOrigin}: {co2Formatter(host.CO2)}{' '}
+                    {aliasMap.get(host.hostOrigin) || host.hostOrigin}:{' '}
+                    {co2Formatter(host.CO2)}{' '}
                     <span className="text-sm">
                       ({host.numberOfCalls} calls)
                     </span>

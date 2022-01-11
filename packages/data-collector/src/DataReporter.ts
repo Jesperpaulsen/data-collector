@@ -22,7 +22,9 @@ export class DataReporter {
       )
         continue
       const usageDoc: StrippedNetworkCall = {
-        hostOrigin: networkCall.hostOrigin,
+        hostOrigin: this.store.hostAnonymizer.convertHostToAlias(
+          networkCall.hostOrigin
+        ),
         size: (networkCall.size || 0) + (networkCall.outgoingSize || 0),
         targetIP: networkCall.targetIP,
         userId: networkCall.userId

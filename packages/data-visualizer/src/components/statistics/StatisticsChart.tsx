@@ -1,15 +1,17 @@
 import { createRef, FunctionalComponent } from 'preact'
-import { useContext, useEffect, useMemo } from 'preact/hooks'
+import { useContext, useEffect, useMemo, useState } from 'preact/hooks'
 
 import { UsageContext } from '../../contexts/Usage/UsageContext'
 import { UsageHandler } from '../../contexts/Usage/UsageHandler'
 import { Dataset, Labels } from '../../types/chart-types'
 import { getStartOfDateInUnix } from '../../utils/date'
+import { defaultDropdownValues } from '../../utils/defaultDropdownValue'
 import Button from '../common/Button'
 import CustomChart from '../common/Charts/CustomChart'
 
 const StatisticsChart: FunctionalComponent = () => {
   const { usageState, usageHandler } = useContext(UsageContext)
+  const [filter, setFilter] = useState(defaultDropdownValues[0].value)
 
   const labels = useMemo(() => {
     const days = [
@@ -45,13 +47,13 @@ const StatisticsChart: FunctionalComponent = () => {
     for (const [date, usage] of Object.entries(
       usageState.allUsersUsageLastWeek
     )) {
-      data[date] = usage.CO2
+      data[date] = usage[filter]
     }
 
     res.label = 'Average use from all users'
     res.data = data
     return res
-  }, [usageState.allUsersUsageLastWeek])
+  }, [usageState.allUsersUsageLastWeek, filter])
 
   const ownUsage = useMemo(() => {
     const res: Dataset = { label: '', data: { 0: 0 } }
@@ -59,12 +61,12 @@ const StatisticsChart: FunctionalComponent = () => {
     if (!usageState.ownUsageLastWeek) return res
 
     for (const [date, usage] of Object.entries(usageState.ownUsageLastWeek)) {
-      data[date] = usage.CO2
+      data[date] = usage[filter]
     }
     res.label = 'Your usage'
     res.data = data
     return res
-  }, [usageState.ownUsageLastWeek])
+  }, [usageState.ownUsageLastWeek, filter])
 
   return useMemo(() => {
     return (
@@ -77,6 +79,7 @@ const StatisticsChart: FunctionalComponent = () => {
           </Button>
         </div>
         <CustomChart
+          setFilter={setFilter}
           type={'line'}
           labels={labels}
           datasets={[ownUsage, allUsersUsage]}

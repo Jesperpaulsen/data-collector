@@ -9,16 +9,44 @@ import UsageLine from '../usage/UsageLine'
 import DashboardStatistics from './DashboardStatistics'
 import Box from '../common/Box'
 import TipsCarousel from '../common/TipsCarousel'
+import Switch from '../common/Switch'
+import { MESSAGE_TYPES } from '../../types/MESSAGE_TYPES'
+import Hover from '../common/Hover'
 
 const Dashboard: FunctionComponent = () => {
-  const { todaysUsage, totalUsage, reports, tips } = useContext(UsageContext)
+  const { todaysUsage, extendedPollution, reports, tips } =
+    useContext(UsageContext)
+
+  const toggleExtendedPollution = (value: boolean) => {
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPES.SET_EXTENDED_POLLUTION,
+      payload: { extendedPollution: value }
+    })
+  }
 
   return (
     <div className="w-full h-screen">
       {SHOW_USAGE ? (
         <div className="w-full">
           <Box>
-            <UsageLine usage={todaysUsage} label="Todays usage" />
+            <UsageLine
+              usage={todaysUsage}
+              label="Todays usage"
+              showProductionPollution={extendedPollution}
+            />
+            <div className="pt-5">
+              <Hover infoText="When toggled, the seconds you have been using the internet is added to the calculations. This is based on an expected lifetime of 3 years per device, and the production cost of your device is converted to active seconds. 80% of the pollution caused by electronic devices is found during production of the device, and is therefore important to try to include in the calculations.">
+                <div className="flex justify-center w-full px-4">
+                  <Switch
+                    initialValue={extendedPollution}
+                    onToggled={toggleExtendedPollution}
+                    label={
+                      'Include the estimated CO2 equivalents from production and use of your device in the calculations'
+                    }
+                  />
+                </div>
+              </Hover>
+            </div>
           </Box>
           {reports?.length > 0 && (
             <DashboardStatistics

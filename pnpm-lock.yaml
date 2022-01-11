@@ -68,6 +68,7 @@ importers:
 
   packages/data-analyzer:
     specifiers:
+      '@types/big.js': ^6.1.2
       '@types/chrome': ^0.0.154
       '@types/cors': ^2.8.12
       '@types/geoip-country': ^4.0.0
@@ -75,6 +76,7 @@ importers:
       '@types/node': ^16.7.12
       '@types/supertest': ^2.0.11
       axios: ^0.21.4
+      big.js: ^6.1.1
       body-parser: ^1.19.0
       cors: ^2.8.5
       dayjs: ^1.10.7
@@ -93,6 +95,7 @@ importers:
       typescript: ^4.4.3
     dependencies:
       axios: 0.21.4
+      big.js: 6.1.1
       body-parser: 1.19.0
       cors: 2.8.5
       dayjs: 1.10.7
@@ -103,6 +106,7 @@ importers:
       firebase-admin: 9.12.0
       geoip-country: 4.0.91
     devDependencies:
+      '@types/big.js': 6.1.2
       '@types/chrome': 0.0.154
       '@types/cors': 2.8.12
       '@types/geoip-country': 4.0.0
@@ -2580,6 +2584,10 @@ packages:
       '@babel/types': 7.15.6
     dev: true
 
+  /@types/big.js/6.1.2:
+    resolution: {integrity: sha512-h24JIZ52rvSvi2jkpYDk2yLH99VzZoCJiSfDWwjst7TwJVuXN61XVCUlPCzRl7mxKEMsGf8z42Q+J4TZwU3z2w==}
+    dev: true
+
   /@types/body-parser/1.19.1:
     resolution: {integrity: sha512-a6bTJ21vFOGIkwM0kzh9Yr89ziVxq4vYH2fQ6N8AeipEzai/cFK6aGMArIkUeIdRIgpwQa+2bXiLuUJCpSf2Cg==}
     dependencies:
@@ -3417,6 +3425,10 @@ packages:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: false
     optional: true
+
+  /big.js/6.1.1:
+    resolution: {integrity: sha512-1vObw81a8ylZO5ePrtMay0n018TcftpTA5HFKDaSuiUDBo8biRBtjIobw60OpwuvrGk+FsxKamqN4cnmj/eXdg==}
+    dev: false
 
   /bignumber.js/9.0.1:
     resolution: {integrity: sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==}

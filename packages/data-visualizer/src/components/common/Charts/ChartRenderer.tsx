@@ -45,7 +45,7 @@ const LineChart: FunctionalComponent<Props> = ({
   const [showAnimation, setShowAnimation] = useState(true)
 
   useEffect(() => {
-    const timeout = setTimeout(() => setShowAnimation(false), 2000)
+    const timeout = setTimeout(() => setShowAnimation(false), 500)
 
     return () => (timeout ? clearTimeout(timeout) : null)
   })

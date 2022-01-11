@@ -9,6 +9,7 @@ import {
 
 import AutoComplete from '../components/common/AutoComplete'
 import Button from '../components/common/Button'
+import DropDown from '../components/common/Dropdown'
 import Modal from '../components/common/Modal'
 import CountryDetails from '../components/usageByCountry/CountryDetails'
 import WorldMap from '../components/usageByCountry/WorldMap'
@@ -16,6 +17,7 @@ import { UsageContext } from '../contexts/Usage/UsageContext'
 import { CountryDoc } from '../types/country-doc'
 import { HostDoc } from '../types/host-doc'
 import { HostToCountry } from '../types/host-to-country'
+import { defaultDropdownValues } from '../utils/defaultDropdownValue'
 
 const UsageByCountry: FunctionComponent = () => {
   const { usageState, usageHandler } = useContext(UsageContext)
@@ -26,6 +28,7 @@ const UsageByCountry: FunctionComponent = () => {
   const [usageByCountry, setUsageByCountry] = useState<{
     [host: string]: CountryDoc | HostToCountry
   }>({})
+  const [filter, setFilter] = useState(defaultDropdownValues[0].value)
 
   useEffect(() => {
     if (!usageState.usageByCountry) {
@@ -62,11 +65,12 @@ const UsageByCountry: FunctionComponent = () => {
 
   const possibleHosts = useMemo(() => {
     const hosts = Object.values(usageState?.accumulatedUsageByHost || {})
-    return hosts.map((host) => ({
-      label: host.hostOrigin,
-      value: host.hostOrigin
-    }))
-  }, [usageState.accumulatedUsageByHost])
+    return hosts.map((host) => {
+      const readableHost =
+        usageState.aliasMap.get(host.hostOrigin) || host.hostOrigin
+      return { label: readableHost, value: host.hostOrigin }
+    })
+  }, [usageState.accumulatedUsageByHost, usageState.aliasMap])
 
   return (
     <div>
@@ -75,38 +79,48 @@ const UsageByCountry: FunctionComponent = () => {
           <CountryDetails
             country={selectedCountry}
             specificHost={selectedHost?.hostOrigin || ''}
+            aliasMap={usageState.aliasMap}
           />
         </Modal>
       )}
       <div className="bg-white rounded-lg shadow-lg p-4">
         <div className="flex justify-between pb-2">
-          <AutoComplete
-            possibleValues={possibleHosts}
-            onClick={(host) => {
-              if (usageState?.accumulatedUsageByHost) {
-                const hostDoc = usageState.accumulatedUsageByHost[host]
-                setSelectedHost(hostDoc)
-                getCountryForHost(hostDoc.hostOrigin)
-              }
-            }}
-            onChange={(host) => {
-              if (usageState?.accumulatedUsageByHost) {
-                const hostDoc = usageState.accumulatedUsageByHost[host]
-                if (!hostDoc && usageState.usageByCountry) {
+          <div className="flex items-center">
+            <AutoComplete
+              possibleValues={possibleHosts}
+              onClick={(host) => {
+                if (usageState?.accumulatedUsageByHost) {
+                  const hostDoc = usageState.accumulatedUsageByHost[host]
+                  setSelectedHost(hostDoc)
+                  getCountryForHost(hostDoc.hostOrigin)
+                }
+              }}
+              onChange={(host) => {
+                if (usageState?.accumulatedUsageByHost) {
+                  const hostDoc = usageState.accumulatedUsageByHost[host]
+                  if (!hostDoc && usageState.usageByCountry) {
+                    setSelectedHost(undefined)
+                    setUsageByCountry(usageState.usageByCountry)
+                  }
+                } else {
                   setSelectedHost(undefined)
+                }
+              }}
+              onClear={() => {
+                setSelectedHost(undefined)
+                if (usageState.usageByCountry) {
                   setUsageByCountry(usageState.usageByCountry)
                 }
-              } else {
-                setSelectedHost(undefined)
-              }
-            }}
-            onClear={() => {
-              setSelectedHost(undefined)
-              if (usageState.usageByCountry) {
-                setUsageByCountry(usageState.usageByCountry)
-              }
-            }}
-          />
+              }}
+            />
+            <div className="pl-4">
+              <DropDown
+                onSelected={setFilter}
+                options={defaultDropdownValues}
+                title="Filter:"
+              />
+            </div>
+          </div>
           <Button
             small
             onClick={() => {
@@ -119,6 +133,7 @@ const UsageByCountry: FunctionComponent = () => {
         <WorldMap
           usageByCountry={usageByCountry}
           setSelectedCountry={onSelectedCountry}
+          filter={filter}
         />
       </div>
     </div>

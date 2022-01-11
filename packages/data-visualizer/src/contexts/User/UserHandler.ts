@@ -94,7 +94,7 @@ export class UserHandler extends GenericHandler<UserState> {
     return token || ''
   }
 
-  private checkIfExtensionIsAvailable = (): Promise<boolean> => {
+  checkIfExtensionIsAvailable = (): Promise<boolean> => {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
         extensionID,

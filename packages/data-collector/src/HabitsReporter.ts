@@ -4,6 +4,7 @@ import { getDateLimit, getStartOfDateInUnix } from './date'
 import Store from './store'
 
 const storageKey = 'reports'
+const CO2Pr10SecondOfUsage = 0.206
 
 type Reports = { [date: number]: UsageReport }
 
@@ -130,9 +131,17 @@ export class HabitsReporter {
     })
   }
 
+  private addExtendedPollution = (activeSeconds: number, pollution: number) => {
+    const secondsIn10s = activeSeconds / 10
+    return secondsIn10s * CO2Pr10SecondOfUsage + pollution
+  }
+
   onUsageChange = (usage: UsageDetails) => {
     const pollution = usage.CO2
-    this.updateBadge(pollution)
+    const badgePollution = this.store.extendedPollution.showExtendedPollution
+      ? this.addExtendedPollution(usage.secondsActive || 0, pollution)
+      : pollution
+    this.updateBadge(badgePollution)
     const limit = this.limits[this.limitIndex]
     if (pollution > limit) {
       this.limitIndex++

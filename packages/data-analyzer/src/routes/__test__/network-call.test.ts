@@ -16,7 +16,7 @@ interface TestNetworkCall extends StrippedNetworkCall {
 }
 
 const testNetworkCall: TestNetworkCall = {
-  hostOrigin: 'https://github.com',
+  hostOrigin: 'testID',
   size: 1855,
   userId: 'iK3zNJGCP0Ry6ENuiZTSTPFVeVW2',
   targetIP: '84.209.48.233'
@@ -109,8 +109,8 @@ describe.skip('route: /network-call/:uid method: PUT', () => {
   it.skip('returns 401 if trying to update a network call for a different user', async () => {
     const { token } = await getUserToken()
     const res =
-      await firebaseAdmin.firestore.networkCallController.storeNetworkCall(
-        testNetworkCall,
+      await firebaseAdmin.firestore.networkCallController.handleNetworkCalls(
+        [testNetworkCall],
         '123'
       )
   })

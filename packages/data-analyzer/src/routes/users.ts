@@ -13,6 +13,7 @@ import { validateRequest } from '../middlewares/validate-request'
 import UserSchema from '../schemas/UserSchema'
 import firebaseAdmin from '../services/firebase-admin'
 import firebase from 'firebase-admin'
+import email from '../services/email'
 
 const basePath = '/users'
 
@@ -118,7 +119,8 @@ router.post(
         totalSize: firebase.firestore.FieldValue.increment(0),
         totalkWh: firebase.firestore.FieldValue.increment(0),
         numberOfCalls: firebase.firestore.FieldValue.increment(0),
-        signUpUid
+        signUpUid,
+        lateSignUp: true
       }
 
       await firebaseAdmin.firestore.createUser(user)
@@ -191,7 +193,9 @@ router.post(
 
     try {
       await firebaseAdmin.firestore.addSignUp(signUp)
-      if (process.env.NODE_ENV !== 'test') await Email.sendSignUpEmail(email)
+      if (process.env.NODE_ENV !== 'test') {
+        await Email.sendLateSignUpEmail(email)
+      }
       res.status(201).send()
     } catch (e: any) {
       next(new DatabaseConnectionError(e.message))
@@ -253,6 +257,126 @@ router.put(
       await firebaseAdmin.firestore.addActiveUser(uid)
       res.status(200).send()
     } catch (e: any) {
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
+router.post(
+  generateRoute('/first-survey'),
+  requireAdmin,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const now = Date.now()
+    const emails: string[] = []
+    const errors: string[] = []
+    try {
+      throw new Error("Don't use this endpoint")
+      const signUps = await firebaseAdmin.firestore.getSignUpsForFirstSurvey()
+      for (const signUp of signUps) {
+        try {
+          if (!signUp.email || !signUp.signUpId) {
+            continue
+          }
+          await email.sendFirstSurveyEmail(signUp.email)
+          await firebaseAdmin.firestore.updateSignUp(signUp.signUpId!, {
+            ...signUp,
+            firstSurveySent: now
+          })
+          emails.push(signUp.email)
+        } catch (e) {
+          errors.push(signUp.signUpId!)
+        }
+      }
+      res.status(200).send(emails)
+    } catch (e: any) {
+      console.log(e)
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
+router.post(
+  generateRoute('/first-round'),
+  requireAdmin,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const now = Date.now()
+    const emails: string[] = []
+    const errors: string[] = []
+    try {
+      throw new Error("Don't use this endpoint")
+      const signUps = await firebaseAdmin.firestore.getAllSignUps()
+      for (const signUp of signUps) {
+        try {
+          if (!signUp.email || !signUp.signUpId) {
+            continue
+          }
+          await email.sendFirstRoundEmail(signUp.email)
+          emails.push(signUp.email)
+        } catch (e) {
+          errors.push(signUp.signUpId!)
+        }
+      }
+      res.status(200).send(emails)
+    } catch (e: any) {
+      console.log(e)
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
+router.post(
+  generateRoute('/plugin-update'),
+  requireAdmin,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const now = Date.now()
+    const emails: string[] = []
+    const errors: string[] = []
+    try {
+      throw new Error("Don't use this endpoint")
+      const users = await firebaseAdmin.auth.listUsers() //{ users: [{ email: 'jespergpaulsen@gmail.com', uid: '' }] } //await firebaseAdmin.auth.listUsers()
+      for (const user of users.users) {
+        try {
+          if (!user.email) {
+            continue
+          }
+          await email.sendNotificationEmail(user.email!)
+          emails.push(user.email!)
+        } catch (e) {
+          errors.push(user.uid)
+        }
+      }
+      res.status(200).send(emails)
+    } catch (e: any) {
+      console.log(e)
+      next(new DatabaseConnectionError(e.message))
+    }
+  }
+)
+
+router.post(
+  generateRoute('/final-survey'),
+  requireAdmin,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const now = Date.now()
+    const emails: string[] = []
+    const errors: string[] = []
+    try {
+      throw new Error("Don't use this endpoint")
+      const users = await firebaseAdmin.auth.listUsers()
+      for (const user of users.users) {
+        try {
+          if (!user.email) {
+            continue
+          }
+          await email.sendFinalSurveyEmail(user.email!)
+          emails.push(user.email!)
+        } catch (e) {
+          errors.push(user.uid)
+        }
+      }
+      res.status(200).send(emails)
+    } catch (e: any) {
+      console.log(e)
       next(new DatabaseConnectionError(e.message))
     }
   }

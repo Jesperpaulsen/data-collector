@@ -6,10 +6,15 @@ import OwnUsageChart from './OwnUsageChart'
 import UsageDisplay from './UsageDisplay'
 
 const Usage: FunctionalComponent = () => {
-  const { todaysUsage, totalUsage } = useContext(UsageContext)
+  const { todaysUsage, totalUsage, extendedPollution } =
+    useContext(UsageContext)
   return (
     <div>
-      <UsageDisplay todaysUsage={todaysUsage} totalUsage={totalUsage} />
+      <UsageDisplay
+        todaysUsage={todaysUsage}
+        totalUsage={totalUsage}
+        showProductionPollution={extendedPollution}
+      />
       <OwnUsageChart />
     </div>
   )

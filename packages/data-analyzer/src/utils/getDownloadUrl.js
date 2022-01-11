@@ -12,7 +12,7 @@ console.log(process.env.FIRESTORE_EMULATOR_HOST)
 admin.initializeApp(options)
 
 const bucket = admin.storage().bucket('gs://data-collector-ff33b.appspot.com')
-const file = bucket.file('informationLetters/information_letter.pdf')
+const file = bucket.file('informationVideos/InformationVideo2.mp4')
 
 const main = async () => {
   const signedUrls = await file.getSignedUrl({

@@ -24,7 +24,7 @@ export class BlackLister {
   private getListFromLocalStorage = async (): Promise<string[]> => {
     return new Promise((resolve) => {
       chrome.storage.local.get(storageKey, (result) =>
-        resolve(result[storageKey])
+        resolve(result[storageKey] || [])
       )
     })
   }

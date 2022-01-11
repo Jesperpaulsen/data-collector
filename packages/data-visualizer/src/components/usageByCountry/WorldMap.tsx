@@ -10,13 +10,15 @@ import MapRenderer from './MapRenderer'
 interface Props {
   usageByCountry?: { [countryCode: string]: CountryDoc | HostToCountry }
   setSelectedCountry: (country?: string) => void
+  filter: string
 }
 
 const mapDivId = 'worldMap'
 
 const WorldMap: FunctionComponent<Props> = ({
   usageByCountry,
-  setSelectedCountry
+  setSelectedCountry,
+  filter
 }) => {
   const [usageDetails, setUsageDetails] = useState<CountryDoc | HostToCountry>()
   const [labelPosition, setLabelPosition] = useState<{
@@ -29,9 +31,6 @@ const WorldMap: FunctionComponent<Props> = ({
   const [mapRerenderKey, setMapRerenderKey] = useState(
     Math.random().toString(36).substr(7)
   )
-  const [filter, setFilter] = useState<
-    'size' | 'kWh' | 'CO2' | 'numberOfCalls'
-  >('CO2')
 
   const normalizedValues = useMemo(() => {
     const countryValues: { [countryCode: string]: number } = {}

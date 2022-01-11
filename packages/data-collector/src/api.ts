@@ -3,7 +3,7 @@ import { NetworkCall, StrippedNetworkCall } from '@data-collector/types'
 import Store from './store'
 export class API {
   private store: typeof Store
-  private baseUrl = 'https://data-collector-ff33b.ew.r.appspot.com'
+  private baseUrl = 'https://data-collector-ff33b.ew.r.appspot.com' // 'http://localhost:3333' // 'https://data-collector-ff33b.ew.r.appspot.com'
 
   constructor(store: typeof Store) {
     this.store = store
@@ -71,7 +71,7 @@ export class API {
   ): Promise<
     | {
         ownAverageUsage: number
-        allUsersAverage: number
+        allUsersAverageUsage: number
         yesterdaysUsage: number
       }
     | undefined
