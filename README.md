@@ -19,7 +19,8 @@ The goal of my master's thesis is to make people more aware of how they pollute 
 This project uses a Chrome extension to estimate the CO2e emissions from web browsing. It calculates the emissions based on the destination country's carbon intensity. First the amount of data sent and recieved is converted using a factor of 0.09 kWh/GB. Then the emission factor of the destination country is fetched from the JSON object stored [here](https://github.com/Jesperpaulsen/data-collector/blob/8e3200b9995e1680a587b593fb2bd1d0eac6730b/packages/data-analyzer/src/data/co2PerKwhPerCountry.json) 
 
 # Architecture
-The overall architecture is shown in Figure (https://github.com/Jesperpaulsen/data-collector/blob/8fdf6ad907e268a6dd2f38da550a7555a9f1e223/figs/DataCollector%20flow%20-%20Architecture-1%20.jpg).
+The overall architecture is shown in Figure
+![Architecture](https://github.com/Jesperpaulsen/data-collector/blob/8fdf6ad907e268a6dd2f38da550a7555a9f1e223/figs/DataCollector%20flow%20-%20Architecture-1%20.jpg?war=true).
 
 The system consists of the following components:
 * DataCollector: The Chrome extension's background page and content scripts
