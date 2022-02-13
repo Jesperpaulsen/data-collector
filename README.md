@@ -28,7 +28,7 @@ The system consists of the following components:
 * DataAnalyzer: The API
 * DataVisualizer: Webpage to explore the usage
 
-Developing:
+# Developing:
 * [pnpm](https://pnpm.io/) is used as package manager. Install the packages with `pnpm i`
 * A Firebase service account is required to run the data-analyzer package (You need to be added to the firestore project)
 * Either navigate into a specific package or run all packages from the entry folder with `pnpm dev`
