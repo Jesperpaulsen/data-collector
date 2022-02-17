@@ -1,6 +1,8 @@
 # Data Collector
 
 This code is part of my Master's Thesis at NTNU, Fall 2021.
+![DataPresenter](https://github.com/Jesperpaulsen/data-collector/blob/main/figs/DataPresenterDashboard.png?raw=true)
+![DataVisualizer](https://github.com/Jesperpaulsen/data-collector/blob/main/figs/DataVisualizerMap.png?raw=true)
 
 # Background for this project
 During my previous semester at NTNU, I started to think about how much we use the Internet. That is when I began to dig into the climate consequences of the Internet and found a book written by Gerry McGovern - World Wide Waste. The book made me realize that the climate impact of the Internet is vast and that we need to do something about it before it's too late.
@@ -20,7 +22,7 @@ This project uses a Chrome extension to estimate the CO2e emissions from web bro
 
 # Architecture
 The overall architecture:
-![Architecture](https://github.com/Jesperpaulsen/data-collector/blob/8fdf6ad907e268a6dd2f38da550a7555a9f1e223/figs/DataCollector%20flow%20-%20Architecture-1%20.jpg?war=true)
+![Architecture](https://github.com/Jesperpaulsen/data-collector/blob/8fdf6ad907e268a6dd2f38da550a7555a9f1e223/figs/DataCollector%20flow%20-%20Architecture-1%20.jpg?raw=true)
 
 The system consists of the following components:
 * DataCollector: The Chrome extension's background page and content scripts
