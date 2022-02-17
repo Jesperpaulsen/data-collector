@@ -33,3 +33,4 @@ The system consists of the following components:
 * A Firebase service account is required to run the data-analyzer package (You need to be added to the firestore project)
 * Either navigate into a specific package or run all packages from the entry folder with `pnpm dev`
 * To run the tests: Install [Firebase emulator suite](https://firebase.google.com/docs/emulator-suite) and start the emulators. Run the tests in the data-analyzer package with `pnpm test`
+* To build the project run `pnpm build`
