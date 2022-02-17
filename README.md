@@ -1,6 +1,6 @@
 # Data Collector
 
-This code is part of my Master's Thesis at NTNU, Fall 2021.
+This code is part of my Master's Thesis at NTNU, Autumn 2021.
 ![DataPresenter](https://github.com/Jesperpaulsen/data-collector/blob/main/figs/DataPresenterDashboard.png?raw=true)
 ![DataVisualizer](https://github.com/Jesperpaulsen/data-collector/blob/main/figs/DataVisualizerMap.png?raw=true)
 
